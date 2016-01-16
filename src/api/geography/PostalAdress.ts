@@ -39,7 +39,7 @@ import {StateProvince} from './StateProvince';
  * @version $Revision: 1.12 $ - $Date: 2008-03-27 00:51:37 $
  ***************************************************************************************************
  */
-interface PostalAddress extends ContactMethod
+export interface PostalAddress extends ContactMethod
 {
 	getLine1(): string;
 	setLine1(s: string): void;

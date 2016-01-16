@@ -1,4 +1,16 @@
+/// <reference path="../collections.ts" />
+
+'use strict';
+
+import basarat = require('../collections');
+import collections = basarat.collections;
+import Dictionary = collections.Dictionary;
+
 import {ContactMethod} from '../api/ContactMethod';
+import {PostalAddress} from '../api/geography/PostalAdress';
+import {PhoneNumber} from '../api/PhoneNumber';
+import {Uri} from '../api/net/Uri';
+import {Url} from '../api/net/Url';
 
 /**
  ***************************************************************************************************
@@ -11,28 +23,26 @@ import {ContactMethod} from '../api/ContactMethod';
  */
 export class ContactMethodManager // implements Contacteable, Serializable, Cloneable
 {
-	private contactMethods: Map<string, ContactMethod>;
+	private contactMethods: Dictionary<string, ContactMethod>;
 
-	/** plain vanilla empty constructor */
-	constructor()
-	{
-		this.contactMethods = new HashMap<string, ContactMethod>();
+	constructor() {
+		this.contactMethods = new Dictionary<string, ContactMethod>();
 	}
 	
-	getContactMethod(string kind): ContactMethod {
-		if (contactMethods.containsKey(kind)) {
-			return ((ContactMethod) contactMethods.get(kind));
+	getContactMethod(kind: string): ContactMethod {
+		var findContact = this.contactMethods.getValue(kind);
+
+		if (findContact != null) {
+			return findContact;
 		}
 		else{
 			return (null);
 		}
 	}
 
-	void setContactMethod(kind: string, contactMethod: ContactMethod) {
-		contactMethods.put(kind, contactMethod);
-		if (log.isInfoEnabled()) {
-			log.info("added contact method of kind '" + kind + "'" + contactMethod.tostring());
-		}
+	setContactMethod(kind: string, contactMethod: ContactMethod): void {
+		this.contactMethods.setValue(kind, contactMethod);
+		console.log("added contact method of kind '" + kind + "'" + contactMethod.toString());
 	}
 	
 	/*
@@ -40,8 +50,8 @@ export class ContactMethodManager // implements Contacteable, Serializable, Clon
 	 * user-defined type of ContactMethod kind, such as PHYSICAL_ADDRESS,
 	 * CHECK-IN_ADDRESS, MAILING_ADDRESS, BILLING_ADDRESS, etc...
 	 */
-	getPostalAddresses(): Map<string, ContactMethod> {
-		return createContactMethodMap(PostalAddress.class);
+	getPostalAddresses(): Dictionary<string, ContactMethod> {
+		return this.createContactMethodDictionary(PostalAddress.class);
 	}
 	
 	getPostalAddress(kind: string): PostalAddress {
@@ -52,8 +62,8 @@ export class ContactMethodManager // implements Contacteable, Serializable, Clon
 	 * Telephone numbers keyed by a string code representing a user-defined type of
 	 * Phone Number, such as PHYSICAL_PHONE, BILLING_PHONE, etc...
 	 */
-	Map getPhoneNumbers() {
-		return ( createContactMethodMap(PhoneNumber.class) );
+	getPhoneNumbers(): Dictionary {
+		return this.createContactMethodDictionary(PhoneNumber.class);
 	
 	}
 	
@@ -65,11 +75,11 @@ export class ContactMethodManager // implements Contacteable, Serializable, Clon
 	 * Email addresses keyed by a string code representing a user-defined kind of
 	 * Email, such as EMAIL1, INFO_EMAIL etc...
 	 */
-	Map getEmailAddresses() {
-		return ( createContactMethodMap(EmailAddressImpl.class) );
+	getEmailAddresses():Dictionary {
+		return this.createContactMethodDictionary(EmailAddressImpl.class);
 	}
 	
-	Uri getEmailAddress(string kind) {
+	getEmailAddress(kind: string): Uri {
 		return (Uri)this.getContactMethod(kind);
 	}
 
@@ -77,73 +87,68 @@ export class ContactMethodManager // implements Contacteable, Serializable, Clon
 	 * Uniform Resource Locators (eg web page or ftp addresses) keyed by a string
 	 * code representing a user-defined type of URL such as WEB_SITE, INTRANET, etc...
 	 */
-	Map getUrls() {
-		return ( createContactMethodMap(Url.class) );
+	getUrls():Dictionary {
+		return this.createContactMethodDictionary(Url.class);
 	}
 
-	Url getUrl(string kind) {
+	getUrl(kind: string): Url {
 		return (Url)this.getContactMethod(kind);
 	}
 
-	/** creates a map for each subclass of ContactMethod found in the main ContactMethod map */
-	private createContactMethodMap(final Class aClass): Map<string, ContactMethod> {
-		var map: Map<string, ContactMethod> = new HashMap<string, ContactMethod>();
-	
-		for (string key : this.contactMethods.keySet()){
-			final ContactMethod contactMethod = this.contactMethods.get(key);
-	
+	/** creates a Dictionary for each subclass of ContactMethod found in the main ContactMethod Dictionary */
+	private createContactMethodDictionary(aClass): Dictionary<string, ContactMethod> {
+		var contacts: Dictionary<string, ContactMethod> = new Dictionary<string, ContactMethod>();
+
+		this.contactMethods.forEach((methodKey: string, cMethod: ContactMethod)=>{
 			if (aClass.isAssignableFrom(contactMethod.getClass()))
 			{
-				map.put(key, contactMethod);
+				contacts.setValue(methodKey, cMethod);
 			}
-		}
-	
-		if (log.isDebugEnabled()) {
-			log.debug("recreated contact method maps");
-		}
-	
-		return (map);
+		});
+
+		console.debug("recreated contact method Dictionarys");
+		return (contacts);
 	}
 
-	getContactMethods(): Map<string, ContactMethod> {
-		if (!(contactMethods instanceof Map))
+	getContactMethods(): Dictionary<string, ContactMethod> {
+		if (!(this.contactMethods instanceof Dictionary))
 		{
-			log.warn("getContactMethods method is having to create another instance of contactMethods map - somehow it wasn't created with constructor");
-			contactMethods = new HashMap<string, ContactMethod>();
+			console.warn("getContactMethods method is having to create another instance of contactMethods Dictionary - somehow it wasn't created with constructor");
+			this.contactMethods = new Dictionary<string, ContactMethod>();
 		}
 	
-		return (contactMethods);
+		return (this.contactMethods);
 	}
 
 	/**
 	 * @param aContactMethods
 	 */
-	setContactMethods(aContactMethods: Map<string, ContactMethod>): void {
+	setContactMethods(aContactMethods: Dictionary<string, ContactMethod>): void {
 		if (aContactMethods == null) {
-			throw new IllegalArgumentException("setContactMethods was pass a null instance");
+			throw new Error("setContactMethods was pass a null instance");
 		}
 	
-		if (!(aContactMethods instanceof Map)) {
-			throw new IllegalArgumentException("setContactMethods expects an instance of Map.  Was actually passed " + aContactMethods.getClass().getName());
+		if (!(aContactMethods instanceof Dictionary)) {
+			throw new Error("setContactMethods expects an instance of Dictionary.  Was actually passed " + aContactMethods.getClass().getName());
 		}
-		contactMethods = aContactMethods;
+		this.contactMethods = aContactMethods;
 	}
-
-	clone(): Object {
-		try {
-			ContactMethodManager result = (ContactMethodManager) super.clone();
-	
-			// deep copy of the contact method map
-			result.contactMethods = new HashMap<string, ContactMethod>();
-			for (string key : this.contactMethods.keySet()) {
-				final ContactMethod value  = (ContactMethod )this.contactMethods.get(key).clone();
-				result.contactMethods.put(key, value);
-			}
-	
-			return result;
-		}
-		catch (CloneNotSupportedException e) {
-			return null;
-		}
-	}
+	//
+	//clone(): Object {
+	//	try {
+	//		ContactMethodManager result = (ContactMethodManager) super.clone();
+	//
+	//		// deep copy of the contact method Dictionary
+	//		result.contactMethods = new HashDictionary<string, ContactMethod>();
+	//		for (string key : this.contactMethods.keySet()) {
+	//			final ContactMethod value  = (ContactMethod )this.contactMethods.get(key).clone();
+	//			result.contactMethods.put(key, value);
+	//		}
+	//
+	//		return result;
+	//	}
+	//	catch (CloneNotSupportedException e) {
+	//		return null;
+	//	}
+	//}
 } // end class
