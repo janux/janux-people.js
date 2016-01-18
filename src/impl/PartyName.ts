@@ -1,3 +1,10 @@
+/// <reference path="../collections.ts" />
+
+'use strict';
+
+import basarat = require('../collections');
+import collections = basarat.collections;
+
 import {PartyName} from "../api/PartyName";
 /**
  ***************************************************************************************************
@@ -9,31 +16,29 @@ import {PartyName} from "../api/PartyName";
  */
 export class PartyNameImpl implements PartyName
 {
-	private string shortName;
-	private string longName;
+	private shortName: string;
+	private longName: string;
 	
-	public string getShort() {
+	public getShort(): string {
 		return this.shortName;
 	}
 	
-	public void setShort(string s) {
+	public setShort(s: string): void {
 		this.shortName = s;
 	}
 	
-	public string getLong() {
+	public getLong(): string {
 		return this.longName;
 	}
 	
-	public void setLong(string s) {
+	public setLong(s: string): void {
 		this.longName = s;
 	}
 	
-	public string tostring()
+	public tostring(): string
 	{
-		return new TostringBuilder(this)
-			.append("short", getShort())
-			.append("long",  getLong())
-			.tostring();
+		// Short hand. Adds each own property
+		return collections.makeString(this);
 	}
 	
 	public Object clone()
