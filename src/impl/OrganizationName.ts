@@ -5,55 +5,56 @@
 import basarat = require('../collections');
 import collections = basarat.collections;
 
-import {PartyName} from "../api/PartyName";
+import {OrganizationName} from "../api/OrganizationName";
+
+import {PartyNameImpl} from "./PartyName";
+
 /**
  ***************************************************************************************************
- * Represents the name of an Party
+ * Represents the name of an Organization
  *
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
- * @version $Revision: 1.5 $ - $Date: 2006-11-14 01:27:50 $
+ * @version $Revision: 1.5 $ - $Date: 2006-11-14 01:30:39 $
  ***************************************************************************************************
  */
-export class PartyNameImpl implements PartyName
-{
-	protected shortName: string;
-	protected longName: string;
-	
+export class OrganizationNameImpl extends PartyNameImpl implements OrganizationName {
+	//private shortName: string;
+	//private longName: string;
+	private legal: string;
+
 	public getShort(): string {
 		return this.shortName;
 	}
-	
+
 	public setShort(s: string): void {
 		this.shortName = s;
 	}
-	
+
 	public getLong(): string {
 		return this.longName;
 	}
-	
+
 	public setLong(s: string): void {
 		this.longName = s;
 	}
-	
-	public toString(): string
-	{
+
+	public getLegal(): string {
+		return this.legal;
+	}
+
+	public setLegal(legal: string): void {
+		this.legal = legal;
+	}
+
+	public tostring(): string {
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}
-	
-	//public Object clone()
-	//{
-	//	try
-	//	{
-	//		PartyNameImpl result = (PartyNameImpl) super.clone();
+
 	//
-	//		return result;
-	//	}
-	//	catch (CloneNotSupportedException e)
-	//	{
-	//		return null;
-	//	}
+	//public Object clone() {
+	//	OrganizationNameImpl result = (OrganizationNameImpl) super.clone();
+	//	return (result);
 	//}
 
-
-} // end class PartyNameImpl
+} // end class OrganizationNameImpl

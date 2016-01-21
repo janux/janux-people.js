@@ -1,4 +1,13 @@
+/// <reference path="../collections.ts" />
+
+'use strict';
+
+import basarat = require('../collections');
+import collections = basarat.collections;
+
 import {PersonName} from "../api/PersonName";
+
+import {PartyNameImpl} from "./PartyName";
 
 /**
  ***************************************************************************************************
@@ -10,111 +19,97 @@ import {PersonName} from "../api/PersonName";
  */
 export class PersonNameImpl extends PartyNameImpl implements PersonName
 {
-	private String honorificPrefix;
-	private String first;
-	private String middle;
-	private String last;
-	private String honorificSuffix;
+	private honorificPrefix: string;
+	private first: string;
+	private middle: string;
+	private last: string;
+	private honorificSuffix: string;
 
-	public String getHonorificPrefix() {
+	public getHonorificPrefix(): string {
 		return this.honorificPrefix;
 	}
 
-	public void setHonorificPrefix(String honorificPrefix) {
+	public setHonorificPrefix(honorificPrefix: string): void {
 		this.honorificPrefix = honorificPrefix;
 	}
 
-
-	public String getFirst() {
+	public getFirst(): string {
 		return this.first;
 	}
 
-	public void setFirst(String first) {
+	public setFirst(first: string): void {
 		this.first = first;
 	}
 
-
-	public String getMiddle() {
+	public getMiddle(): string {
 		return this.middle;
 	}
 
-	public void setMiddle(String middle) {
+	public setMiddle(middle: string): void {
 		this.middle = middle;
 	}
 
-
-	public String getLast() {
+	public getLast(): string {
 		return this.last;
 	}
 
-	public void setLast(String last) {
+	public setLast(last: string): void {
 		this.last = last;
 	}
 
-
-	public String getHonorificSuffix() {
+	public getHonorificSuffix(): string {
 		return this.honorificSuffix;
 	}
 
-	public void setHonorificSuffix(String honorificSuffix) {
+	public setHonorificSuffix(honorificSuffix: string): void {
 		this.honorificSuffix = honorificSuffix;
 	}
 
-
 	/** contatenates and returns the first and last names */
-	public String getShort() {
+	public getShort(): string {
 		return this.first + " " + this.last;
 	}
 
 	/** does nothing, here to satisfy the PartyName interface */
-	public void setShort(String s) {
+	public setShort(s: string): void {
 		// do nothing
 	}
 
-
 	/** contatenates and returns the honorific Prefix, first, middle and last names, and the honorificSuffix */
-	public String getLong() {
-		StringBuffer out = new StringBuffer();
+	public getLong(): string {
+		var out: string = "";
 
-		if (getHonorificPrefix() != null && !getHonorificPrefix().equals(""))
-			out.append(getHonorificPrefix()).append(" ");
-
-		if (getFirst() != null && !getFirst().equals(""))
-			out.append(getFirst()).append(" ");
-
-		if (getMiddle() != null && !getMiddle().equals(""))
-			out.append(getMiddle()).append(" ");
-
-		if (getLast() != null && !getLast().equals(""))
-			out.append(getLast());
-
-		if (getHonorificSuffix() != null && !getHonorificSuffix().equals(""))
-			out.append(", ").append(getHonorificSuffix());
-
-		return out.toString().trim();
+		if (this.getHonorificPrefix() != null && this.getHonorificPrefix() != ''){
+			out += this.getHonorificPrefix()+' ';
+		}
+		if (this.getFirst() != null && this.getFirst() != ''){
+			out += this.getFirst() + ' ';
+		}
+		if (this.getMiddle() != null && this.getMiddle() != ''){
+			out += this.getMiddle() + ' ';
+		}
+		if (this.getLast() != null && this.getLast() != ''){
+			out += this.getLast() + ' ';
+		}
+		if (this.getHonorificSuffix() != null && this.getHonorificSuffix() != ''){
+			out += ', ' + this.getHonorificSuffix();
+		}
+		return out;
 	}
 
 	/** does nothing, here to satisfy the PartyName interface */
-	public void setLong(String s) {
+	public setLong(s: string): void {
 		// do nothing
 	}
 
-
-
-	public String toString()
-	{
-		return new ToStringBuilder(this)
-			.append("honorificPrefix", getHonorificPrefix())
-			.append("first", getFirst())
-			.append("middle", getMiddle())
-			.append("last", getLast())
-			.append("honorificSuffix", getHonorificSuffix())
-			.toString();
+	public toString(): string {
+		// Short hand. Adds each own property
+		return collections.makeString(this);
 	}
 
-	public Object clone()
-	{
-		PersonNameImpl result = (PersonNameImpl) super.clone();
-		return (result);
-	}
+	//public Object clone()
+	//{
+	//	PersonNameImpl result = (PersonNameImpl) super.clone();
+	//	return (result);
+	//}
 } // end class PersonNameImpl

@@ -1,8 +1,16 @@
+/// <reference path="../collections.ts" />
+
+'use strict';
+
+import basarat = require('../collections');
+import collections = basarat.collections;
 
 import {Person} from '../api/Person';
 import {PersonName} from "../api/PersonName";
 
 import {PartyAbstract} from "./Party";
+import {PersonNameImpl} from "./PersonName";
+import {PartyName} from "../api/PartyName";
 
 /**
  ***************************************************************************************************
@@ -17,18 +25,17 @@ export class PersonImpl extends PartyAbstract implements Person
 	private name: PersonName;
 
 	public getName(): PersonName {
-		if(this.name == null)
-			this. name = new PersonNameImpl();
-
+		if(this.name == null) {
+			this.name = new PersonNameImpl();
+		}
 		return this.name;
 	}
 
-		public void setName(PersonName name) {
+	public setName(name: PersonName): void {
 		this.name = name;
 	}
 
-
-	public PartyName getPartyName() {
+	public getPartyName(): PartyName {
 		return this.getName();
 	}
 
@@ -38,20 +45,18 @@ export class PersonImpl extends PartyAbstract implements Person
 	 }
 	 */
 
-	public String toString()
-	{
-		return new ToStringBuilder(this)
-			.append("name", getName())
-			.toString();
+	public toString(): string {
+		// Short hand. Adds each own property
+		return collections.makeString(this);
 	}
 
-	public Object clone()
-	{
-		PersonImpl result = (PersonImpl) super.clone();
-		if (this.name != null)
-		{
-			result.name = (PersonName )this.name.clone();
-		}
-		return result;
-	}
+	//public Object clone()
+	//{
+	//	PersonImpl result = (PersonImpl) super.clone();
+	//	if (this.name != null)
+	//	{
+	//		result.name = (PersonName )this.name.clone();
+	//	}
+	//	return result;
+	//}
 } // end class PersonImpl

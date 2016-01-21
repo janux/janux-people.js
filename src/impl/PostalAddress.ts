@@ -1,6 +1,10 @@
+/// <reference path="../../typings/tsd.d.ts" />
 /// <reference path="../collections.ts" />
 
+import {CityImpl} from "./City";
 'use strict';
+
+var tools = require('../tools');
 
 import basarat = require('../collections');
 import collections = basarat.collections;
@@ -9,6 +13,8 @@ import {PostalAddress} from '../api/geography/PostalAdress';
 import {City} from "../api/geography/City";
 import {StateProvince} from "../api/geography/StateProvince";
 import {Country} from "../api/geography/Country";
+import {CountryImpl} from "./Country";
+import {StateProvinceImpl} from "./StateProvince";
 
 /**
  ***************************************************************************************************
@@ -21,6 +27,10 @@ import {Country} from "../api/geography/Country";
  */
 export class PostalAddressImpl implements PostalAddress
 {
+	get typeName(): string {
+		return tools.className(this);
+	}
+
 	private line1: string;
 	private line2: string;
 	private line3: string;
@@ -75,7 +85,7 @@ export class PostalAddressImpl implements PostalAddress
 	*/
 	setCity(city: City): void {
 		this.city = city;
-		if (city instanceof City)
+		if (city instanceof CityImpl)
 		{
 			this.cityText    = null;
 			this.setStateProvince(city.getState());
@@ -89,7 +99,7 @@ export class PostalAddressImpl implements PostalAddress
 	*/
 	getStateProvince(): StateProvince
 	{
-		if (this.getCity() instanceof City) {
+		if (this.getCity() instanceof CityImpl) {
 			return this.city.getState();
 		}
 		else {
@@ -104,7 +114,7 @@ export class PostalAddressImpl implements PostalAddress
 	*/
 	setStateProvince(aStateProvince: StateProvince): void {
 		this.stateProvince = aStateProvince;
-		if (aStateProvince instanceof StateProvince)
+		if (aStateProvince instanceof StateProvinceImpl)
 		{
 			this.stateText = null;
 			this.setCountry(aStateProvince.getCountry());
@@ -117,12 +127,12 @@ export class PostalAddressImpl implements PostalAddress
 	*/
 	 getCountry()
 	{
-	if (this.city instanceof City) {
-		return this.city.getCountry();
-	}
-	else {
-		return this.country;
-	}
+		if (this.city instanceof CityImpl) {
+			return this.city.getCountry();
+		}
+		else {
+			return this.country;
+		}
 	}
 	
 	/**
@@ -135,12 +145,12 @@ export class PostalAddressImpl implements PostalAddress
 	setCountry(aCountry: Country): void {
 		this.country = aCountry;
 
-		if (aCountry instanceof Country)
+		if (aCountry instanceof CountryImpl)
 		{
 			this.countryText = null;
 		}
 
-		if (this.city instanceof City && !this.city.getCountry().equals(aCountry))
+		if (this.city instanceof CityImpl && this.city.getCountry().toString() != aCountry.toString())
 		{
 			this.city = null;
 			this.stateProvince = null;

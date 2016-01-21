@@ -1,4 +1,9 @@
 import {Organization} from "../api/Organization";
+import {PartyName} from "../api/PartyName";
+import {OrganizationName} from "../api/OrganizationName";
+
+import {PartyAbstract} from "./Party";
+import {OrganizationNameImpl} from "./OrganizationName";
 
 /**
  ***************************************************************************************************
@@ -10,15 +15,11 @@ import {Organization} from "../api/Organization";
  */
 export class OrganizationImpl extends PartyAbstract implements Organization
 {
-	private OrganizationName name;
+	private name: OrganizationName;
 
-
-	/** plain vanilla constructor */
-	public OrganizationImpl() {}
-
-	public PartyName getPartyName() {
-	return this.getName();
-}
+	public getPartyName(): PartyName {
+		return this.getName();
+	}
 
 	/*
 	 public void setPartyName(PartyName name) {
@@ -29,26 +30,24 @@ export class OrganizationImpl extends PartyAbstract implements Organization
 	 }
 	 */
 
-	public OrganizationName getName()
-{
-	if (this.name == null)
-		this.name = new OrganizationNameImpl();
+	public getName(): OrganizationName {
+		if (this.name == null)
+			this.name = new OrganizationNameImpl();
 
-	return this.name;
-}
-
-	public void setName(OrganizationName name) {
-	this.name = name;
-}
-
-public Object clone()
-{
-	OrganizationImpl result = (OrganizationImpl) super.clone();
-	if (this.name != null)
-	{
-		result.name = (OrganizationName )this.name.clone();
+		return this.name;
 	}
-	return result;
-}
 
+	public setName(name: OrganizationName): void {
+		this.name = name;
+	}
+
+	//public Object clone()
+	//{
+	//	OrganizationImpl result = (OrganizationImpl) super.clone();
+	//	if (this.name != null)
+	//	{
+	//		result.name = (OrganizationName )this.name.clone();
+	//	}
+	//	return result;
+	//}
 } // end class OrganizationImpl

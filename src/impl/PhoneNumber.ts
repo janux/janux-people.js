@@ -1,6 +1,9 @@
+/// <reference path="../../typings/tsd.d.ts" />
 /// <reference path="../collections.ts" />
 
 'use strict';
+
+var tools = require('../tools');
 
 import basarat = require('../collections');
 import collections = basarat.collections;
@@ -21,7 +24,11 @@ export class PhoneNumberImpl implements PhoneNumber
 	private areaCode: number     = -1;
 	private number: string;
 	private extension: string;
-	
+
+	get typeName(): string {
+		return tools.className(this);
+	}
+
 	getCountryCode(): string {
 		return (this.countryCode == -1) ? "" : this.countryCode.toString();
 	}
@@ -32,7 +39,7 @@ export class PhoneNumberImpl implements PhoneNumber
 		}
 		else {
 			try {
-				this.countryCode = <number>countryCode;
+				this.countryCode = +countryCode;
 			}
 			catch (e)
 			{
@@ -53,7 +60,7 @@ export class PhoneNumberImpl implements PhoneNumber
 		}
 		else {
 			try {
-				this.areaCode = <number>areaCode;
+				this.areaCode = +areaCode;
 			}
 			catch (e)
 			{

@@ -6,6 +6,10 @@ import basarat = require('../collections');
 import collections = basarat.collections;
 import Dictionary = collections.Dictionary;
 
+import {EmailAddressImpl} from "./EmailAddress";
+import {PhoneNumberImpl} from "./PhoneNumber";
+import {PostalAddressImpl} from "./PostalAddress";
+
 import {ContactMethod} from '../api/ContactMethod';
 import {PostalAddress} from '../api/geography/PostalAdress';
 import {PhoneNumber} from '../api/PhoneNumber';
@@ -24,6 +28,7 @@ import {Url} from '../api/net/Url';
 export class ContactMethodManager // implements Contacteable, Serializable, Cloneable
 {
 	private contactMethods: Dictionary<string, ContactMethod>;
+	private contactMethod;
 
 	constructor() {
 		this.contactMethods = new Dictionary<string, ContactMethod>();
@@ -51,57 +56,55 @@ export class ContactMethodManager // implements Contacteable, Serializable, Clon
 	 * CHECK-IN_ADDRESS, MAILING_ADDRESS, BILLING_ADDRESS, etc...
 	 */
 	getPostalAddresses(): Dictionary<string, ContactMethod> {
-		return this.createContactMethodDictionary(PostalAddress.class);
+		return this.createContactMethodDictionary('PostalAddressImpl');
 	}
 	
 	getPostalAddress(kind: string): PostalAddress {
-		return (PostalAddress)this.getContactMethod(kind);
+		return <PostalAddress>this.getContactMethod(kind);
 	}
 
 	/*
 	 * Telephone numbers keyed by a string code representing a user-defined type of
 	 * Phone Number, such as PHYSICAL_PHONE, BILLING_PHONE, etc...
 	 */
-	getPhoneNumbers(): Dictionary {
-		return this.createContactMethodDictionary(PhoneNumber.class);
-	
+	getPhoneNumbers(): Dictionary<string, ContactMethod> {
+		return this.createContactMethodDictionary('PhoneNumberImpl');
 	}
 	
 	getPhoneNumber(kind: string): PhoneNumber {
-		return (PhoneNumber)this.getContactMethod(kind);
+		return <PhoneNumber>this.getContactMethod(kind);
 	}
 
 	/*
 	 * Email addresses keyed by a string code representing a user-defined kind of
 	 * Email, such as EMAIL1, INFO_EMAIL etc...
 	 */
-	getEmailAddresses():Dictionary {
-		return this.createContactMethodDictionary(EmailAddressImpl.class);
+	getEmailAddresses(): Dictionary<string, ContactMethod> {
+		return this.createContactMethodDictionary('EmailAddressImpl');
 	}
 	
 	getEmailAddress(kind: string): Uri {
-		return (Uri)this.getContactMethod(kind);
+		return <Uri>this.getContactMethod(kind);
 	}
 
-	/*
-	 * Uniform Resource Locators (eg web page or ftp addresses) keyed by a string
-	 * code representing a user-defined type of URL such as WEB_SITE, INTRANET, etc...
-	 */
-	getUrls():Dictionary {
-		return this.createContactMethodDictionary(Url.class);
-	}
-
-	getUrl(kind: string): Url {
-		return (Url)this.getContactMethod(kind);
-	}
+	///*
+	// * Uniform Resource Locators (eg web page or ftp addresses) keyed by a string
+	// * code representing a user-defined type of URL such as WEB_SITE, INTRANET, etc...
+	// */
+	//getUrls():Dictionary {
+	//	return this.createContactMethodDictionary(Url.class);
+	//}
+	//
+	//getUrl(kind: string): Url {
+	//	return <Url>this.getContactMethod(kind);
+	//}
 
 	/** creates a Dictionary for each subclass of ContactMethod found in the main ContactMethod Dictionary */
-	private createContactMethodDictionary(aClass): Dictionary<string, ContactMethod> {
+	private createContactMethodDictionary(aType): Dictionary<string, ContactMethod> {
 		var contacts: Dictionary<string, ContactMethod> = new Dictionary<string, ContactMethod>();
 
 		this.contactMethods.forEach((methodKey: string, cMethod: ContactMethod)=>{
-			if (aClass.isAssignableFrom(contactMethod.getClass()))
-			{
+			if (cMethod.typeName == aType) {
 				contacts.setValue(methodKey, cMethod);
 			}
 		});
@@ -113,7 +116,7 @@ export class ContactMethodManager // implements Contacteable, Serializable, Clon
 	getContactMethods(): Dictionary<string, ContactMethod> {
 		if (!(this.contactMethods instanceof Dictionary))
 		{
-			console.warn("getContactMethods method is having to create another instance of contactMethods Dictionary - somehow it wasn't created with constructor");
+			console.warn('getContactMethods method is having to create another instance of contactMethods Dictionary - somehow it wasn\'t created with constructor');
 			this.contactMethods = new Dictionary<string, ContactMethod>();
 		}
 	
@@ -125,11 +128,11 @@ export class ContactMethodManager // implements Contacteable, Serializable, Clon
 	 */
 	setContactMethods(aContactMethods: Dictionary<string, ContactMethod>): void {
 		if (aContactMethods == null) {
-			throw new Error("setContactMethods was pass a null instance");
+			throw new Error('setContactMethods was pass a null instance');
 		}
 	
 		if (!(aContactMethods instanceof Dictionary)) {
-			throw new Error("setContactMethods expects an instance of Dictionary.  Was actually passed " + aContactMethods.getClass().getName());
+			throw new Error('setContactMethods expects an instance of Dictionary');
 		}
 		this.contactMethods = aContactMethods;
 	}
