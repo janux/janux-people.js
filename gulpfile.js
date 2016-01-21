@@ -19,8 +19,24 @@ for (var filename in taskDir) {
 	taskDir[filename](gulp);
 }
 
-// Simply build by default
-gulp.task('default', ['clean:build', 'ts']);
+//
+// Compile typescript project
+//
+gulp.task('default', ['clean:build','ts']);
 
-// Generate documentation
+//
+// Compile and run tests for typescript project
+//
+gulp.task('test', ['run-tests']);
+
+//
+// Generate documentation from typescript project
+//
 gulp.task('doc', ['clean:doc', 'typedoc']);
+
+//
+// Check if typescript files has been modified and compile
+//
+gulp.task('watch', ['ts'], function() {
+	gulp.watch(gulp.cfg.fileset.ts, ['ts']);
+});

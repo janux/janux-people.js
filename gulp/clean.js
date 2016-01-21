@@ -9,14 +9,14 @@ var	del = require('del'),
 module.exports = function(gulp) {
 	
 	var cfg = gulp.cfg;
-	
+
 	//
-	// Remove all generated JavaScript files from TypeScript compilation.
+	// Remove all generated JavaScript files from TypeScript compilation process.
 	//
 	gulp.task('clean:build', function (cb) {
-		console.log('cleaning build directory...');
+		console.log('cleaning '+cfg.dir.dist+' directory...');
 		// delete the files
-		del([path.join(cfg.dir.build,'*')], cb);
+		del([path.join(cfg.dir.dist,'**','*')], cb);
 	});
 	
 	//

@@ -3,7 +3,8 @@
 // compile TypeScript files
 //
 
-var	ts = require('gulp-typescript'),
+var	path     = require('path'),
+	ts = require('gulp-typescript'),
 	concat = require('gulp-concat'),
 	sourcemaps = require('gulp-sourcemaps'),
 	tslint = require('gulp-tslint');
@@ -29,14 +30,7 @@ module.exports = function(gulp) {
 		.pipe(sourcemaps.init()) // This means sourcemaps will be generated
 		.pipe(ts(cfg.tsConfig))
 		.pipe(sourcemaps.write()) // sourcemaps are added to the .js file
-		.pipe(gulp.dest(cfg.dir.build));	
-	});
-
-	//
-	// Check if files has been modified
-	//
-	gulp.task('watch', ['ts'], function() {
-		gulp.watch(cfg.fileset.ts, ['ts']);
+		.pipe(gulp.dest(path.join(cfg.dir.dist)));
 	});
 };
 
