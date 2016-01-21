@@ -1,5 +1,5 @@
 export interface ContactMethod // extends Persistent, Serializable, Cloneable
 {
-	clone(): Object;
+	typeName: string;
 	toString(): string;
 }

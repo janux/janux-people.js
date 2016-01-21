@@ -11,5 +11,5 @@ export interface PartyName
 	getLong(): string;
 	setLong(strings): void;
 
-	clone(): Object;
+	//clone(): Object;
 }

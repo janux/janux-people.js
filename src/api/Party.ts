@@ -30,23 +30,23 @@ export interface Party // extends Persistent, Contacteable, Serializable, Clonea
 	 */
 	getPartyName(): PartyName;
 
-
-	/**
-	 * returns the matching type of form of payment
-	 */
-	getFormOfPayment(aFormOfPaymentClass): FormOfPayment; // getFormOfPayment(final Class aFormOfPaymentClass): FormOfPayment;
-
-
-	/**
-	 * Forms of payment associated with this party
-	 * @return a list containing all the forms of payment associated with the party
-	 */
-	getFormsOfPayment(): List<FormOfPayment>;
-
-	/**
-	 * @param fopList The fopList to set.
-	 */
-	setFormsOfPayment(fopList: List<FormOfPayment>): void;
+	//
+	///**
+	// * returns the matching type of form of payment
+	// */
+	//getFormOfPayment(aFormOfPaymentClass): FormOfPayment; // getFormOfPayment(final Class aFormOfPaymentClass): FormOfPayment;
+	//
+	//
+	///**
+	// * Forms of payment associated with this party
+	// * @return a list containing all the forms of payment associated with the party
+	// */
+	//getFormsOfPayment(): List<FormOfPayment>;
+	//
+	///**
+	// * @param fopList The fopList to set.
+	// */
+	//setFormsOfPayment(fopList: List<FormOfPayment>): void;
 
 
 	getContactMethods(): Dictionary<string, ContactMethod>;
@@ -54,5 +54,5 @@ export interface Party // extends Persistent, Contacteable, Serializable, Clonea
 
 	setContactMethods(aContactMethods: Dictionary<string, ContactMethod>): void;
 
-	clone(): Object;
+	//clone(): Object;
 }
