@@ -18,25 +18,8 @@ import {PartyNameImpl} from "./PartyName";
  ***************************************************************************************************
  */
 export class OrganizationNameImpl extends PartyNameImpl implements OrganizationName {
-	//private shortName: string;
-	//private longName: string;
+
 	private legal: string;
-
-	public getShort(): string {
-		return this.shortName;
-	}
-
-	public setShort(s: string): void {
-		this.shortName = s;
-	}
-
-	public getLong(): string {
-		return this.longName;
-	}
-
-	public setLong(s: string): void {
-		this.longName = s;
-	}
 
 	public getLegal(): string {
 		return this.legal;
@@ -45,16 +28,5 @@ export class OrganizationNameImpl extends PartyNameImpl implements OrganizationN
 	public setLegal(legal: string): void {
 		this.legal = legal;
 	}
-
-	public tostring(): string {
-		// Short hand. Adds each own property
-		return collections.makeString(this);
-	}
-
-	//
-	//public Object clone() {
-	//	OrganizationNameImpl result = (OrganizationNameImpl) super.clone();
-	//	return (result);
-	//}
 
 } // end class OrganizationNameImpl
