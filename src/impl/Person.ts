@@ -1,6 +1,9 @@
+/// <reference path="../../typings/tsd.d.ts" />
 /// <reference path="../collections.ts" />
 
 'use strict';
+
+var tools = require('../tools');
 
 import basarat = require('../collections');
 import collections = basarat.collections;
@@ -23,6 +26,15 @@ import {PartyName} from "../api/PartyName";
 export class PersonImpl extends PartyAbstract implements Person
 {
 	private name: PersonName;
+
+	constructor(){
+		super();
+		this.name = new PersonNameImpl();
+	}
+
+	get typeName(): string {
+		return tools.className(this);
+	}
 
 	public getName(): PersonName {
 		if(this.name == null) {
