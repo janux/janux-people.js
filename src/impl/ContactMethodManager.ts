@@ -2,6 +2,8 @@
 
 'use strict';
 
+var tools = require('../tools');
+
 import basarat = require('../collections');
 import collections = basarat.collections;
 import Dictionary = collections.Dictionary;
@@ -25,10 +27,13 @@ import {Url} from '../api/net/Url';
  * @version $Revision: 1.9 $ - $Date: 2006-11-14 01:26:27 $
  ***************************************************************************************************
  */
-export class ContactMethodManager // implements Contacteable, Serializable, Cloneable
-{
+export class ContactMethodManager {
 	private contactMethods: Dictionary<string, ContactMethod>;
 	private contactMethod;
+
+	get typeName(): string {
+		return tools.className(this);
+	}
 
 	constructor() {
 		this.contactMethods = new Dictionary<string, ContactMethod>();
@@ -47,7 +52,7 @@ export class ContactMethodManager // implements Contacteable, Serializable, Clon
 
 	setContactMethod(kind: string, contactMethod: ContactMethod): void {
 		this.contactMethods.setValue(kind, contactMethod);
-		console.log("added contact method of kind '" + kind + "'" + contactMethod.toString());
+		console.log("added contact method of kind '" + kind + "'");
 	}
 	
 	/*
@@ -136,22 +141,4 @@ export class ContactMethodManager // implements Contacteable, Serializable, Clon
 		}
 		this.contactMethods = aContactMethods;
 	}
-	//
-	//clone(): Object {
-	//	try {
-	//		ContactMethodManager result = (ContactMethodManager) super.clone();
-	//
-	//		// deep copy of the contact method Dictionary
-	//		result.contactMethods = new HashDictionary<string, ContactMethod>();
-	//		for (string key : this.contactMethods.keySet()) {
-	//			final ContactMethod value  = (ContactMethod )this.contactMethods.get(key).clone();
-	//			result.contactMethods.put(key, value);
-	//		}
-	//
-	//		return result;
-	//	}
-	//	catch (CloneNotSupportedException e) {
-	//		return null;
-	//	}
-	//}
 } // end class
