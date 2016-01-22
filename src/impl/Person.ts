@@ -61,14 +61,4 @@ export class PersonImpl extends PartyAbstract implements Person
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}
-
-	//public Object clone()
-	//{
-	//	PersonImpl result = (PersonImpl) super.clone();
-	//	if (this.name != null)
-	//	{
-	//		result.name = (PersonName )this.name.clone();
-	//	}
-	//	return result;
-	//}
 } // end class PersonImpl
