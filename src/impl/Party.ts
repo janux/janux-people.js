@@ -94,7 +94,6 @@ export abstract class PartyAbstract implements Party
 		return this.contactMan.getPhoneNumber(kind);
 	}
 
-
 	/**
 	 * Email addresses keyed by a string code representing a user-defined kind of
 	 * Email, such as EMAIL1, INFO_EMAIL etc...
@@ -122,86 +121,5 @@ export abstract class PartyAbstract implements Party
 	//
 	//getUrl(kind: string): Url {
 	//	return this.contactMan.getUrl(kind);
-	//}
-
-	///**
-	// * Form of Payment
-	// */
-	//getFormsOfPayment(): List<FormOfPayment> {
-	//	if (this.fopList == null) {
-	//		this.fopList = new List<FormOfPayment>();
-	//	}
-	//	return this.fopList;
-	//}
-	//
-	///**
-	// * @param aFopList The fopList to set.
-	// */
-	//setFormsOfPayment(aFopList: List<FormOfPayment>): void {
-	//	this.fopList = aFopList;
-	//}
-	//
-	///**
-	// * returns the matching type of form of payment
-	// */
-	//getFormOfPayment(aFormOfPaymentClass): FormOfPayment {
-	//	var iNum: number = this.getNumFormsOfPayment(aFormOfPaymentClass);
-	//	if (iNum > 1)
-	//	{
-	//		throw new Error("Unable to return a single instance of class " + aFormOfPaymentClass.getName() + " There is more than one");
-	//	}
-	//
-	//	// loop through all the forms of payment and find the matching instance
-	//	final Iterator<FormOfPayment> it = getFormsOfPayment().iterator();
-	//	while (it.hasNext())
-	//	{
-	//		final FormOfPayment fop = it.next();
-	//		if (aFormOfPaymentClass.isInstance(fop))
-	//		{
-	//			return (fop);
-	//		}
-	//	}
-	//
-	//	this.getFormsOfPayment().forEach((fOP: FormOfPayment)=>{
-	//
-	//	});
-	//
-	//	// no matching instance found
-	//	return (null);
-	//}
-	//
-	//getFormsOfPayment(aFormOfPaymentClass): List<FormOfPayment> {
-	//	var list: List<FormOfPayment> = new List<FormOfPayment>();
-	//
-	//	// loop through all the forms of payment and find the matching instance
-	//	final Iterator<FormOfPayment> it = getFormsOfPayment().iterator();
-	//	while (it.hasNext())
-	//	{
-	//		final FormOfPayment fop = it.next();
-	//		if (aFormOfPaymentClass.isInstance(fop))
-	//		{
-	//			list.add(fop);
-	//		}
-	//	}
-	//	return list;
-	//}
-	//
-	///**
-	// * returns the number of types of forms of payment
-	// */
-	//private getNumFormsOfPayment(aFormOfPaymentClass): number {
-	//	var iNum: number = 0;
-	//
-	//	final Iterator<FormOfPayment> it = getFormsOfPayment().iterator();
-	//	while (it.hasNext())
-	//	{
-	//		final FormOfPayment fop = it.next();
-	//		if (aFormOfPaymentClass.isInstance(fop))
-	//		{
-	//			iNum++;
-	//		}
-	//	}
-	//
-	//	return (iNum);
 	//}
 } // end class PartyAbstract
