@@ -1,3 +1,6 @@
+
+var tools = require('../tools');
+
 import {Organization} from "../api/Organization";
 import {PartyName} from "../api/PartyName";
 import {OrganizationName} from "../api/OrganizationName";
@@ -15,7 +18,16 @@ import {OrganizationNameImpl} from "./OrganizationName";
  */
 export class OrganizationImpl extends PartyAbstract implements Organization
 {
+	get typeName(): string {
+		return tools.className(this);
+	}
+
 	private name: OrganizationName;
+
+	constructor(){
+		super();
+		this.name = new OrganizationNameImpl();
+	}
 
 	public getPartyName(): PartyName {
 		return this.getName();
@@ -40,14 +52,4 @@ export class OrganizationImpl extends PartyAbstract implements Organization
 	public setName(name: OrganizationName): void {
 		this.name = name;
 	}
-
-	//public Object clone()
-	//{
-	//	OrganizationImpl result = (OrganizationImpl) super.clone();
-	//	if (this.name != null)
-	//	{
-	//		result.name = (OrganizationName )this.name.clone();
-	//	}
-	//	return result;
-	//}
 } // end class OrganizationImpl
