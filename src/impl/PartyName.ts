@@ -40,20 +40,4 @@ export class PartyNameImpl implements PartyName
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}
-	
-	//public Object clone()
-	//{
-	//	try
-	//	{
-	//		PartyNameImpl result = (PartyNameImpl) super.clone();
-	//
-	//		return result;
-	//	}
-	//	catch (CloneNotSupportedException e)
-	//	{
-	//		return null;
-	//	}
-	//}
-
-
 } // end class PartyNameImpl
