@@ -36,7 +36,7 @@ export abstract class PartyAbstract implements Party
 
 	/** Optional unique business identifier for this Party */
 	getCode(): string {
-	return this.code;
+		return this.code;
 	}
 
 	setCode(code: string): void {
@@ -65,8 +65,8 @@ export abstract class PartyAbstract implements Party
 		return this.contactMan.getContactMethod(kind);
 	}
 
-	setContactMethod(kind: string, phone: ContactMethod): void {
-		this.contactMan.setContactMethod(kind, phone);
+	setContactMethod(kind: string, cMethod: ContactMethod): void {
+		this.contactMan.setContactMethod(kind, cMethod);
 	}
 
 	/**
@@ -105,6 +105,11 @@ export abstract class PartyAbstract implements Party
 
 	getEmailAddress(kind: string): Uri {
 		return this.contactMan.getEmailAddress(kind);
+	}
+
+	toString(): string {
+		// Short hand. Adds each own property
+		return collections.makeString(this);
 	}
 
 	///**
