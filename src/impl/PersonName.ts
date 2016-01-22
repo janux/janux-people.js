@@ -1,7 +1,8 @@
+/// <reference path="../../typings/tsd.d.ts" />
 /// <reference path="../collections.ts" />
 
 'use strict';
-
+import _ = require('lodash');
 import basarat = require('../collections');
 import collections = basarat.collections;
 
@@ -94,7 +95,7 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName
 		if (this.getHonorificSuffix() != null && this.getHonorificSuffix() != ''){
 			out += ', ' + this.getHonorificSuffix();
 		}
-		return out;
+		return _.trim(out);
 	}
 
 	/** does nothing, here to satisfy the PartyName interface */
@@ -106,10 +107,4 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}
-
-	//public Object clone()
-	//{
-	//	PersonNameImpl result = (PersonNameImpl) super.clone();
-	//	return (result);
-	//}
 } // end class PersonNameImpl
