@@ -56,9 +56,4 @@ export class PersonImpl extends PartyAbstract implements Person
 	 // do nothing;
 	 }
 	 */
-
-	public toString(): string {
-		// Short hand. Adds each own property
-		return collections.makeString(this);
-	}
 } // end class PersonImpl
