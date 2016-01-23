@@ -18,8 +18,7 @@ import {ContactMethod} from './ContactMethod';
 
 export interface Party {
 	/** optional string identifier for this Party */
-	getCode(): string;
-	setCode(code: string): void;
+	code: string;
 
 	/**
 	 * The name(s) by which this Party is known; sub-classes may implement this in different ways; for
