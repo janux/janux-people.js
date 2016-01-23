@@ -26,7 +26,7 @@ export class PhoneNumberImpl implements PhoneNumber
 	private extension: string;
 
 	get typeName(): string {
-		return tools.className(this);
+		return 'phoneNumbers'; // tools.className(this);
 	}
 
 	getCountryCode(): string {

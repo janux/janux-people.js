@@ -16,7 +16,7 @@ import {Uri} from "../api/net/Uri";
 export class EmailAddressImpl implements Uri
 {
 	get typeName(): string {
-		return tools.className(this);
+		return 'emails'; // tools.className(this);
 	}
 
 	private address: string;

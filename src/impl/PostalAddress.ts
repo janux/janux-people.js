@@ -28,7 +28,7 @@ import {StateProvinceImpl} from "./StateProvince";
 export class PostalAddressImpl implements PostalAddress
 {
 	get typeName(): string {
-		return tools.className(this);
+		return  'addresses'; // tools.className(this);
 	}
 
 	private line1: string;
