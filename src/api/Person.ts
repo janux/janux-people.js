@@ -5,6 +5,5 @@ import {PersonName} from "./PersonName";
 
 /** represents a physical Person in a variety of contexts */
 export interface Person extends Party  {
-	getName(): PersonName;
-	setName(name: PersonName): void;
+	name: PersonName;
 }

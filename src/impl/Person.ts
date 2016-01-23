@@ -25,7 +25,7 @@ import {PartyName} from "../api/PartyName";
  */
 export class PersonImpl extends PartyAbstract implements Person
 {
-	private name: PersonName;
+	public name: PersonName;
 
 	constructor(){
 		super();
@@ -36,19 +36,8 @@ export class PersonImpl extends PartyAbstract implements Person
 		return tools.className(this);
 	}
 
-	public getName(): PersonName {
-		if(this.name == null) {
-			this.name = new PersonNameImpl();
-		}
-		return this.name;
-	}
-
-	public setName(name: PersonName): void {
-		this.name = name;
-	}
-
 	public getPartyName(): PartyName {
-		return this.getName();
+		return this.name;
 	}
 
 	/*
