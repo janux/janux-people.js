@@ -70,20 +70,20 @@ describe('Person', function () {
 	it('should be able to add/retrieve the postal address of a person', function(){
 		// Postal Address
 		var aPostalAddr = new PostalAddress();
-		aPostalAddr.setLine1('1415 L Street');
-		aPostalAddr.setLine2('Suite 200');
+		aPostalAddr.line1 = '1415 L Street';
+		aPostalAddr.line2 = 'Suite 200';
 		aPostalAddr.setCityAsstring('Sacramento');
 		aPostalAddr.setStateProvinceAsstring('CA');
-		aPostalAddr.setPostalCode('95814');
+		aPostalAddr.postalCode = '95814';
 		person.setContactMethod('Home', aPostalAddr);
 
 		var postalAddr = person.getPostalAddress('Home');
 
-		expect(postalAddr.getLine1()).to.equal('1415 L Street');
-		expect(postalAddr.getLine2()).to.equal('Suite 200');
+		expect(postalAddr.line1).to.equal('1415 L Street');
+		expect(postalAddr.line2).to.equal('Suite 200');
 		expect(postalAddr.getCityAsstring()).to.equal('Sacramento');
 		expect(postalAddr.getStateProvinceAsstring()).to.equal('CA');
-		expect(postalAddr.getPostalCode()).to.equal('95814');
+		expect(postalAddr.postalCode).to.equal('95814');
 	});
 
 	// assertions
