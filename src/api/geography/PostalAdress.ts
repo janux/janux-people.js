@@ -41,14 +41,10 @@ import {StateProvince} from './StateProvince';
  */
 export interface PostalAddress extends ContactMethod
 {
-	getLine1(): string;
-	setLine1(s: string): void;
-
-	getLine2(): string;
-	setLine2(s: string): void;
-
-	getLine3(): string;
-	setLine3(s: string): void;
+	line1: string;
+	line2: string;
+	line3: string;
+	postalCode: string;
 
 	/**
 	 * The City where the PostalAddress is located; may be null if it is not possible to ascertain the
@@ -65,9 +61,6 @@ export interface PostalAddress extends ContactMethod
 	 */
 	getStateProvince(): StateProvince;
 	setStateProvince(o: StateProvince): void;
-
-	getPostalCode(): string;
-	setPostalCode(s: string): void;
 
 	/**
 	 * Country in which this PostalAddress is located; if getCity or getStateProvince fields are not

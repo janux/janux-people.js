@@ -3,20 +3,11 @@ import {StateProvince} from './StateProvince';
 
 export interface City // extends Serializable, Persistent
 {
-	getCode(): string;
-	setCode(code: string): void;
+	code: string;
+	name: string;
+	state: StateProvince;
 
-	getName(): string;
-	setName(name: string): void;
-
-	getState(): StateProvince;
-	setState(o: StateProvince): void;
-
-	/** alias for getState **/
-	getProvince(): StateProvince;
-	setProvince(o: StateProvince): void;
-
-	/** shortcut for getState().getCountry() */
+	/** shortcut for state.getCountry() */
 	getCountry(): Country;
 	setCountry(o: Country): void;
 }

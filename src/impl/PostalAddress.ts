@@ -31,48 +31,16 @@ export class PostalAddressImpl implements PostalAddress
 		return  'addresses'; // tools.className(this);
 	}
 
-	private line1: string;
-	private line2: string;
-	private line3: string;
-	private postalCode: string;
-	private cityText: string;
-	private stateText: string;
-	private countryText: string;
-	private city: City;
-	private stateProvince: StateProvince;
-	private country: Country;
-
-	getLine1(): string {
-		return this.line1;
-	}
-	
-	setLine1(line1: string): void {
-		this.line1 = line1;
-	}
-
-	getLine2(): string {
-		return this.line2;
-	}
-	
-	setLine2(line2: string): void {
-		this.line2 = line2;
-	}
-
-	getLine3(): string {
-		return this.line3;
-	}
-	
-	setLine3(line3: string): void {
-		this.line3 = line3;
-	}
-	
-	getPostalCode(): string {
-		return this.postalCode;
-	}
-	
-	setPostalCode(postalCode: string): void {
-		this.postalCode = postalCode;
-	}
+	public line1: string;
+	public line2: string;
+	public line3: string;
+	public postalCode: string;
+	public cityText: string;
+	public stateText: string;
+	public countryText: string;
+	public city: City;
+	public stateProvince: StateProvince;
+	public country: Country;
 
 	getCity(): City {
 		return this.city;
@@ -88,7 +56,7 @@ export class PostalAddressImpl implements PostalAddress
 		if (city instanceof CityImpl)
 		{
 			this.cityText    = null;
-			this.setStateProvince(city.getState());
+			this.setStateProvince(city.state);
 			this.setCountry(city.getCountry());
 		}
 	}
@@ -100,7 +68,7 @@ export class PostalAddressImpl implements PostalAddress
 	getStateProvince(): StateProvince
 	{
 		if (this.getCity() instanceof CityImpl) {
-			return this.city.getState();
+			return this.city.state;
 		}
 		else {
 			return this.stateProvince;
@@ -125,7 +93,7 @@ export class PostalAddressImpl implements PostalAddress
 	* returns getCity().getCountry() if a City is assigned to this
 	* PostalAddress, or else the Country field
 	*/
-	 getCountry()
+	getCountry()
 	{
 		if (this.city instanceof CityImpl) {
 			return this.city.getCountry();
@@ -183,7 +151,7 @@ export class PostalAddressImpl implements PostalAddress
 	
 	getCityName(): string {
 		if (this.getCity() != null){
-			return this.getCity().getName();
+			return this.getCity().name;
 		}
 		else {
 			return this.cityText;
