@@ -22,7 +22,7 @@ export class OrganizationImpl extends PartyAbstract implements Organization
 		return tools.className(this);
 	}
 
-	private name: OrganizationName;
+	public name: OrganizationName;
 
 	constructor(){
 		super();
@@ -30,7 +30,7 @@ export class OrganizationImpl extends PartyAbstract implements Organization
 	}
 
 	public getPartyName(): PartyName {
-		return this.getName();
+		return this.name;
 	}
 
 	/*
@@ -41,15 +41,4 @@ export class OrganizationImpl extends PartyAbstract implements Organization
 	 }
 	 }
 	 */
-
-	public getName(): OrganizationName {
-		if (this.name == null)
-			this.name = new OrganizationNameImpl();
-
-		return this.name;
-	}
-
-	public setName(name: OrganizationName): void {
-		this.name = name;
-	}
 } // end class OrganizationImpl

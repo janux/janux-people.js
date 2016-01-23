@@ -5,6 +5,5 @@ import {OrganizationName} from "./OrganizationName";
 
 export interface Organization extends Party
 {
-	getName(): OrganizationName;
-	setName(name: OrganizationName): void;
+	name: OrganizationName;
 }
