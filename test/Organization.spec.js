@@ -39,25 +39,25 @@ describe('Organization', function () {
 		expect(org.typeName).to.equal(TYPE_NAME);
 	});
 
-	it('should be able to add/retrieve basic data of a org', function(){
+	it('should be able to add/retrieve basic data of a organization', function(){
 		expect(_.isObject(org)).to.equal(true);
 
 		org.name.setLegal('Coca-Cola');
 		expect(org.name.getLegal()).to.equal('Coca-Cola');
 	});
 
-	it('should be able to add/retrieve the phone number of a org', function(){
+	it('should be able to add/retrieve the phone number of a organization', function(){
 		// Phone Number
 		var aPhone = new PhoneNumber();
 		aPhone.setNumber('689655555');
-		org.setContactMethod('PhoneNumber', aPhone);
+		org.setContactMethod('work', aPhone);
 
-		var phone = org.getContactMethod('PhoneNumber');
+		var phone = org.getPhoneNumber('work');
 
 		expect(phone.getNumber()).to.equal('689655555');
 	});
 
-	it('should be able to add/retrieve the postal address of a org', function(){
+	it('should be able to add/retrieve the postal address of a organization', function(){
 		// Postal Address
 		var aPostalAddr = new PostalAddress();
 		aPostalAddr.setLine1('1415 L Street');
@@ -67,7 +67,7 @@ describe('Organization', function () {
 		aPostalAddr.setPostalCode('95814');
 		org.setContactMethod('Home', aPostalAddr);
 
-		var postalAddr = org.getContactMethod('Home');
+		var postalAddr = org.getPostalAddress('Home');
 
 		expect(postalAddr.getLine1()).to.equal('1415 L Street');
 		expect(postalAddr.getLine2()).to.equal('Suite 200');

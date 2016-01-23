@@ -62,7 +62,7 @@ describe('Person', function () {
 		aPhone.setNumber('5555060593');
 		person.setContactMethod('PhoneNumber', aPhone);
 
-		var phone = person.getContactMethod('PhoneNumber');
+		var phone = person.getPhoneNumber('PhoneNumber');
 
 		expect(phone.getNumber()).to.equal('5555060593');
 	});
@@ -77,7 +77,7 @@ describe('Person', function () {
 		aPostalAddr.setPostalCode('95814');
 		person.setContactMethod('Home', aPostalAddr);
 
-		var postalAddr = person.getContactMethod('Home');
+		var postalAddr = person.getPostalAddress('Home');
 
 		expect(postalAddr.getLine1()).to.equal('1415 L Street');
 		expect(postalAddr.getLine2()).to.equal('Suite 200');
