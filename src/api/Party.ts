@@ -16,8 +16,7 @@ import {ContactMethod} from './ContactMethod';
  *************************************************************************************************
  */
 
-export interface Party // extends Persistent, Contacteable, Serializable, Cloneable
-{
+export interface Party {
 	/** optional string identifier for this Party */
 	getCode(): string;
 	setCode(code: string): void;
@@ -28,12 +27,4 @@ export interface Party // extends Persistent, Contacteable, Serializable, Clonea
 	 * Organization it may be a short name or legal name
 	 */
 	getPartyName(): PartyName;
-
-
-	getContactMethods(): Dictionary<string, ContactMethod>;
-
-
-	setContactMethods(aContactMethods: Dictionary<string, ContactMethod>): void;
-
-	//clone(): Object;
 }
