@@ -1,5 +1,6 @@
 /// <reference path="../collections.ts" />
 
+import {EmailAddressImpl} from "./EmailAddress";
 'use strict';
 
 // collections
@@ -63,6 +64,13 @@ export abstract class PartyAbstract implements Party
 		return this.createContactMethodDictionary('addresses');
 	}
 
+	/*
+	 * Return Array of postal addresses
+	 */
+	postalAddresses(): PostalAddress[] {
+		return <PostalAddress[]>this.contactDicToArray(this.createContactMethodDictionary('addresses'));
+	}
+
 	getPostalAddress(kind: string): PostalAddress {
 		return <PostalAddress>this.getContactMethod(kind);
 	}
@@ -75,6 +83,13 @@ export abstract class PartyAbstract implements Party
 		return this.createContactMethodDictionary('phoneNumbers');
 	}
 
+	/*
+	 * Return Array of phone numbers
+	 */
+	phoneNumbers(): PhoneNumber[] {
+		return <PhoneNumber[]>this.contactDicToArray(this.createContactMethodDictionary('phoneNumbers'));
+	}
+
 	getPhoneNumber(kind: string): PhoneNumber {
 		return <PhoneNumber>this.getContactMethod( kind);
 	}
@@ -85,6 +100,13 @@ export abstract class PartyAbstract implements Party
 	 */
 	getEmailAddresses(): Dictionary<string, ContactMethod> {
 		return this.createContactMethodDictionary('emails');
+	}
+
+	/*
+	 * Return Array of phones numbers
+	 */
+	emailAddresses(): EmailAddressImpl[] {
+		return <EmailAddressImpl[]>this.contactDicToArray(this.createContactMethodDictionary('emails'));
 	}
 
 	getEmailAddress(kind: string): Uri {
@@ -107,16 +129,23 @@ export abstract class PartyAbstract implements Party
 	private createContactMethodDictionary(aClassName): Dictionary<string, ContactMethod> {
 		var contacts: Dictionary<string, ContactMethod> = new Dictionary<string, ContactMethod>();
 
-		//this.contactMethods.forEach((methodKey: string, cMethod: ContactMethod)=>{
-		//	if (cMethod.typeName == aClassName) {
-		//		contacts.setValue(methodKey, cMethod);
-		//	}
-		//});
-
-		contacts = this.contactMethods;
-
-		console.debug("recreated contact method Dictionary");
+		this.contactMethods.forEach((methodKey: string, cMethod: ContactMethod)=>{
+			if (cMethod.typeName == aClassName) {
+				contacts.setValue(methodKey, cMethod);
+			}
+		});
 		return (contacts);
+	}
+
+	private contactDicToArray(contacts: Dictionary<string, ContactMethod>): ContactMethod[]{
+		var cArray: ContactMethod[] = Array();
+
+		contacts.forEach((key:string, cont: ContactMethod)=>{
+			cont['type'] = key;
+			cArray.push(<PostalAddress>cont);
+		});
+
+		return cArray;
 	}
 
 	toString(): string {
