@@ -60,11 +60,17 @@ describe('Person', function () {
 		// Phone Number
 		var aPhone = new PhoneNumber();
 		aPhone.setNumber('5555060593');
-		person.setContactMethod('PhoneNumber', aPhone);
+		person.setContactMethod('work', aPhone);
 
-		var phone = person.getPhoneNumber('PhoneNumber');
+		var phone = person.getPhoneNumber('work');
 
 		expect(phone.getNumber()).to.equal('5555060593');
+
+		// Phone numbers array
+		var phoneNumbers = person.phoneNumbers();
+
+		expect(phoneNumbers[0].type).to.equal('work');
+		expect(phoneNumbers[0].getNumber()).to.equal('5555060593');
 	});
 
 	it('should be able to add/retrieve the postal address of a person', function(){
@@ -84,6 +90,16 @@ describe('Person', function () {
 		expect(postalAddr.getCityAsstring()).to.equal('Sacramento');
 		expect(postalAddr.getStateProvinceAsstring()).to.equal('CA');
 		expect(postalAddr.postalCode).to.equal('95814');
+
+		// Postal addresses array
+		var postalAddresses = person.postalAddresses();
+
+		expect(postalAddresses[0].type).to.equal('Home');
+		expect(postalAddresses[0].line1).to.equal('1415 L Street');
+		expect(postalAddresses[0].line2).to.equal('Suite 200');
+		expect(postalAddresses[0].getCityAsstring()).to.equal('Sacramento');
+		expect(postalAddresses[0].getStateProvinceAsstring()).to.equal('CA');
+		expect(postalAddresses[0].postalCode).to.equal('95814');
 	});
 
 	// assertions
