@@ -17,13 +17,10 @@ import {ContactMethod} from './ContactMethod';
  */
 
 export interface Party {
-	/** optional string identifier for this Party */
-	code: string;
-
 	/**
 	 * The name(s) by which this Party is known; sub-classes may implement this in different ways; for
 	 * Persons, for example, it may the concatenation of the first and last name, while for an
 	 * Organization it may be a short name or legal name
 	 */
-	getPartyName(): PartyName;
+	// getPartyName(): PartyName;
 }

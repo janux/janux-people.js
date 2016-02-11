@@ -10,6 +10,4 @@ export interface PartyName
 	/** a long (or legal) name to refer to a Person or Organization */
 	getLong(): string;
 	setLong(strings): void;
-
-	//clone(): Object;
 }
