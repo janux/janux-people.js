@@ -3,10 +3,8 @@ var tools = require('../tools');
 
 import {Organization} from "../api/Organization";
 import {PartyName} from "../api/PartyName";
-import {OrganizationName} from "../api/OrganizationName";
 
 import {PartyAbstract} from "./Party";
-import {OrganizationNameImpl} from "./OrganizationName";
 
 /**
  ***************************************************************************************************
@@ -22,23 +20,23 @@ export class OrganizationImpl extends PartyAbstract implements Organization
 		return tools.className(this);
 	}
 
-	public name: OrganizationName;
+	public name: string;
 
-	constructor(){
+	constructor(name?:string){
 		super();
-		this.name = new OrganizationNameImpl();
+		this.name = name;
 	}
 
-	public getPartyName(): PartyName {
-		return this.name;
+	public toJSON(): any {
+		var out:any = this.contactMethods;
+		out.name = this.name;
+		return out;
 	}
 
-	/*
-	 public void setPartyName(PartyName name) {
-	 if (name != null) {
-	 this.getName().setShort(name.getShort());
-	 this.getName().setLong(name.getLong());
-	 }
-	 }
-	 */
+	/** deserializes a Organization from its canonical toJSON representation */
+	static fromJSON(obj: any): Organization {
+		var aOrg =  new OrganizationImpl(obj.name);
+		aOrg = PartyAbstract.fromJSON(obj, aOrg);
+		return aOrg;
+	}
 } // end class OrganizationImpl
