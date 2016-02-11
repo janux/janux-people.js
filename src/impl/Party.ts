@@ -1,12 +1,10 @@
 /// <reference path="../collections.ts" />
 
-import {EmailAddressImpl} from "./EmailAddress";
 'use strict';
 
 // collections
 import basarat = require('../collections');
 import collections = basarat.collections;
-import List = collections.LinkedList;
 import Dictionary = collections.Dictionary;
 
 // interfaces
@@ -15,9 +13,11 @@ import {PartyName} from '../api/PartyName';
 import {ContactMethod} from '../api/ContactMethod';
 import {PhoneNumber} from '../api/PhoneNumber';
 import {PostalAddress} from '../api/geography/PostalAdress';
-import {Uri} from '../api/net/Uri';
-import {Url} from '../api/net/Url';
+import {EmailAddress} from '../api/net/EmailAddress';
 
+import {PhoneNumberImpl} from "./PhoneNumber";
+import {PostalAddressImpl} from "./PostalAddress";
+import {EmailAddressImpl} from "./EmailAddress";
 /**
  ***************************************************************************************************
  * Base implementation for the class hierarchy to which a Person and an Organization belong
@@ -28,31 +28,36 @@ import {Url} from '../api/net/Url';
  */
 export abstract class PartyAbstract implements Party
 {
-	public code: string; // Optional unique business identifier for this Party
-	private contactMethods: Dictionary<string, ContactMethod>;
+	public contactMethods: any;
 
 	constructor() {
-		this.contactMethods = new Dictionary<string, ContactMethod>();
+		this.contactMethods = {};
 	}
 
-	abstract getPartyName(): PartyName;
-
-	getContactMethod(aType: string): ContactMethod {
+	getContactMethod(aField: string, aType: string): ContactMethod {
+		var findContact: ContactMethod;
 
 		// Get contact for a specific type Ej: Home
-		var findContact =  this.contactMethods.getValue(aType); // contactDict.getValue(aType);
-
-		if (findContact != null) {
-			return findContact;
+		if(typeof this.contactMethods[aField] !== 'undefined'){
+			this.contactMethods[aField].forEach(function(contact:ContactMethod){
+				if(contact.type == aType){
+					findContact = contact;
+				}
+			});
 		}
-		else{
-			return (null);
-		}
+		return findContact;
 	}
 
 	setContactMethod(type: string, contactMethod: ContactMethod): void {
-		this.contactMethods.setValue(type, contactMethod);
-		console.log("added contact method of type '" + type + "'");
+		if(typeof type === 'undefined' || type === ''){
+			throw new Error('Can not add a contact without specifying the type');
+		}
+		else{
+			contactMethod.type = type;
+			this.contactMethods[contactMethod.field] = this.contactMethods[contactMethod.field] || [];
+			this.contactMethods[contactMethod.field].push(contactMethod);
+			console.log("added contact method in field '" + contactMethod.field + "' with type "+contactMethod.type);
+		}
 	}
 
 	/*
@@ -68,11 +73,14 @@ export abstract class PartyAbstract implements Party
 	 * Return Array of postal addresses
 	 */
 	postalAddresses(): PostalAddress[] {
-		return <PostalAddress[]>this.contactDicToArray(this.createContactMethodDictionary('addresses'));
+		return <PostalAddress[]>this.contactMethods['addresses'];
 	}
 
-	getPostalAddress(kind: string): PostalAddress {
-		return <PostalAddress>this.getContactMethod(kind);
+	/*
+	 * Return specific postal address according type
+	 */
+	getPostalAddress(type: string): PostalAddress {
+		return <PostalAddress>this.getContactMethod('addresses', type);
 	}
 
 	/*
@@ -87,11 +95,14 @@ export abstract class PartyAbstract implements Party
 	 * Return Array of phone numbers
 	 */
 	phoneNumbers(): PhoneNumber[] {
-		return <PhoneNumber[]>this.contactDicToArray(this.createContactMethodDictionary('phoneNumbers'));
+		return <PhoneNumber[]>this.contactMethods['phoneNumbers'];
 	}
 
-	getPhoneNumber(kind: string): PhoneNumber {
-		return <PhoneNumber>this.getContactMethod( kind);
+	/*
+	 * Return specific phone number according type
+	 */
+	getPhoneNumber(type: string): PhoneNumber {
+		return <PhoneNumber>this.getContactMethod('phoneNumbers', type);
 	}
 
 	/*
@@ -106,50 +117,65 @@ export abstract class PartyAbstract implements Party
 	 * Return Array of phones numbers
 	 */
 	emailAddresses(): EmailAddressImpl[] {
-		return <EmailAddressImpl[]>this.contactDicToArray(this.createContactMethodDictionary('emails'));
+		return <EmailAddressImpl[]>this.contactMethods['emails'];
 	}
 
-	getEmailAddress(kind: string): Uri {
-		return <Uri>this.getContactMethod( kind);
+	/*
+	 * Return specific email according type
+	 */
+	getEmailAddress(type: string): EmailAddress {
+		return <EmailAddress>this.getContactMethod('emails', type);
 	}
-
-	///*
-	// * Uniform Resource Locators (eg web page or ftp addresses) keyed by a string
-	// * code representing a user-defined type of URL such as WEB_SITE, INTRANET, etc...
-	// */
-	//getUrls():Dictionary {
-	//	return this.createContactMethodDictionary(Url.class);
-	//}
-	//
-	//getUrl(kind: string): Url {
-	//	return <Url>this.getContactMethod(kind);
-	//}
 
 	/** creates a Dictionary for each subclass of ContactMethod found in the main ContactMethod Dictionary */
-	private createContactMethodDictionary(aClassName): Dictionary<string, ContactMethod> {
+	protected createContactMethodDictionary(aField: string): Dictionary<string, ContactMethod> {
 		var contacts: Dictionary<string, ContactMethod> = new Dictionary<string, ContactMethod>();
 
-		this.contactMethods.forEach((methodKey: string, cMethod: ContactMethod)=>{
-			if (cMethod.typeName == aClassName) {
-				contacts.setValue(methodKey, cMethod);
-			}
-		});
-		return (contacts);
-	}
-
-	private contactDicToArray(contacts: Dictionary<string, ContactMethod>): ContactMethod[]{
-		var cArray: ContactMethod[] = Array();
-
-		contacts.forEach((key:string, cont: ContactMethod)=>{
-			cont['type'] = key;
-			cArray.push(<PostalAddress>cont);
-		});
-
-		return cArray;
+		var csArray = this.contactMethods[aField];
+		if(csArray.length > 0){
+			csArray.forEach(function(contact: ContactMethod){
+				contacts.setValue(contact.type, contact);
+			});
+		}else {
+			throw new Error('Error while creating contacts dictionary for field '+aField);
+		}
+		return contacts;
 	}
 
 	toString(): string {
 		// Short hand. Adds each own property
 		return collections.makeString(this);
+	}
+
+	static fromJSON(obj:any, party: any): any{
+		// Contacts
+		['addresses','phoneNumbers','emails'].forEach(function(elem){
+			var cType = obj[elem];
+			if(typeof obj[elem] !== 'undefined') {
+				if (cType.length > 0) {
+					cType.forEach(function (contact:ContactMethod) {
+						party.setContactMethod(contact.type, PartyAbstract.hydrateContactMethod(elem, contact));
+					});
+				}
+			}
+		});
+		return party;
+	}
+
+	static hydrateContactMethod(field: string, obj: any): ContactMethod {
+		var out: ContactMethod;
+
+		switch (field) {
+			case 'phoneNumbers': out = new PhoneNumberImpl(); break;
+			case 'emails': out = new EmailAddressImpl(); break;
+			case "addresses": out = new PostalAddressImpl(); break;
+		}
+
+		for (var prop in obj) {
+			if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+				out[prop] = obj[prop];
+			}
+		}
+		return out;
 	}
 } // end class PartyAbstract
