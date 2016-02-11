@@ -19,7 +19,7 @@ describe('Person', function () {
 
 	// run before every test in the suite
 	beforeEach(function () {
-		person = new Person();
+		person = new Person('Mr', 'Jonh', 'Peter', 'Sanders');
 	});
 
 	it('should instantiate with basic fields', function () {
@@ -42,15 +42,10 @@ describe('Person', function () {
 	it('should be able to add/retrieve basic data of a person', function(){
 		expect(_.isObject(person)).to.equal(true);
 
-		person.name.setHonorificPrefix('Mr');
-		person.name.setFirst('Jonh');
-		person.name.setMiddle('Peter');
-		person.name.setLast('Sanders');
-
-		expect(person.name.getHonorificPrefix()).to.equal('Mr');
-		expect(person.name.getFirst()).to.equal('Jonh');
-		expect(person.name.getMiddle()).to.equal('Peter');
-		expect(person.name.getLast()).to.equal('Sanders');
+		expect(person.name.honorificPrefix).to.equal('Mr');
+		expect(person.name.first).to.equal('Jonh');
+		expect(person.name.middle).to.equal('Peter');
+		expect(person.name.last).to.equal('Sanders');
 
 		// The honorific Prefix, first, middle and last names
 		expect(person.name.getLong()).to.equal('Mr Jonh Peter Sanders');
@@ -58,19 +53,18 @@ describe('Person', function () {
 
 	it('should be able to add/retrieve the phone number of a person', function(){
 		// Phone Number
-		var aPhone = new PhoneNumber();
-		aPhone.setNumber('5555060593');
+		var aPhone = new PhoneNumber('5555060593');
 		person.setContactMethod('work', aPhone);
 
 		var phone = person.getPhoneNumber('work');
 
-		expect(phone.getNumber()).to.equal('5555060593');
+		expect(phone.number).to.equal('5555060593');
 
 		// Phone numbers array
 		var phoneNumbers = person.phoneNumbers();
 
 		expect(phoneNumbers[0].type).to.equal('work');
-		expect(phoneNumbers[0].getNumber()).to.equal('5555060593');
+		expect(phoneNumbers[0].number).to.equal('5555060593');
 	});
 
 	it('should be able to add/retrieve the postal address of a person', function(){
@@ -100,6 +94,41 @@ describe('Person', function () {
 		expect(postalAddresses[0].getCityAsstring()).to.equal('Sacramento');
 		expect(postalAddresses[0].getStateProvinceAsstring()).to.equal('CA');
 		expect(postalAddresses[0].postalCode).to.equal('95814');
+	});
+
+	it('should be deserialized via fromJSON', function () {
+
+		var aPhone = new PhoneNumber('5555060593');
+		person.setContactMethod('work', aPhone);
+
+		// Postal Address
+		var aPostalAddr = new PostalAddress();
+		aPostalAddr.line1 = '1415 L Street';
+		aPostalAddr.line2 = 'Suite 200';
+		aPostalAddr.setCityAsstring('Sacramento');
+		aPostalAddr.setStateProvinceAsstring('CA');
+		aPostalAddr.postalCode = '95814';
+		person.setContactMethod('Home', aPostalAddr);
+
+		var person2 = Person.fromJSON(person.toJSON());
+
+		// Person vs Person2 Name
+		expect(person.name.honorificPrefix).to.equal(person2.name.honorificPrefix);
+		expect(person.name.first).to.equal(person2.name.first);
+		expect(person.name.middle).to.equal(person2.name.middle);
+		expect(person.name.last).to.equal(person2.name.last);
+		expect(person.name.honorificSuffix).to.equal(person2.name.honorificSuffix);
+
+		// Person vs Person2 Phone Number
+		expect(person.getPhoneNumber('work').number).to.equal(person2.getPhoneNumber('work').number);
+		expect(person.getPhoneNumber('work').type).to.equal(person2.getPhoneNumber('work').type);
+
+		// Person vs Person2 Address
+		expect(person.getPostalAddress('Home').line1).to.equal(person2.getPostalAddress('Home').line1);
+		expect(person.getPostalAddress('Home').line2).to.equal(person2.getPostalAddress('Home').line2);
+		expect(person.getPostalAddress('Home').getCityAsstring()).to.equal(person2.getPostalAddress('Home').getCityAsstring());
+		expect(person.getPostalAddress('Home').getStateProvinceAsstring()).to.equal(person2.getPostalAddress('Home').getStateProvinceAsstring());
+		expect(person.getPostalAddress('Home').postalCode).to.equal(person2.getPostalAddress('Home').postalCode);
 	});
 
 	// assertions
