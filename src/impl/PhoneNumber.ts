@@ -20,12 +20,21 @@ import {PhoneNumber} from "../api/PhoneNumber";
  */
 export class PhoneNumberImpl implements PhoneNumber
 {
-	private countryCode: number  = -1;
-	private areaCode: number     = -1;
-	private number: string;
-	private extension: string;
+	public countryCode: number  = -1;
+	public areaCode: number     = -1;
+	public number: string;
+	public extension: string;
+	public type: string;
+	public primary: boolean;
 
-	get typeName(): string {
+	constructor(number?:string, extension?:string, cC?:number, aC?:number){
+		this.number = number;
+		this.extension = extension;
+		this.areaCode = aC || this.areaCode;
+		this.countryCode = cC || this.countryCode;
+	}
+
+	get field(): string {
 		return 'phoneNumbers'; // tools.className(this);
 	}
 
@@ -70,43 +79,10 @@ export class PhoneNumberImpl implements PhoneNumber
 			}
 		}
 	}
-
-	getNumber(): string {
-		return this.number;
-	}
-	
-	setNumber(number: string): void {
-		this.number = number;
-	}
-
-	getExtension(): string {
-		return this.extension;
-	}
-	
-	setExtension(extension: string): void {
-		this.extension = extension;
-	}
 	
 	toString(): string
 	{
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}
-	//
-	//@SuppressWarnings("unchecked")
-	//Object clone()
-	//{
-	//	try
-	//	{
-	//		PhoneNumberImpl result = (PhoneNumberImpl) super.clone();
-	//
-	//		result.setId(-1);
-	//
-	//		return result;
-	//	}
-	//	catch (CloneNotSupportedException e)
-	//	{
-	//		return null;
-	//	}
-	//}
 } // end class PhoneNumberImpl

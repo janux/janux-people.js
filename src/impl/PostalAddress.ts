@@ -27,7 +27,7 @@ import {StateProvinceImpl} from "./StateProvince";
  */
 export class PostalAddressImpl implements PostalAddress
 {
-	get typeName(): string {
+	get field(): string {
 		return  'addresses'; // tools.className(this);
 	}
 
@@ -41,6 +41,8 @@ export class PostalAddressImpl implements PostalAddress
 	public city: City;
 	public stateProvince: StateProvince;
 	public country: Country;
+	public type: string;
+	public primary: boolean;
 
 	getCity(): City {
 		return this.city;
