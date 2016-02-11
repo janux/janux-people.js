@@ -4,7 +4,7 @@
 
 var tools = require('../tools');
 
-import {Uri} from "../api/net/Uri";
+import {EmailAddress} from "../api/net/EmailAddress";
 /**
  ***************************************************************************************************
  * bean that represents an Email Address Uniform Resource Identifier
@@ -13,33 +13,17 @@ import {Uri} from "../api/net/Uri";
  * @version $Revision: 1.9 $ - $Date: 2007-12-06 01:20:41 $
  ***************************************************************************************************
  */
-export class EmailAddressImpl implements Uri
+export class EmailAddressImpl implements EmailAddress
 {
-	get typeName(): string {
+	get field(): string {
 		return 'emails'; // tools.className(this);
 	}
 
-	private address: string;
+	public address: string;
+	public type: string;
+	public primary: boolean;
 
-	constructor(address: string) {
-		this.setAddress(address);
-	}
-
-	public getAddress(): string {
-		return this.address;
-	}
-
-	public setAddress(address: string): void {
+	constructor(address?: string) {
 		this.address = address;
-	}
-
-	public getUri(): string
-	{
-		if (this.getAddress() == null) {
-			return (null);
-		}
-		else {
-			return this.getAddress();
-		}
 	}
 } // end class EmailAddressImpl
