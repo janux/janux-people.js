@@ -5,20 +5,13 @@ import {PartyName} from './PartyName';
  */
 export interface PersonName extends PartyName
 {
-	getFirst(): string;
-	setFirst(s: string): void;
-
-	getMiddle(): string;
-	setMiddle(s: string): void;
-
-	getLast(): string;
-	setLast(s: string): void;
-
+	first: string;
+	middle: string;
+	last: string;
 	/** titles that may be used before a name such as: Mr., Ms., Dr., etc...*/
-	getHonorificPrefix(): string;
-	setHonorificPrefix(s: string): void;
-
+	honorificPrefix: string;
 	/** titles that are used after a name such as Jr., Sr., M.D., C.P.A., etc... */
-	getHonorificSuffix(): string;
-	setHonorificSuffix(s: string): void;
+	honorificSuffix: string;
+
+	toJSON():any;
 }

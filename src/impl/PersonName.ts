@@ -20,50 +20,20 @@ import {PartyNameImpl} from "./PartyName";
  */
 export class PersonNameImpl extends PartyNameImpl implements PersonName
 {
-	private honorificPrefix: string;
-	private first: string;
-	private middle: string;
-	private last: string;
-	private honorificSuffix: string;
+	public honorificPrefix: string;
+	public first: string;
+	public middle: string;
+	public last: string;
+	public honorificSuffix: string;
 
-	public getHonorificPrefix(): string {
-		return this.honorificPrefix;
-	}
+	constructor(hP?:string, first?:string, middle?:string, last?:string, hS?:string){
+		super();
 
-	public setHonorificPrefix(honorificPrefix: string): void {
-		this.honorificPrefix = honorificPrefix;
-	}
-
-	public getFirst(): string {
-		return this.first;
-	}
-
-	public setFirst(first: string): void {
+		this.honorificPrefix = hP;
 		this.first = first;
-	}
-
-	public getMiddle(): string {
-		return this.middle;
-	}
-
-	public setMiddle(middle: string): void {
 		this.middle = middle;
-	}
-
-	public getLast(): string {
-		return this.last;
-	}
-
-	public setLast(last: string): void {
 		this.last = last;
-	}
-
-	public getHonorificSuffix(): string {
-		return this.honorificSuffix;
-	}
-
-	public setHonorificSuffix(honorificSuffix: string): void {
-		this.honorificSuffix = honorificSuffix;
+		this.honorificSuffix = hS;
 	}
 
 	/** contatenates and returns the first and last names */
@@ -80,20 +50,20 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName
 	public getLong(): string {
 		var out: string = "";
 
-		if (this.getHonorificPrefix() != null && this.getHonorificPrefix() != ''){
-			out += this.getHonorificPrefix()+' ';
+		if (this.honorificPrefix != null && this.honorificPrefix != ''){
+			out += this.honorificPrefix+' ';
 		}
-		if (this.getFirst() != null && this.getFirst() != ''){
-			out += this.getFirst() + ' ';
+		if (this.first != null && this.first != ''){
+			out += this.first + ' ';
 		}
-		if (this.getMiddle() != null && this.getMiddle() != ''){
-			out += this.getMiddle() + ' ';
+		if (this.middle != null && this.middle != ''){
+			out += this.middle + ' ';
 		}
-		if (this.getLast() != null && this.getLast() != ''){
-			out += this.getLast() + ' ';
+		if (this.last != null && this.last != ''){
+			out += this.last + ' ';
 		}
-		if (this.getHonorificSuffix() != null && this.getHonorificSuffix() != ''){
-			out += ', ' + this.getHonorificSuffix();
+		if (this.honorificSuffix != null && this.honorificSuffix != ''){
+			out += ', ' + this.honorificSuffix;
 		}
 		return _.trim(out);
 	}
@@ -106,5 +76,17 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName
 	public toString(): string {
 		// Short hand. Adds each own property
 		return collections.makeString(this);
+	}
+
+	public toJSON(): any {
+		var out: any = {};
+		var _hasOwnProperty = Object.prototype.hasOwnProperty;
+
+		for (var prop in this) {
+			if (_hasOwnProperty.call(this, prop)) {
+				out[prop] = (<any>this)[prop];
+			}
+		}
+		return out;
 	}
 } // end class PersonNameImpl
