@@ -31,6 +31,9 @@
     },
     "log4js/log4js.d.ts": {
       "commit": "e5a27ea95e47b95333784f1f0d590127b4e39a89"
+    },
+    "faker/faker.d.ts": {
+      "commit": "42335c83eda05c7d7c007788629aa58d3b008fca"
     }
   }
 }

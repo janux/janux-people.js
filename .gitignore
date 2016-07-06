@@ -3,4 +3,5 @@ typings
 doc
 dist
 *.log
+.idea/
 
