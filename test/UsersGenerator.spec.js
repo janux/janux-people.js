@@ -20,11 +20,11 @@ describe('UsersGenerator', function () {
 
 	it('should be able to generate some fake users objects', function(){
 
-		var users = usersGen.generateUsers(10);
+		var users = usersGen.generateUsers(5);
 
 		users.forEach(function(user){
 			expect(user).to.have.keys(
-				'user_id', 'username', 'password', 'role', 'contact', 'cdate', 'mdate'
+				'userId', 'username', 'password', 'role', 'contact', 'cdate', 'mdate'
 			);
 		});
 
