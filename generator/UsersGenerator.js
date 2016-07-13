@@ -5,6 +5,7 @@ var faker = require('faker'),
 
 var Person = require('../index').Person;
 var PhoneNumber = require('../index').PhoneNumber;
+var Email = require('../index').EmailAddress;
 var PostalAddress = require('../index').PostalAddress;
 
 //
@@ -63,6 +64,10 @@ var UsersGenerator = (function () {
 		// Create a new fake phone for this person
 		var aPhone = new PhoneNumber( faker.phone.phoneNumber() );
 		person.setContactMethod('work', aPhone);
+
+		// Create a new fake email for this person
+		var aEmail = new Email( faker.internet.email() );
+		person.setContactMethod('work', aEmail);
 
 		// Create a new fake postal address for this person
 		var aPostalAddr = new PostalAddress();

@@ -61,6 +61,10 @@ describe('UserService', function () {
 			expect(fakeUsers[0].contact.getPhoneNumber('work').number).to.equal(aUser.contact.getPhoneNumber('work').number);
 			expect(fakeUsers[0].contact.getPhoneNumber('work').type).to.equal(aUser.contact.getPhoneNumber('work').type);
 
+			// Person vs Person2 Email
+			expect(fakeUsers[0].contact.getEmailAddress('work').address).to.equal(aUser.contact.getEmailAddress('work').address);
+			expect(fakeUsers[0].contact.getEmailAddress('work').type).to.equal(aUser.contact.getEmailAddress('work').type);
+
 			// Person vs Person2 Address
 			expect(fakeUsers[0].contact.getPostalAddress('Home').line1).to.equal(aUser.contact.getPostalAddress('Home').line1);
 			expect(fakeUsers[0].contact.getPostalAddress('Home').line2).to.equal(aUser.contact.getPostalAddress('Home').line2);
