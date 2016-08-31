@@ -17,13 +17,13 @@ function UserService() {
 }
 
 // Get a single user by Id
-UserService.prototype.getUserById = function (userId, callback) {
-	return this.userDAO.getUserById(userId);
+UserService.prototype.findUserById = function (userId, callback) {
+	return this.userDAO.findUserById(userId);
 };
 
 // Get a single user by username
-UserService.prototype.getUserByName = function (userName) {
-	return this.userDAO.getUserByName(userName);
+UserService.prototype.findUserByName = function (userName) {
+	return this.userDAO.findUserByName(userName);
 };
 
 // Add one or more users
