@@ -39,7 +39,7 @@ describe('UserService', function () {
 	it('should be able to get a user by id from service', function(done){
 
 		// Get user from service
-		userService.getUserById(aUser.userId).then(function (user) {
+		userService.findUserById(aUser.userId).then(function (user) {
 			// The user obtained from the service must have at least the specified fields
 			expect(user).to.have.any.keys(
 				'userId', 'username', 'password', 'role', 'contact', 'cdate', 'mdate'
@@ -80,7 +80,7 @@ describe('UserService', function () {
 	it('should be able to get a user by username from service', function(done){
 
 		// Get user by username from service
-		userService.getUserByName(aUser.username).then(function (user) {
+		userService.findUserByName(aUser.username).then(function (user) {
 
 			// The user obtained from the service must have at least the specified fields
 			expect(user).to.have.any.keys(
