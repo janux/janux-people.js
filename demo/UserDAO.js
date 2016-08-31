@@ -2,7 +2,7 @@
 
 var loki = require('lokijs');
 var _ = require('lodash');
-var Q = require('q');
+var Promise  = require('bluebird');
 
 //  variable to hold the singleton instance, if used in that manner
 var userDAOInstance = undefined;
@@ -22,13 +22,21 @@ function UserDAO(dbName) {
 }
 
 // Get User Object by id
-UserDAO.prototype.getUserById = function (userId, callback) {
-	return Q.when( this._users.findOne( { userId:userId } ) );
+UserDAO.prototype.findUserById = function (userId, callback) {
+
+	var users = this._users.findOne( { userId:userId });
+	return new Promise(function(resolve){
+		resolve( users );
+	}).asCallback(callback);
 };
 
 // Get User Object by username
-UserDAO.prototype.getUserByName = function (userName) {
-	return Q.when( this._users.findOne( { username:userName } ) );
+UserDAO.prototype.findUserByName = function (userName, callback) {
+
+	var users = this._users.findOne( { username:userName } );
+	return new Promise(function(resolve){
+		resolve( users );
+	}).asCallback(callback);
 };
 
 // Add new User Object
