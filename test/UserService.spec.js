@@ -17,29 +17,26 @@ var hydrateUserContact = function (userObj) {
 };
 
 describe('UserService', function () {
+	var usersGen = new UsersGenerator();
 
-	// var userService;
-	var usersGen, fakeUsers, aUser
+	// Generate fake users
+	var fakeUsers = usersGen.generateUsers(3);
+
+	// Take one fake user for test
+	var aUser = hydrateUserContact(fakeUsers[0]);
+
+	// Add users
+	userService.save(fakeUsers);
 
 	// run before every test in the suite
-	beforeEach(function () {
-		// userService= new UserService();
-		usersGen = new UsersGenerator();
-
-		// Generate fake users
-		fakeUsers = usersGen.generateUsers(3);
-
-		// Add users
-		userService.addUser(fakeUsers);
-
-		// Take one fake user for test
-		aUser = hydrateUserContact(fakeUsers[0]);
-	});
+	// beforeEach(function () {
+	//
+	// });
 
 	it('should be able to get a user by id from service', function(done){
 
 		// Get user from service
-		userService.findUserById(aUser.userId).then(function (user) {
+		userService.findById(aUser.userId).then(function (user) {
 			// The user obtained from the service must have at least the specified fields
 			expect(user).to.have.any.keys(
 				'userId', 'username', 'password', 'role', 'contact', 'cdate', 'mdate'
@@ -80,7 +77,7 @@ describe('UserService', function () {
 	it('should be able to get a user by username from service', function(done){
 
 		// Get user by username from service
-		userService.findUserByName(aUser.username).then(function (user) {
+		userService.findByUsername(aUser.username).then(function (user) {
 
 			// The user obtained from the service must have at least the specified fields
 			expect(user).to.have.any.keys(
@@ -111,6 +108,64 @@ describe('UserService', function () {
 			expect(user.contact.getPostalAddress('Home').postalCode).to.equal(aUser.contact.getPostalAddress('Home').postalCode);
 
 			// log.info('user get by username from the service', user);
+			done();
+		});
+	});
+
+	it('should find one or more users from a partial string', function(done){
+
+		// Get user by partial name from service
+		var partialName = aUser.contact.name.first.substr(0,5);
+
+		userService.findByName(partialName).then(function (users) {
+
+			// Expect at least one user
+			expect(users).to.have.length.above(0);
+
+			var user = users[0];
+
+			expect(user.contact.name.honorificPrefix).to.equal(aUser.contact.name.honorificPrefix);
+			expect(user.contact.name.first).to.equal(aUser.contact.name.first);
+			expect(user.contact.name.middle).to.equal(aUser.contact.name.middle);
+			expect(user.contact.name.last).to.equal(aUser.contact.name.last);
+			expect(user.contact.name.honorificSuffix).to.equal(aUser.contact.name.honorificSuffix);
+
+			done();
+		});
+	});
+
+	it('should not get a user from service', function(done) {
+
+		userService.findByName('000000').then(function (users) {
+
+			expect(users).to.have.length.below(1);
+
+			done();
+		});
+	});
+
+	it('should get all users from service', function(done) {
+
+		userService.findByName('').then(function (users) {
+
+			userService.count().then(function (numberOfUsers) {
+
+				expect(users.length).to.be.equal(numberOfUsers);
+				expect(users.length).to.be.equal(fakeUsers.length);
+			});
+
+			done();
+		});
+	});
+
+	it('should find one user by email address', function(done){
+
+		userService.findByEmail(aUser.contact.getEmailAddress('work').address).then(function (user) {
+
+			// // Person vs Person2 Email
+			expect(user.contact.getEmailAddress('work').address).to.equal(aUser.contact.getEmailAddress('work').address);
+			expect(user.contact.getEmailAddress('work').type).to.equal(aUser.contact.getEmailAddress('work').type);
+
 			done();
 		});
 	});

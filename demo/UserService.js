@@ -16,19 +16,34 @@ function UserService() {
 	this.userDAO = userDAO;
 }
 
-// Get a single user by Id
-UserService.prototype.findUserById = function (userId, callback) {
-	return this.userDAO.findUserById(userId);
+// Returns the number of users
+UserService.prototype.count = function () {
+	return this.userDAO.count();
 };
 
-// Get a single user by username
-UserService.prototype.findUserByName = function (userName) {
-	return this.userDAO.findUserByName(userName);
+// Find a single user by Id
+UserService.prototype.findById = function (userId) {
+	return this.userDAO.findById(userId);
 };
 
-// Add one or more users
-UserService.prototype.addUser = function (aUserObj) {
-	this.userDAO.addUser(aUserObj);
+// Find a single user by username
+UserService.prototype.findByUsername = function (userName) {
+	return this.userDAO.findByUsername(userName);
+};
+
+// Find users by name
+UserService.prototype.findByName = function (name) {
+	return this.userDAO.findByName(name);
+};
+
+// Find a single user by email address
+UserService.prototype.findByEmail = function (email) {
+	return this.userDAO.findByEmail(email);
+};
+
+// Save one or more users
+UserService.prototype.save = function (aUserObj) {
+	this.userDAO.save(aUserObj);
 };
 
 exports.createInstance = function() {
