@@ -41,6 +41,11 @@ UserService.prototype.findByEmail = function (email) {
 	return this.userDAO.findByEmail(email);
 };
 
+// Find users by phone number
+UserService.prototype.findByPhone = function (phone) {
+	return this.userDAO.findByPhone(phone);
+};
+
 // Save one or more users
 UserService.prototype.save = function (aUserObj) {
 	this.userDAO.save(aUserObj);

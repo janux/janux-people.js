@@ -72,38 +72,33 @@ UserDAO.prototype.findByName = function (name, callback) {
 
 // Find User Object by email address
 UserDAO.prototype.findByEmail = function (email, callback) {
-	var usersByEmail = [];
+	var userByEmail = [];
 	if(email !== ''){
-		// usersByEmail = this._users.chain().where(function(user) {
-		// 	var found = false;
-		// 	log.info('user inside where', user.contact.phoneNumbers);
-		// 	user.contact.emails.forEach(function(uEmail) {
-		// 		if(uEmail.address === email){
-		// 			found = true;
-		// 		}
-		// 	});
-		// }).limit(1).data()[0];
-		// usersByEmail = this._users.findOne(
-		// 	{ 'contact.emails' : { 'address': email } }
-		// );
-
-		var users = this._users.find();
-		users.forEach(function (user, iUser) {
-			if(typeof user.contact.contactMethods !== 'undefined'){
-				user.contact.contactMethods.emails.forEach(function(anEmail){
-					if(anEmail.address === email){
-						usersByEmail.push(users[iUser]);
-					}
-				});
-			}
-		});
-
+		userByEmail = this._users.findOne(
+			{ 'contact.contactMethods.emails.address': email }
+		);
 	}else{
-		usersByEmail = this._users.find();
+		userByEmail = this._users.find();
 	}
 
 	return new Promise(function(resolve){
-		resolve( usersByEmail[0] );
+		resolve( userByEmail );
+	}).asCallback(callback);
+};
+
+// Find Users by phone number
+UserDAO.prototype.findByPhone = function (number, callback) {
+	var userByPhone = [];
+	if(number !== '') {
+		userByPhone = this._users.find(
+			{ 'contact.contactMethods.phoneNumbers.number': number }
+		);
+	}else{
+		userByPhone = this._users.find();
+	}
+
+	return new Promise(function(resolve){
+		resolve( userByPhone );
 	}).asCallback(callback);
 };
 

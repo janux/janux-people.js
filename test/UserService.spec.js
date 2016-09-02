@@ -160,11 +160,32 @@ describe('UserService', function () {
 
 	it('should find one user by email address', function(done){
 
+		// log.info('email to search', aUser.contact.getEmailAddress('work').address);
+
 		userService.findByEmail(aUser.contact.getEmailAddress('work').address).then(function (user) {
+
+			// log.info('email found', user.contact.contactMethods.emails);
 
 			// // Person vs Person2 Email
 			expect(user.contact.getEmailAddress('work').address).to.equal(aUser.contact.getEmailAddress('work').address);
 			expect(user.contact.getEmailAddress('work').type).to.equal(aUser.contact.getEmailAddress('work').type);
+
+			done();
+		});
+	});
+
+	it('should find users by phone number', function(done){
+
+		userService.findByPhone(aUser.contact.getPhoneNumber('work').number).then(function (users) {
+
+			// Expect at least one user
+			expect(users).to.have.length.above(0);
+
+			var user = users[0];
+
+			// Person vs Person2 Phone Number
+			expect(user.contact.getPhoneNumber('work').number).to.equal(aUser.contact.getPhoneNumber('work').number);
+			expect(user.contact.getPhoneNumber('work').type).to.equal(aUser.contact.getPhoneNumber('work').type);
 
 			done();
 		});
