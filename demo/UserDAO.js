@@ -51,6 +51,15 @@ UserDAO.prototype.findByUsername = function (username, callback) {
 	}).asCallback(callback);
 };
 
+// Find users by matching a string
+UserDAO.prototype.findByUsernameMatch = function (username, callback) {
+
+	var users = this._users.findOne( { username: { '$contains': username } } );
+	return new Promise(function(resolve){
+		resolve( users );
+	}).asCallback(callback);
+};
+
 // Find Users by name
 UserDAO.prototype.findByName = function (name, callback) {
 	var users = [];
@@ -102,9 +111,25 @@ UserDAO.prototype.findByPhone = function (number, callback) {
 	}).asCallback(callback);
 };
 
-// Save new User Object
+// Save new Users Objects
 UserDAO.prototype.save = function (aUserObj) {
 	this._users.insert(aUserObj);
+};
+
+// Save or update users Object
+UserDAO.prototype.saveOrUpdate = function (aUserObj) {
+	var userExists = this._users.findOne( { 'userId': aUserObj.userId } );
+
+	if(userExists !== null) {
+		this._users.update( aUserObj );
+	}else{
+		this._users.insert( aUserObj );
+	}
+};
+
+// Delete User Object
+UserDAO.prototype.delete = function (doc) {
+	this._users.remove( doc );
 };
 
 exports.createInstance = function() {

@@ -12,3 +12,4 @@ exports.UsersGenerator 	= require('./generator/UsersGenerator').UsersGenerator;
 
 // Demo
 exports.UserService 	= require('./demo/UserService');
+exports.UserDAO 		= require('./demo/UserDAO');

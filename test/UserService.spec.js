@@ -1,6 +1,7 @@
 'use strict';
 
-var userService = require('../index').UserService.singleton();
+var userDAO = require('../index').UserDAO.createInstance();
+var userService = require('../index').UserService.singleton(userDAO);
 var UsersGenerator = require('../index').UsersGenerator;
 var Person = require('../index').Person;
 
@@ -190,4 +191,33 @@ describe('UserService', function () {
 			done();
 		});
 	});
+
+	it('should be able to update a user', function(done){
+
+		// Modify user record
+		aUser.username = 'JanuxPeople';
+		userService.saveOrUpdate(aUser);
+
+		// Get modified user from service
+		userService.findById(aUser.userId).then(function (user) {
+
+			expect(aUser.username).to.equal('JanuxPeople');
+
+			done();
+		});
+	});
+
+	it('should be able to delete a user by id', function(done) {
+
+		userService.delete(aUser);
+
+		// Get user by username from service
+		userService.findByUsername(aUser.username).then(function (user) {
+
+			expect(user).to.equal(null);
+
+			done();
+		});
+	});
+
 });

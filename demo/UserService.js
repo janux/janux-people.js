@@ -1,7 +1,6 @@
 "use strict";
 
 // User data access object
-var userDAO = require('./UserDAO').createInstance();
 var _ = require('lodash');
 
 //  variable to hold the singleton instance, if used in that manner
@@ -12,8 +11,8 @@ var userServiceInstance = undefined;
 //
 
 // Constructor
-function UserService() {
-	this.userDAO = userDAO;
+function UserService(aDAO) {
+	this.userDAO = aDAO;
 }
 
 // Returns the number of users
@@ -29,6 +28,10 @@ UserService.prototype.findById = function (userId) {
 // Find a single user by username
 UserService.prototype.findByUsername = function (userName) {
 	return this.userDAO.findByUsername(userName);
+};
+
+UserService.prototype.findByUsernameMatch = function (userName) {
+	return this.userDAO.findByUsernameMatch(userName);
 };
 
 // Find users by name
@@ -51,14 +54,24 @@ UserService.prototype.save = function (aUserObj) {
 	this.userDAO.save(aUserObj);
 };
 
-exports.createInstance = function() {
-	return new UserService();
+// Save or update a single user object
+UserService.prototype.saveOrUpdate = function (aUserObj) {
+	this.userDAO.saveOrUpdate(aUserObj);
 };
 
-exports.singleton = function() {
+// Delete one user
+UserService.prototype.delete = function (id) {
+	this.userDAO.delete(id);
+};
+
+exports.createInstance = function(aDAO) {
+	return new UserService(aDAO);
+};
+
+exports.singleton = function(aDAO) {
 	// if the singleton has not yet been instantiated, do so
 	if ( !_.isObject(userServiceInstance) ) {
-		userServiceInstance = new UserService();
+		userServiceInstance = new UserService(aDAO);
 	}
 
 	return userServiceInstance;
