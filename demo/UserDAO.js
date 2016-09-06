@@ -144,3 +144,5 @@ exports.singleton = function() {
 
 	return userDAOInstance;
 };
+
+exports.objectDAO = UserDAO;

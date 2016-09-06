@@ -1,6 +1,6 @@
 'use strict';
 
-var userDAO = require('../index').UserDAO.createInstance();
+var userDAO = require('../index').UserDAO.objectDAO;
 var userService = require('../index').UserService.singleton(userDAO);
 var UsersGenerator = require('../index').UsersGenerator;
 var Person = require('../index').Person;
@@ -151,11 +151,11 @@ describe('UserService', function () {
 
 			userService.count().then(function (numberOfUsers) {
 
-				expect(users.length).to.be.equal(numberOfUsers);
-				expect(users.length).to.be.equal(fakeUsers.length);
-			});
+				expect(users.length).to.equal(numberOfUsers);
+				expect(users.length).to.equal(fakeUsers.length);
 
-			done();
+				done();
+			});
 		});
 	});
 
@@ -201,7 +201,7 @@ describe('UserService', function () {
 		// Get modified user from service
 		userService.findById(aUser.userId).then(function (user) {
 
-			expect(aUser.username).to.equal('JanuxPeople');
+			expect(user.username).to.equal('JanuxPeople');
 
 			done();
 		});
