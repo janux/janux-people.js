@@ -33,17 +33,23 @@ var UsersGenerator = (function () {
 	};
 
 	// Generate a single user
-	UsersGenerator.prototype.generateUser = function () {
+	UsersGenerator.prototype.generateUser = function (userObj) {
 		var aDate = faker.date.past();
-		return {
-			"userId": faker.random.uuid(),
+		
+		var randUsr = {
 			"username": faker.internet.userName(),
 			"password": md5(faker.internet.password()),
-			"role": "DESIGNER",
-			"contact": this.generateContact(),
-			"mdate": aDate,
-			"cdate": aDate
+			"role": "DESIGNER"
 		};
+		
+		var userObj = (typeof userObj !== 'undefined')? userObj : randUsr;
+		
+		userObj.userId =  faker.random.uuid();
+		userObj.contact = this.generateContact();
+		userObj.mdate = aDate;
+		userObj.cdate = aDate;
+		
+		return userObj;
 	};
 
 	// Generate contact for a user

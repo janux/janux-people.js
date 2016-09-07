@@ -17,9 +17,9 @@ var log4js = require('log4js'),
 // Constructor
 function UserDAO(dbName) {
 	// Define database name
-	dbName = (dbName != '') ? dbName : 'janux.people.db';
+	var name = (typeof dbName !== 'undefined') ? dbName : 'demo/janux-people-demo.db';
 	// Create db
-	this._db = new loki(dbName);
+	this._db = new loki(name);
 	// Add users collection
 	this._users = this._db.addCollection('users');
 }
@@ -114,6 +114,7 @@ UserDAO.prototype.findByPhone = function (number, callback) {
 // Save new Users Objects
 UserDAO.prototype.save = function (aUserObj) {
 	this._users.insert(aUserObj);
+	this._db.saveDatabase();
 };
 
 // Save or update users Object
@@ -125,6 +126,7 @@ UserDAO.prototype.saveOrUpdate = function (aUserObj) {
 	}else{
 		this._users.insert( aUserObj );
 	}
+	this._db.saveDatabase();
 };
 
 // Delete User Object
