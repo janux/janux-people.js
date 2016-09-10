@@ -1,6 +1,6 @@
 'use strict';
 
-var userDAO = require('../index').UserDAO.objectDAO;
+var userDAO = require('../index').UserDAO.createInstance();
 var userService = require('../index').UserService.singleton(userDAO);
 var UsersGenerator = require('../index').UsersGenerator;
 
