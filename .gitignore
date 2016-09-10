@@ -4,4 +4,5 @@ doc
 dist
 *.log
 .idea/
+janux-people.db
 
