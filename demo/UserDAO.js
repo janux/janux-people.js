@@ -16,12 +16,25 @@ var log4js = require('log4js'),
 
 // Constructor
 function UserDAO(dbName) {
-	// Define database name
-	var name = (typeof dbName !== 'undefined') ? dbName : 'demo/janux-people-demo.db';
-	// Create db
+	// Database filename
+	var name = (typeof dbName !== 'undefined') ? dbName : 'janux-people.db';
+
+	var _self = this;
+
+	// Loki instance
 	this._db = new loki(name);
-	// Add users collection
+	this._users;
+
+	// // Add users collection
 	this._users = this._db.addCollection('users');
+
+	this._db.loadDatabase({}, function(err, data) {
+		_self._users = _self._db.getCollection('users');
+
+		if(_self._users === null){
+			_self._users = _self._db.addCollection('users');
+		}
+	});
 }
 
 // Returns the number of entities available.
@@ -132,16 +145,17 @@ UserDAO.prototype.saveOrUpdate = function (aUserObj) {
 // Delete User Object
 UserDAO.prototype.delete = function (doc) {
 	this._users.remove( doc );
+	this._db.saveDatabase();
 };
 
-exports.createInstance = function() {
-	return new UserDAO();
+exports.createInstance = function(dbPath) {
+	return new UserDAO(dbPath);
 };
 
-exports.singleton = function() {
+exports.singleton = function(dbPath) {
 	// if the singleton has not yet been instantiated, do so
 	if ( !_.isObject(userDAOInstance) ) {
-		userDAOInstance = new UserDAO();
+		userDAOInstance = new UserDAO(dbPath);
 	}
 
 	return userDAOInstance;
