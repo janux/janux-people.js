@@ -8,6 +8,11 @@
     "client",
     "browser"
   ],
+  "scripts": {
+    "tsd":        "tsd install",
+    "build":      "gulp default",
+    "postinstall": "npm run tsd && npm run build"
+  },
   "author": "janux",
   "contributors": [],
   "dependencies": {
@@ -19,13 +24,7 @@
     "lodash": "3.10.1",
     "log4js": "0.6.29",
     "lokijs": "file:vendor/LokiJS",
-    "q": "1.4.1"
-  },
-  "devDependencies": {
-    "browserify": "12.0.1",
-    "chai": "3.4.1",
-    "config": "1.16.0",
-    "del": "2.1.0",
+    "q": "1.4.1",
     "gulp": "3.9.0",
     "gulp-concat": "2.6.0",
     "gulp-mocha": "2.2.0",
@@ -33,8 +32,14 @@
     "gulp-tslint": "3.6.0",
     "gulp-typedoc": "1.2.1",
     "gulp-typescript": "2.9.2",
-    "mocha": "2.3.4",
     "require-dir": "0.3.0",
+    "del": "2.1.0"
+  },
+  "devDependencies": {
+    "browserify": "12.0.1",
+    "chai": "3.4.1",
+    "config": "1.16.0",
+    "mocha": "2.3.4",
     "vinyl-source-stream": "1.1.0"
   }
 }
