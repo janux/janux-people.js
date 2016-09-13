@@ -3,6 +3,7 @@
 var userDAO = require('../index').UserDAO.createInstance();
 var userService = require('../index').UserService.singleton(userDAO);
 var UsersGenerator = require('../index').UsersGenerator;
+var md5 = require('MD5');
 
 var usersGen = new UsersGenerator();
 
@@ -13,17 +14,17 @@ var fakeUsers = usersGen.generateUsers(3);
 var users = [
 	{
 		username: 'widget',
-		password: 'test1',
+		password: md5('test1'),
 		role: "WIDGET_DESIGNER"
 	},
 	{
 		username: 'manager',
-		password: 'test2',
+		password: md5('test2'),
 		role: "MANAGER"
 	},
 	{
 		username: 'admin',
-		password: '1234567',
+		password: md5('1234567'),
 		role: "ADMIN"
 	}
 ];
