@@ -17,7 +17,7 @@ var log4js = require('log4js'),
 // Constructor
 function UserDAO(dbName) {
 	// Database filename
-	var name = (typeof dbName !== 'undefined') ? dbName : 'janux-people.db';
+	var name = (typeof dbName !== 'undefined') ? dbName : this.dbName;
 
 	var _self = this;
 
@@ -36,6 +36,9 @@ function UserDAO(dbName) {
 		}
 	});
 }
+
+// Default name of the database
+UserDAO.prototype.dbName = 'janux-people.db';
 
 // Returns the number of entities available.
 UserDAO.prototype.count = function (callback) {
@@ -67,7 +70,7 @@ UserDAO.prototype.findByUsername = function (username, callback) {
 // Find users by matching a string
 UserDAO.prototype.findByUsernameMatch = function (username, callback) {
 
-	var users = this._users.findOne( { username: { '$contains': username } } );
+	var users = this._users.find( { username: { '$contains': username } } );
 	return new Promise(function(resolve){
 		resolve( users );
 	}).asCallback(callback);
@@ -148,10 +151,12 @@ UserDAO.prototype.delete = function (doc) {
 	this._db.saveDatabase();
 };
 
+// Returns a new instance
 exports.createInstance = function(dbPath) {
 	return new UserDAO(dbPath);
 };
 
+// Returns the current stored instance (if it exists) or creates a new instance and stores
 exports.singleton = function(dbPath) {
 	// if the singleton has not yet been instantiated, do so
 	if ( !_.isObject(userDAOInstance) ) {
@@ -161,4 +166,9 @@ exports.singleton = function(dbPath) {
 	return userDAOInstance;
 };
 
-exports.objectDAO = UserDAO;
+// Returns the object that has not yet been instantiated
+exports.object = function(dbName) {
+	// Sets the name and location of the file of the database
+	UserDAO.prototype.dbName = (typeof dbName !== 'undefined') ? dbName : UserDAO.prototype.dbName;
+	return UserDAO;
+};
