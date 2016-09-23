@@ -3,6 +3,7 @@
 var loki = require('lokijs');
 var _ = require('lodash');
 var Promise  = require('bluebird');
+var faker = require('faker');
 
 //  variable to hold the singleton instance, if used in that manner
 var userDAOInstance = undefined;
@@ -135,11 +136,16 @@ UserDAO.prototype.save = function (aUserObj) {
 
 // Save or update users Object
 UserDAO.prototype.saveOrUpdate = function (aUserObj, callback) {
-	var userExists = this._users.findOne( { 'userId': aUserObj.userId } );
+	var userExists = null;
+
+	if(typeof aUserObj.userId !== 'undefined'){
+		userExists = this._users.findOne( { 'userId': aUserObj.userId } );
+	}
 
 	if(userExists !== null) {
 		this._users.update( aUserObj );
 	}else{
+		aUserObj.userId = faker.random.uuid();
 		this._users.insert( aUserObj );
 	}
 	this._db.saveDatabase();
@@ -150,9 +156,19 @@ UserDAO.prototype.saveOrUpdate = function (aUserObj, callback) {
 };
 
 // Delete User Object
-UserDAO.prototype.delete = function (doc) {
-	this._users.remove( doc );
-	this._db.saveDatabase();
+UserDAO.prototype.deleteUser = function (userId, callback) {
+	var user = this._users.findOne( { 'userId': userId } );
+	var resp = {};
+
+	if(user !== null){
+		this._users.remove( user );
+		this._db.saveDatabase();
+		resp = user;
+	}
+
+	return new Promise(function(resolve){
+		resolve( resp );
+	}).asCallback(callback);
 };
 
 // Returns a new instance
