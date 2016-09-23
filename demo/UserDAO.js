@@ -134,7 +134,7 @@ UserDAO.prototype.save = function (aUserObj) {
 };
 
 // Save or update users Object
-UserDAO.prototype.saveOrUpdate = function (aUserObj) {
+UserDAO.prototype.saveOrUpdate = function (aUserObj, callback) {
 	var userExists = this._users.findOne( { 'userId': aUserObj.userId } );
 
 	if(userExists !== null) {
@@ -143,6 +143,10 @@ UserDAO.prototype.saveOrUpdate = function (aUserObj) {
 		this._users.insert( aUserObj );
 	}
 	this._db.saveDatabase();
+
+	return new Promise(function(resolve){
+		resolve( aUserObj );
+	}).asCallback(callback);
 };
 
 // Delete User Object

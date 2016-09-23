@@ -13,7 +13,7 @@ var log4js = require('log4js'), util = require('util');
 var log = log4js.getLogger('UserService_test');
 
 var hydrateUserContact = function (userObj) {
-	userObj.contact = Person.fromJSON(JSON.parse(userObj.contact));
+	userObj.contact = Person.fromJSON(userObj.contact);
 	return userObj;
 };
 
@@ -40,7 +40,7 @@ describe('UserService', function () {
 		userService.findById(aUser.userId).then(function (user) {
 			// The user obtained from the service must have at least the specified fields
 			expect(user).to.have.any.keys(
-				'userId', 'username', 'password', 'role', 'contact', 'cdate', 'mdate'
+				'userId', 'username', 'password', 'roles', 'contact', 'cdate', 'mdate'
 			);
 
 			// User data obtained from the service must match the data used to create it
@@ -82,7 +82,7 @@ describe('UserService', function () {
 
 			// The user obtained from the service must have at least the specified fields
 			expect(user).to.have.any.keys(
-				'userId', 'username', 'password', 'role', 'contact', 'cdate', 'mdate'
+				'userId', 'username', 'password', 'roles', 'contact', 'cdate', 'mdate'
 			);
 
 			// User data obtained from the service must match the data used to create it

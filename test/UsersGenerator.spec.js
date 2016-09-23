@@ -24,7 +24,7 @@ describe('UsersGenerator', function () {
 
 		users.forEach(function(user){
 			expect(user).to.have.keys(
-				'userId', 'username', 'password', 'role', 'contact', 'cdate', 'mdate'
+				'userId', 'username', 'password', 'roles', 'contact', 'cdate', 'mdate'
 			);
 		});
 

@@ -37,9 +37,9 @@ var UsersGenerator = (function () {
 		var aDate = faker.date.past();
 		
 		var randUsr = {
-			"username": faker.internet.userName(),
-			"password": md5(faker.internet.password()),
-			"role": "DESIGNER"
+			username: faker.internet.userName(),
+			password: md5(faker.internet.password()),
+			roles: ['DESIGNER']
 		};
 		
 		var userObj = (typeof userObj !== 'undefined')? userObj : randUsr;
@@ -84,7 +84,7 @@ var UsersGenerator = (function () {
 		aPostalAddr.postalCode = faker.address.zipCode();
 		person.setContactMethod('Home', aPostalAddr);
 
-		return JSON.stringify(person.toJSON());
+		return person.toJSON();
 	};
 
 	return UsersGenerator;

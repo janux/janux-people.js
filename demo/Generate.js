@@ -15,17 +15,17 @@ var users = [
 	{
 		username: 'widget',
 		password: md5('test1'),
-		role: "WIDGET_DESIGNER"
+		roles: ["WIDGET_DESIGNER"]
 	},
 	{
 		username: 'manager',
 		password: md5('test2'),
-		role: "MANAGER"
+		roles: ["MANAGER"]
 	},
 	{
 		username: 'admin',
 		password: md5('1234567'),
-		role: "ADMIN"
+		roles: ["ADMIN"]
 	}
 ];
 
