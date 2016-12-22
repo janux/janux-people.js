@@ -1,21 +1,17 @@
 'use strict';
 
-var userDAO = require('../index').UserDAO.object(); // createInstance();
-var userService = require('../index').UserService.singleton(userDAO);
+var userDAO = require('../index').UserDAO.createInstance(); // .object();
+var userService = require('../index').UserService.createInstance(userDAO);
 var UsersGenerator = require('../index').UsersGenerator;
-var Person = require('../index').Person;
 
 var chai = require('chai');
 var expect = chai.expect;
+var _ = require('lodash');
 
 /* global describe, it, beforeEach, fail */
 var log4js = require('log4js'), util = require('util');
 var log = log4js.getLogger('UserService_test');
 
-var hydrateUserContact = function (userObj) {
-	userObj.contact = Person.fromJSON(userObj.contact);
-	return userObj;
-};
 
 describe('UserService', function () {
 	var usersGen = new UsersGenerator();
@@ -24,7 +20,7 @@ describe('UserService', function () {
 	var fakeUsers = usersGen.generateUsers(3);
 
 	// Take one fake user for test
-	var aUser = hydrateUserContact(fakeUsers[0]);
+	var aUser = userService.hydrateUsersContacts(fakeUsers[0]);
 
 	// Add users
 	userService.save(fakeUsers);
@@ -35,49 +31,52 @@ describe('UserService', function () {
 	// });
 
 	it('should be able to get a user by id from service', function(done){
-
+	
 		// Get user from service
 		userService.findById(aUser.userId).then(function (user) {
+
+			log.info('user by id query in test', user);
+	
 			// The user obtained from the service must have at least the specified fields
 			expect(user).to.have.any.keys(
 				'userId', 'username', 'password', 'roles', 'contact', 'cdate', 'mdate'
 			);
-
+	
 			// User data obtained from the service must match the data used to create it
-			expect(fakeUsers[0].userId).to.equal(aUser.userId);
-			expect(fakeUsers[0].username).to.equal(aUser.username);
-			expect(fakeUsers[0].password).to.equal(aUser.password);
-
+			expect(user.userId).to.equal(aUser.userId);
+			expect(user.username).to.equal(aUser.username);
+			expect(user.password).to.equal(aUser.password);
+	
 			// Contact data obtained from the service must match the data used to create it
-			expect(fakeUsers[0].contact.name.honorificPrefix).to.equal(aUser.contact.name.honorificPrefix);
-			expect(fakeUsers[0].contact.name.first).to.equal(aUser.contact.name.first);
-			expect(fakeUsers[0].contact.name.middle).to.equal(aUser.contact.name.middle);
-			expect(fakeUsers[0].contact.name.last).to.equal(aUser.contact.name.last);
-			expect(fakeUsers[0].contact.name.honorificSuffix).to.equal(aUser.contact.name.honorificSuffix);
-
+			expect(user.contact.name.honorificPrefix).to.equal(aUser.contact.name.honorificPrefix);
+			expect(user.contact.name.first).to.equal(aUser.contact.name.first);
+			expect(user.contact.name.middle).to.equal(aUser.contact.name.middle);
+			expect(user.contact.name.last).to.equal(aUser.contact.name.last);
+			expect(user.contact.name.honorificSuffix).to.equal(aUser.contact.name.honorificSuffix);
+	
 			// Person vs Person2 Phone Number
-			expect(fakeUsers[0].contact.getPhoneNumber('work').number).to.equal(aUser.contact.getPhoneNumber('work').number);
-			expect(fakeUsers[0].contact.getPhoneNumber('work').type).to.equal(aUser.contact.getPhoneNumber('work').type);
-
+			expect(user.contact.getPhoneNumber('work').number).to.equal(aUser.contact.getPhoneNumber('work').number);
+			expect(user.contact.getPhoneNumber('work').type).to.equal(aUser.contact.getPhoneNumber('work').type);
+	
 			// Person vs Person2 Email
-			expect(fakeUsers[0].contact.getEmailAddress('work').address).to.equal(aUser.contact.getEmailAddress('work').address);
-			expect(fakeUsers[0].contact.getEmailAddress('work').type).to.equal(aUser.contact.getEmailAddress('work').type);
-
+			expect(user.contact.getEmailAddress('work').address).to.equal(aUser.contact.getEmailAddress('work').address);
+			expect(user.contact.getEmailAddress('work').type).to.equal(aUser.contact.getEmailAddress('work').type);
+	
 			// Person vs Person2 Address
-			expect(fakeUsers[0].contact.getPostalAddress('Home').line1).to.equal(aUser.contact.getPostalAddress('Home').line1);
-			expect(fakeUsers[0].contact.getPostalAddress('Home').line2).to.equal(aUser.contact.getPostalAddress('Home').line2);
-			expect(fakeUsers[0].contact.getPostalAddress('Home').getCityAsstring()).to.equal(aUser.contact.getPostalAddress('Home').getCityAsstring());
-			expect(fakeUsers[0].contact.getPostalAddress('Home').getStateProvinceAsstring()).to.equal(aUser.contact.getPostalAddress('Home').getStateProvinceAsstring());
-			expect(fakeUsers[0].contact.getPostalAddress('Home').postalCode).to.equal(aUser.contact.getPostalAddress('Home').postalCode);
-
+			expect(user.contact.getPostalAddress('Home').line1).to.equal(aUser.contact.getPostalAddress('Home').line1);
+			expect(user.contact.getPostalAddress('Home').line2).to.equal(aUser.contact.getPostalAddress('Home').line2);
+			expect(user.contact.getPostalAddress('Home').getCityAsstring()).to.equal(aUser.contact.getPostalAddress('Home').getCityAsstring());
+			expect(user.contact.getPostalAddress('Home').getStateProvinceAsstring()).to.equal(aUser.contact.getPostalAddress('Home').getStateProvinceAsstring());
+			expect(user.contact.getPostalAddress('Home').postalCode).to.equal(aUser.contact.getPostalAddress('Home').postalCode);
+	
 			// log.info('user get by id from the service', user);
 			done();
 		});
 	});
-
+	
 	it('should be able to get a user by username from service', function(done){
 
-		// Get user by username from service
+		// Get user by username from services
 		userService.findByUsername(aUser.username).then(function (user) {
 
 			// The user obtained from the service must have at least the specified fields
@@ -165,9 +164,9 @@ describe('UserService', function () {
 
 		userService.findByEmail(aUser.contact.getEmailAddress('work').address).then(function (user) {
 
-			// log.info('email found', user.contact.contactMethods.emails);
+			// log.info('email found', user, aUser.contact.getEmailAddress('work').address);
 
-			// // Person vs Person2 Email
+			// Person vs Person2 Email
 			expect(user.contact.getEmailAddress('work').address).to.equal(aUser.contact.getEmailAddress('work').address);
 			expect(user.contact.getEmailAddress('work').type).to.equal(aUser.contact.getEmailAddress('work').type);
 
@@ -195,28 +194,35 @@ describe('UserService', function () {
 	it('should be able to update a user', function(done){
 
 		// Modify user record
-		aUser.username = 'JanuxPeople';
-		userService.saveOrUpdate(aUser);
+		userService.findByUsername(aUser.username).then(function (user) {
 
-		// Get modified user from service
-		userService.findById(aUser.userId).then(function (user) {
+			user.username = 'JanuxPeople';
+			userService.saveOrUpdate(user);
+			aUser = user;
 
-			expect(user.username).to.equal('JanuxPeople');
+			// Get modified user from service
+			userService.findById(aUser.userId).then(function (user) {
 
-			done();
+				expect(user.username).to.equal('JanuxPeople');
+
+				done();
+			});
 		});
+
 	});
 
 	it('should be able to delete a user by id', function(done) {
 
-		userService.delete(aUser);
-
-		// Get user by username from service
 		userService.findByUsername(aUser.username).then(function (user) {
+			userService.deleteUser(user);
 
-			expect(user).to.equal(null);
+			// Get user by username from service
+			userService.findByUsername(user.username).then(function (user) {
 
-			done();
+				expect(user).to.equal(null);
+
+				done();
+			});
 		});
 	});
 

@@ -1,4 +1,4 @@
-export interface ContactMethod // extends Persistent, Serializable, Cloneable
+export interface ContactMethod
 {
 	/**
 	 * Portable Contacts Plural Fields: phoneNumbers, emails, etc.
