@@ -156,7 +156,7 @@ UserDAO.prototype.findByPhone = function (number, callback) {
 	var userByPhone = [];
 	if(number !== '') {
 		userByPhone = this._users.find(
-			{ 'contact.phoneNumbers.number': number }
+			{ 'contact.phones.number': number }
 		);
 	}else{
 		userByPhone = this._users.find();

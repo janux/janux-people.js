@@ -50,7 +50,7 @@ describe('Organization', function () {
 		var aPhone = new PhoneNumber('689655555');
 		org.setContactMethod('work', aPhone);
 
-		expect(org.getPhoneNumber('work').number).to.equal('689655555');
+		expect(org.phoneNumber('work').number).to.equal('689655555');
 	});
 
 	it('should be able to add/retrieve the postal address of a organization', function(){
@@ -58,17 +58,17 @@ describe('Organization', function () {
 		var aPostalAddr = new PostalAddress();
 		aPostalAddr.line1 = '1415 L Street';
 		aPostalAddr.line2 = 'Suite 200';
-		aPostalAddr.setCityAsstring('Sacramento');
-		aPostalAddr.setStateProvinceAsstring('CA');
+		aPostalAddr.cityText = 'Sacramento';
+		aPostalAddr.stateText = 'CA';
 		aPostalAddr.postalCode = '95814';
 		org.setContactMethod('Home', aPostalAddr);
 
-		var postalAddr = org.getPostalAddress('Home');
+		var postalAddr = org.postalAddress('Home');
 
 		expect(postalAddr.line1).to.equal('1415 L Street');
 		expect(postalAddr.line2).to.equal('Suite 200');
-		expect(postalAddr.getCityAsstring()).to.equal('Sacramento');
-		expect(postalAddr.getStateProvinceAsstring()).to.equal('CA');
+		expect(postalAddr.cityText).to.equal('Sacramento');
+		expect(postalAddr.stateText).to.equal('CA');
 		expect(postalAddr.postalCode).to.equal('95814');
 	});
 
@@ -81,8 +81,8 @@ describe('Organization', function () {
 		var aPostalAddr = new PostalAddress();
 		aPostalAddr.line1 = '1415 L Street';
 		aPostalAddr.line2 = 'Suite 200';
-		aPostalAddr.setCityAsstring('Sacramento');
-		aPostalAddr.setStateProvinceAsstring('CA');
+		aPostalAddr.cityText = 'Sacramento';
+		aPostalAddr.stateText = 'CA';
 		aPostalAddr.postalCode = '95814';
 		org.setContactMethod('headquarters', aPostalAddr);
 
@@ -92,25 +92,14 @@ describe('Organization', function () {
 		expect(org.name).to.equal(org2.name);
 
 		// org vs org2 Phone Number
-		expect(org.getPhoneNumber('headquarters').number).to.equal(org2.getPhoneNumber('headquarters').number);
-		expect(org.getPhoneNumber('headquarters').type).to.equal(org2.getPhoneNumber('headquarters').type);
+		expect(org.phoneNumber('headquarters').number).to.equal(org2.phoneNumber('headquarters').number);
+		expect(org.phoneNumber('headquarters').type).to.equal(org2.phoneNumber('headquarters').type);
 
 		// org vs org2 Address
-		expect(org.getPostalAddress('headquarters').line1).to.equal(org2.getPostalAddress('headquarters').line1);
-		expect(org.getPostalAddress('headquarters').line2).to.equal(org2.getPostalAddress('headquarters').line2);
-		expect(org.getPostalAddress('headquarters').getCityAsstring()).to.equal(org2.getPostalAddress('headquarters').getCityAsstring());
-		expect(org.getPostalAddress('headquarters').getStateProvinceAsstring()).to.equal(org2.getPostalAddress('headquarters').getStateProvinceAsstring());
-		expect(org.getPostalAddress('headquarters').postalCode).to.equal(org2.getPostalAddress('headquarters').postalCode);
+		expect(org.postalAddress('headquarters').line1).to.equal(org2.postalAddress('headquarters').line1);
+		expect(org.postalAddress('headquarters').line2).to.equal(org2.postalAddress('headquarters').line2);
+		expect(org.postalAddress('headquarters').cityText).to.equal(org2.postalAddress('headquarters').cityText);
+		expect(org.postalAddress('headquarters').stateText).to.equal(org2.postalAddress('headquarters').stateText);
+		expect(org.postalAddress('headquarters').postalCode).to.equal(org2.postalAddress('headquarters').postalCode);
 	});
-	// assertions
-	// see http://chaijs.com/api/bdd
-	// some_prop).to.equal('somevalue'); // fails if some_prop is null
-	// some_prop.should.have.length(3);
-	// some_prop.should.be.a('string');
-	// some_prop.should.have.property;
-	//
-	// expect(something).to.be.empty|true|false|null|undefine;
-	// expect(something).to.be.not.empty;
-	// expect(something).to.equal(some_value);
-	// expect(something).to.be.instanceof(Array|String|Number|Function|Object);
 });

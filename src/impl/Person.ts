@@ -22,7 +22,6 @@ import {PhoneNumberImpl} from "./PhoneNumber";
  * Represents a Person in a variety of contexts
  *
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
- * @version $Revision: 1.8 $ - $Date: 2007-05-01 23:20:58 $
  ***************************************************************************************************
  */
 export class PersonImpl extends PartyAbstract implements Person
@@ -40,7 +39,7 @@ export class PersonImpl extends PartyAbstract implements Person
 
 	public toJSON(): any {
 		var out:any = this.contactMethods;
-		out.displayName = this.name.getShort();
+		out.displayName = this.name.shortName;
 		out.name = this.name.toJSON();
 		return out;
 	}

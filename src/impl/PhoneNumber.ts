@@ -15,13 +15,12 @@ import {PhoneNumber} from "../api/PhoneNumber";
  * Simple bean representing a phone number
  *
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
- * @version $Revision: 1.10 $ - $Date: 2007-12-06 01:20:41 $
  ***************************************************************************************************
  */
 export class PhoneNumberImpl implements PhoneNumber
 {
-	public countryCode: number  = -1;
-	public areaCode: number     = -1;
+	private _countryCode: number  = -1;
+	private _areaCode: number     = -1;
 	public number: string;
 	public extension: string;
 	public type: string;
@@ -30,46 +29,43 @@ export class PhoneNumberImpl implements PhoneNumber
 	constructor(number?:string, extension?:string, cC?:number, aC?:number){
 		this.number = number;
 		this.extension = extension;
-		this.areaCode = aC || this.areaCode;
-		this.countryCode = cC || this.countryCode;
+		this._areaCode = aC || this._areaCode;
+		this._countryCode = cC || this._countryCode;
 	}
 
 	get field(): string {
-		return 'phoneNumbers'; // tools.className(this);
+		return 'phones'; // tools.className(this);
 	}
 
-	getCountryCode(): string {
-		return (this.countryCode == -1) ? "" : this.countryCode.toString();
+	get countryCode(): string {
+		return (this._countryCode == -1) ? "" : this._countryCode.toString();
 	}
 	
-	setCountryCode(countryCode: string): void {
+	set countryCode(countryCode: string) {
 		if (countryCode == '') {
-			this.countryCode = -1;
+			this._countryCode = -1;
 		}
 		else {
-			try {
-				this.countryCode = +countryCode;
-			}
-			catch (e)
-			{
-				var msg: string = "The Country Code of a phone number should be a numeric value";
-				console.error(msg, e);
+			this._countryCode = Number(countryCode);
+			if(isNaN(this._countryCode)){
+				var msg: string = "The Country Code of a phone number should be a numeric value:";
+				console.error(msg);
 				throw new Error(msg);
 			}
 		}
 	}
 
-	getAreaCode(): string {
-		return (this.areaCode == -1) ? "" : this.areaCode.toString();
+	get areaCode(): string {
+		return (this._areaCode == -1) ? "" : this._areaCode.toString();
 	}
 	
-	setAreaCode(areaCode: string): void {
+	set areaCode(areaCode: string) {
 		if (areaCode == ''){
-			this.areaCode = -1;
+			this._areaCode = -1;
 		}
 		else {
 			try {
-				this.areaCode = +areaCode;
+				this._areaCode = Number(areaCode);
 			}
 			catch (e)
 			{

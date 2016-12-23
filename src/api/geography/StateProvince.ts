@@ -3,21 +3,17 @@ import {Country} from './Country';
 export interface StateProvince // extends Serializable, Persistent
 {
 	/** a Code that uniquely identifies a State or Province within a Country */
-	getCode(): string;
-	setCode(code: string): void;
+	code: string;
 
 	/** the name of the State or Province; TODO: this field should be internationalized */
-	getName(): string;
-	setName(name: string): void;
+	name: string;
 
 	/** the Country containing this State/Province, must be not null */
-	getCountry(): Country;
-	setCountry(c: Country): void;
+	country: Country;
 
 	/**
 	 * implementation specific sorting order, for example to display the
 	 * State/Provinces in a list or drop-down in an arbitrary order
 	 */
-	getSortOrder(): number;
-	setSortOrder(i: number): void;
+	sortOrder: number;
 }

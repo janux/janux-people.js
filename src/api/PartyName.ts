@@ -4,10 +4,8 @@
 export interface PartyName
 {
 	/** a short name to refer to a Person or Organization */
-	getShort(): string;
-	setShort(strings): void;
+	shortName: string;
 
 	/** a long (or legal) name to refer to a Person or Organization */
-	getLong(): string;
-	setLong(strings): void;
+	longName: string;
 }

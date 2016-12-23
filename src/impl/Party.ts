@@ -23,7 +23,6 @@ import {EmailAddressImpl} from "./EmailAddress";
  * Base implementation for the class hierarchy to which a Person and an Organization belong
  *
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
- * @since 0.1 2006-11-14
  ***************************************************************************************************
  */
 export abstract class PartyAbstract implements Party
@@ -40,7 +39,8 @@ export abstract class PartyAbstract implements Party
 		// Get contact for a specific type Ej: Home
 		if(typeof this.contactMethods[aField] !== 'undefined'){
 			this.contactMethods[aField].forEach(function(contact:ContactMethod){
-				if(contact.type == aType){
+				if( (aType !== '' && contact.type === aType) ||
+					(typeof aType === 'undefined' && contact.primary === true)){
 					findContact = contact;
 				}
 			});
@@ -53,77 +53,95 @@ export abstract class PartyAbstract implements Party
 			throw new Error('Can not add a contact without specifying the type');
 		}
 		else{
+			// Set type
 			contactMethod.type = type;
+
+			// If there are no others define an empty array
 			this.contactMethods[contactMethod.field] = this.contactMethods[contactMethod.field] || [];
+
+			// Set this contact method as primary
+			if(this.contactMethods[contactMethod.field].length == 0){
+				contactMethod.primary = true;
+			}
+
 			this.contactMethods[contactMethod.field].push(contactMethod);
 			console.log("added contact method in field '" + contactMethod.field + "' with type "+contactMethod.type);
 		}
 	}
 
 	/*
-	 * Postal mailing addresses keyed by a string code representing a
-	 * user-defined type of ContactMethod kind, such as PHYSICAL_ADDRESS,
-	 * CHECK-IN_ADDRESS, MAILING_ADDRESS, BILLING_ADDRESS, etc...
+	 * Postal mailing addresses
 	 */
-	getPostalAddresses(): Dictionary<string, ContactMethod> {
-		return this.createContactMethodDictionary('addresses');
-	}
-
-	/*
-	 * Return Array of postal addresses
-	 */
-	postalAddresses(): PostalAddress[] {
-		return <PostalAddress[]>this.contactMethods['addresses'];
+	postalAddresses(dictionary?: boolean): any {
+		if(dictionary){
+			/*
+			 * Postal mailing addresses keyed by a string code representing a
+			 * user-defined type of ContactMethod kind, such as PHYSICAL_ADDRESS,
+			 * CHECK-IN_ADDRESS, MAILING_ADDRESS, BILLING_ADDRESS, etc...
+			 */
+			return this.createContactMethodDictionary('addresses');
+		}else{
+			/*
+			 * Return Array of postal addresses
+			 */
+			return <PostalAddress[]>this.contactMethods['addresses'];
+		}
 	}
 
 	/*
 	 * Return specific postal address according type
 	 */
-	getPostalAddress(type: string): PostalAddress {
+	postalAddress(type: string): PostalAddress {
 		return <PostalAddress>this.getContactMethod('addresses', type);
 	}
 
 	/*
-	 * Telephone numbers keyed by a string code representing a user-defined type of
-	 * Phone Number, such as PHYSICAL_PHONE, BILLING_PHONE, etc...
+	 * Telephone numbers 
 	 */
-	getPhoneNumbers(): Dictionary<string, ContactMethod> {
-		return this.createContactMethodDictionary('phoneNumbers');
-	}
-
-	/*
-	 * Return Array of phone numbers
-	 */
-	phoneNumbers(): PhoneNumber[] {
-		return <PhoneNumber[]>this.contactMethods['phoneNumbers'];
+	phoneNumbers(dictionary?: boolean): any {
+		if(dictionary){
+			/*
+			 * Telephone numbers keyed by a string code representing a user-defined type of
+			 * Phone Number, such as PHYSICAL_PHONE, BILLING_PHONE, etc...
+			 */
+			return this.createContactMethodDictionary('phones');
+		}else{
+			/*
+			 * Return Array of phone numbers
+			 */
+			return <PhoneNumber[]>this.contactMethods['phones'];
+		}
 	}
 
 	/*
 	 * Return specific phone number according type
 	 */
-	getPhoneNumber(type: string): PhoneNumber {
-		return <PhoneNumber>this.getContactMethod('phoneNumbers', type);
+	phoneNumber(type: string): PhoneNumber {
+		return <PhoneNumber>this.getContactMethod('phones', type);
 	}
 
 	/*
-	 * Email addresses keyed by a string code representing a user-defined kind of
-	 * Email, such as EMAIL1, INFO_EMAIL etc...
+	 * Email addresses
 	 */
-	getEmailAddresses(): Dictionary<string, ContactMethod> {
-		return this.createContactMethodDictionary('emails');
-	}
-
-	/*
-	 * Return Array of phones numbers
-	 */
-	emailAddresses(): EmailAddressImpl[] {
-		return <EmailAddressImpl[]>this.contactMethods['emails'];
+	emailAddresses(dictionary?: boolean): any {
+		if(dictionary){
+			/*
+			 * Email addresses keyed by a string code representing a user-defined kind of
+			 * Email, such as EMAIL1, INFO_EMAIL etc...
+			 */
+			return this.createContactMethodDictionary('emails');
+		}else{
+			/*
+			 * Return Array of phones numbers
+			 */
+			return <EmailAddressImpl[]>this.contactMethods['emails'];
+		}
 	}
 
 	/*
 	 * Return specific email according type
 	 */
-	getEmailAddress(type: string): EmailAddress {
+	emailAddress(type: string): EmailAddress {
 		return <EmailAddress>this.getContactMethod('emails', type);
 	}
 
@@ -149,7 +167,7 @@ export abstract class PartyAbstract implements Party
 
 	static fromJSON(obj:any, party: any): any{
 		// Contacts
-		['addresses','phoneNumbers','emails'].forEach(function(elem){
+		['addresses','phones','emails'].forEach(function(elem){
 			var cType = obj[elem];
 			if(typeof obj[elem] !== 'undefined') {
 				if (cType.length > 0) {
@@ -166,9 +184,9 @@ export abstract class PartyAbstract implements Party
 		var out: ContactMethod;
 
 		switch (field) {
-			case 'phoneNumbers': out = new PhoneNumberImpl(); break;
+			case 'phones': out = new PhoneNumberImpl(); break;
 			case 'emails': out = new EmailAddressImpl(); break;
-			case "addresses": out = new PostalAddressImpl(); break;
+			case 'addresses': out = new PostalAddressImpl(); break;
 		}
 
 		for (var prop in obj) {

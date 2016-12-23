@@ -37,17 +37,12 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName
 	}
 
 	/** contatenates and returns the first and last names */
-	public getShort(): string {
+	get shortName(): string {
 		return this.first + " " + this.last;
 	}
 
-	/** does nothing, here to satisfy the PartyName interface */
-	public setShort(s: string): void {
-		// do nothing
-	}
-
 	/** contatenates and returns the honorific Prefix, first, middle and last names, and the honorificSuffix */
-	public getLong(): string {
+	get longName(): string {
 		var out: string = "";
 
 		if (this.honorificPrefix != null && this.honorificPrefix != ''){
@@ -66,11 +61,6 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName
 			out += ', ' + this.honorificSuffix;
 		}
 		return _.trim(out);
-	}
-
-	/** does nothing, here to satisfy the PartyName interface */
-	public setLong(s: string): void {
-		// do nothing
 	}
 
 	public toString(): string {

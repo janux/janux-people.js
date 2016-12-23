@@ -36,7 +36,6 @@ import {StateProvince} from './StateProvince';
  * </p>
  *
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
- * @version $Revision: 1.12 $ - $Date: 2008-03-27 00:51:37 $
  ***************************************************************************************************
  */
 export interface PostalAddress extends ContactMethod
@@ -46,85 +45,62 @@ export interface PostalAddress extends ContactMethod
 	line3: string;
 	postalCode: string;
 
+	/** @param s a string that can be used to represent a city */
+	cityText: string;
+
+	/** @param s a string that can be used to represent a state or a province */
+	stateText: string;
+
+	/** @param s a string that can be used to represent a country */
+	countryText: string;
+
 	/**
 	 * The City where the PostalAddress is located; may be null if it is not possible to ascertain the
 	 * City entity in with this Postal Address is located; in such case, the city may be stored as a
 	 * string in getCityAsstring.  If the City is not null, the getStateProvince and getCountry fields
 	 * must be the same as the StateProvince/Country of the City.
 	 */
-	getCity(): City;
-	setCity(o: City): void;
+	city: City;
 
 	/**
 	 * StateProvince in which this PostalAddress is located; if getCity or getCountry fields ane not
 	 * null, all three of these entities must be congruent.
 	 */
-	getStateProvince(): StateProvince;
-	setStateProvince(o: StateProvince): void;
+	stateProvince: StateProvince;
 
 	/**
 	 * Country in which this PostalAddress is located; if getCity or getStateProvince fields are not
 	 * null, this Country must be the same as the one in which the City and StateProvince are located
 	 */
-	getCountry(): Country;
-	setCountry(o: Country): void;
+	country: Country;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getCity().getName(); or,
 	 * if getCity() is null, it returns getCityAsstring().
 	 */
-	getCityName(): string;
+	cityName: string;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getStateProvince().getName(); or,
 	 * if getStateProvince() is null, it returns this.getStateProvinceNameAsstring().
 	 */
-	getStateProvinceName(): string;
+	stateProvinceName: string;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getStateProvince().getCode(); or,
 	 * if getStateProvince() is null, it returns this.getStateProvinceNameAsstring().
 	 */
-	getStateProvinceCode(): string;
+	stateProvinceCode: string;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getCountry().getName(); or,
 	 * if getCountry() is null, it returns this.getCountryAsstring().
 	 */
-	getCountryName(): string;
+	countryName: string;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getCountry().getCode(); or,
 	 * if getCountry() is null, it returns this.getCountryAsstring().
 	 */
-	getCountryCode(): string;
-
-	/**
-	 * @return Returns a string used to represent the City, in the event that this PostalAddress has
-	 * not been related to a City entity
-	 */
-	getCityAsstring(): string;
-
-	/** @param s a string that can be used to represent a city */
-	setCityAsstring(s: string): void;
-
-
-	/**
-	 * @return Returns a string used to represent the name of a StateProvince, in the event that this
-	 * PostalAddress has not been related to a StateProvince entity
-	 */
-	getStateProvinceAsstring(): string;
-
-	/** @param s a string that can be used to represent a state or a province */
-	setStateProvinceAsstring(s: string): void;
-
-
-	/**
-	 * @return Returns a string used to represent the Country, in the event that this PostalAddress
-	 * has not been related to a Country entity
-	 */
-	getCountryAsstring(): string;
-
-	/** @param s a string that can be used to represent a country */
-	setCountryAsstring(s: string): void;
+	countryCode: string;
 }

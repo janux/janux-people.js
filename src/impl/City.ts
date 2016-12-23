@@ -16,7 +16,6 @@ import {StateProvinceImpl} from "./StateProvince";
  * Simple bean representing a City
  *
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
- * @version $Revision: 1.10 $ - $Date: 2007-12-18 20:31:22 $
  ***************************************************************************************************
  */
 export class CityImpl implements City
@@ -41,20 +40,20 @@ export class CityImpl implements City
 		this.name = name;
 	}
 
-	public getProvince(): StateProvince {
+	get province(): StateProvince {
 		return this.state;
 	}
 
-	public setProvince(o: StateProvince): void {
+	set province(o: StateProvince) {
 		this.state = o;
 	}
 
-	public getCountry():Country {
-		return this.state.getCountry();
+	get country():Country {
+		return this.state.country;
 	}
 
-	public setCountry(o: Country): void {
-		this.state.setCountry(o);
+	set country(o: Country) {
+		this.state.country = o;
 	}
 
 	public toString(): string {

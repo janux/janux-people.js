@@ -34,8 +34,6 @@ describe('UserService', function () {
 	
 		// Get user from service
 		userService.findById(aUser.userId).then(function (user) {
-
-			log.info('user by id query in test', user);
 	
 			// The user obtained from the service must have at least the specified fields
 			expect(user).to.have.any.keys(
@@ -55,25 +53,25 @@ describe('UserService', function () {
 			expect(user.contact.name.honorificSuffix).to.equal(aUser.contact.name.honorificSuffix);
 	
 			// Person vs Person2 Phone Number
-			expect(user.contact.getPhoneNumber('work').number).to.equal(aUser.contact.getPhoneNumber('work').number);
-			expect(user.contact.getPhoneNumber('work').type).to.equal(aUser.contact.getPhoneNumber('work').type);
-	
+			expect(user.contact.phoneNumber('work').number).to.equal(aUser.contact.phoneNumber('work').number);
+			expect(user.contact.phoneNumber('work').type).to.equal(aUser.contact.phoneNumber('work').type);
+
 			// Person vs Person2 Email
-			expect(user.contact.getEmailAddress('work').address).to.equal(aUser.contact.getEmailAddress('work').address);
-			expect(user.contact.getEmailAddress('work').type).to.equal(aUser.contact.getEmailAddress('work').type);
-	
+			expect(user.contact.emailAddress('work').address).to.equal(aUser.contact.emailAddress('work').address);
+			expect(user.contact.emailAddress('work').type).to.equal(aUser.contact.emailAddress('work').type);
+
 			// Person vs Person2 Address
-			expect(user.contact.getPostalAddress('Home').line1).to.equal(aUser.contact.getPostalAddress('Home').line1);
-			expect(user.contact.getPostalAddress('Home').line2).to.equal(aUser.contact.getPostalAddress('Home').line2);
-			expect(user.contact.getPostalAddress('Home').getCityAsstring()).to.equal(aUser.contact.getPostalAddress('Home').getCityAsstring());
-			expect(user.contact.getPostalAddress('Home').getStateProvinceAsstring()).to.equal(aUser.contact.getPostalAddress('Home').getStateProvinceAsstring());
-			expect(user.contact.getPostalAddress('Home').postalCode).to.equal(aUser.contact.getPostalAddress('Home').postalCode);
-	
+			expect(user.contact.postalAddress('Home').line1).to.equal(aUser.contact.postalAddress('Home').line1);
+			expect(user.contact.postalAddress('Home').line2).to.equal(aUser.contact.postalAddress('Home').line2);
+			expect(user.contact.postalAddress('Home').cityText).to.equal(aUser.contact.postalAddress('Home').cityText);
+			expect(user.contact.postalAddress('Home').stateText).to.equal(aUser.contact.postalAddress('Home').stateText);
+			expect(user.contact.postalAddress('Home').postalCode).to.equal(aUser.contact.postalAddress('Home').postalCode);
+
 			// log.info('user get by id from the service', user);
 			done();
 		});
 	});
-	
+
 	it('should be able to get a user by username from service', function(done){
 
 		// Get user by username from services
@@ -97,15 +95,15 @@ describe('UserService', function () {
 			expect(user.contact.name.honorificSuffix).to.equal(aUser.contact.name.honorificSuffix);
 
 			// Person vs Person2 Phone Number
-			expect(user.contact.getPhoneNumber('work').number).to.equal(aUser.contact.getPhoneNumber('work').number);
-			expect(user.contact.getPhoneNumber('work').type).to.equal(aUser.contact.getPhoneNumber('work').type);
+			expect(user.contact.phoneNumber('work').number).to.equal(aUser.contact.phoneNumber('work').number);
+			expect(user.contact.phoneNumber('work').type).to.equal(aUser.contact.phoneNumber('work').type);
 
 			// Person vs Person2 Address
-			expect(user.contact.getPostalAddress('Home').line1).to.equal(aUser.contact.getPostalAddress('Home').line1);
-			expect(user.contact.getPostalAddress('Home').line2).to.equal(aUser.contact.getPostalAddress('Home').line2);
-			expect(user.contact.getPostalAddress('Home').getCityAsstring()).to.equal(aUser.contact.getPostalAddress('Home').getCityAsstring());
-			expect(user.contact.getPostalAddress('Home').getStateProvinceAsstring()).to.equal(aUser.contact.getPostalAddress('Home').getStateProvinceAsstring());
-			expect(user.contact.getPostalAddress('Home').postalCode).to.equal(aUser.contact.getPostalAddress('Home').postalCode);
+			expect(user.contact.postalAddress('Home').line1).to.equal(aUser.contact.postalAddress('Home').line1);
+			expect(user.contact.postalAddress('Home').line2).to.equal(aUser.contact.postalAddress('Home').line2);
+			expect(user.contact.postalAddress('Home').cityText).to.equal(aUser.contact.postalAddress('Home').cityText);
+			expect(user.contact.postalAddress('Home').stateText).to.equal(aUser.contact.postalAddress('Home').stateText);
+			expect(user.contact.postalAddress('Home').postalCode).to.equal(aUser.contact.postalAddress('Home').postalCode);
 
 			// log.info('user get by username from the service', user);
 			done();
@@ -160,15 +158,15 @@ describe('UserService', function () {
 
 	it('should find one user by email address', function(done){
 
-		// log.info('email to search', aUser.contact.getEmailAddress('work').address);
+		// log.info('email to search', aUser.contact.emailAddress('work').address);
 
-		userService.findByEmail(aUser.contact.getEmailAddress('work').address).then(function (user) {
+		userService.findByEmail(aUser.contact.emailAddress('work').address).then(function (user) {
 
-			// log.info('email found', user, aUser.contact.getEmailAddress('work').address);
+			// log.info('email found', user, aUser.contact.emailAddress('work').address);
 
 			// Person vs Person2 Email
-			expect(user.contact.getEmailAddress('work').address).to.equal(aUser.contact.getEmailAddress('work').address);
-			expect(user.contact.getEmailAddress('work').type).to.equal(aUser.contact.getEmailAddress('work').type);
+			expect(user.contact.emailAddress('work').address).to.equal(aUser.contact.emailAddress('work').address);
+			expect(user.contact.emailAddress('work').type).to.equal(aUser.contact.emailAddress('work').type);
 
 			done();
 		});
@@ -176,7 +174,7 @@ describe('UserService', function () {
 
 	it('should find users by phone number', function(done){
 
-		userService.findByPhone(aUser.contact.getPhoneNumber('work').number).then(function (users) {
+		userService.findByPhone(aUser.contact.phoneNumber('work').number).then(function (users) {
 
 			// Expect at least one user
 			expect(users).to.have.length.above(0);
@@ -184,8 +182,8 @@ describe('UserService', function () {
 			var user = users[0];
 
 			// Person vs Person2 Phone Number
-			expect(user.contact.getPhoneNumber('work').number).to.equal(aUser.contact.getPhoneNumber('work').number);
-			expect(user.contact.getPhoneNumber('work').type).to.equal(aUser.contact.getPhoneNumber('work').type);
+			expect(user.contact.phoneNumber('work').number).to.equal(aUser.contact.phoneNumber('work').number);
+			expect(user.contact.phoneNumber('work').type).to.equal(aUser.contact.phoneNumber('work').type);
 
 			done();
 		});
@@ -225,5 +223,4 @@ describe('UserService', function () {
 			});
 		});
 	});
-
 });

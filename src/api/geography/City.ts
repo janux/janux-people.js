@@ -8,6 +8,5 @@ export interface City // extends Serializable, Persistent
 	state: StateProvince;
 
 	/** shortcut for state.getCountry() */
-	getCountry(): Country;
-	setCountry(o: Country): void;
+	country: Country;
 }

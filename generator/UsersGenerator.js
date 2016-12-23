@@ -79,8 +79,8 @@ var UsersGenerator = (function () {
 		var aPostalAddr = new PostalAddress();
 		aPostalAddr.line1 = faker.address.streetName();
 		aPostalAddr.line2 = faker.address.streetAddress();
-		aPostalAddr.setCityAsstring( faker.address.city() );
-		aPostalAddr.setStateProvinceAsstring( faker.address.state() );
+		aPostalAddr.cityText = faker.address.city();
+		aPostalAddr.stateText = faker.address.state();
 		aPostalAddr.postalCode = faker.address.zipCode();
 		person.setContactMethod('Home', aPostalAddr);
 

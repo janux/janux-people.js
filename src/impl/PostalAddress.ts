@@ -38,14 +38,14 @@ export class PostalAddressImpl implements PostalAddress
 	public cityText: string;
 	public stateText: string;
 	public countryText: string;
-	public city: City;
-	public stateProvince: StateProvince;
-	public country: Country;
+	public _city: City;
+	public _stateProvince: StateProvince;
+	public _country: Country;
 	public type: string;
 	public primary: boolean;
 
-	getCity(): City {
-		return this.city;
+	get city(): City {
+		return this._city;
 	}
 	
 	/**
@@ -53,13 +53,13 @@ export class PostalAddressImpl implements PostalAddress
 	* nulled, and the StateProvince and Country fields of this Address to be set
 	* to, respectively, city.getState() and city.getCountry()
 	*/
-	setCity(city: City): void {
-		this.city = city;
+	set city(city: City) {
+		this._city = city;
 		if (city instanceof CityImpl)
 		{
 			this.cityText    = null;
-			this.setStateProvince(city.state);
-			this.setCountry(city.getCountry());
+			this.stateProvince = city.state;
+			this.country = city.country;
 		}
 	}
 
@@ -67,9 +67,9 @@ export class PostalAddressImpl implements PostalAddress
 	* returns getCity().getState() if a City is assigned to this
 	* PostalAddress, or else the StateProvince field
 	*/
-	getStateProvince(): StateProvince
+	get stateProvince(): StateProvince
 	{
-		if (this.getCity() instanceof CityImpl) {
+		if (this.city instanceof CityImpl) {
 			return this.city.state;
 		}
 		else {
@@ -82,12 +82,12 @@ export class PostalAddressImpl implements PostalAddress
 	* stateProvinceAsstring field to be nulled, and the Country fields of this
 	* Address to be set to stateProvince.getCountry()
 	*/
-	setStateProvince(aStateProvince: StateProvince): void {
-		this.stateProvince = aStateProvince;
+	set stateProvince(aStateProvince: StateProvince) {
+		this._stateProvince = aStateProvince;
 		if (aStateProvince instanceof StateProvinceImpl)
 		{
 			this.stateText = null;
-			this.setCountry(aStateProvince.getCountry());
+			this.country = aStateProvince.country;
 		}
 	}
 	
@@ -95,13 +95,13 @@ export class PostalAddressImpl implements PostalAddress
 	* returns getCity().getCountry() if a City is assigned to this
 	* PostalAddress, or else the Country field
 	*/
-	getCountry()
+	get country()
 	{
 		if (this.city instanceof CityImpl) {
-			return this.city.getCountry();
+			return this.city.country;
 		}
 		else {
-			return this.country;
+			return this._country;
 		}
 	}
 	
@@ -112,99 +112,75 @@ export class PostalAddressImpl implements PostalAddress
 	* to mean that the existing City will be changed, and thus the City filed is
 	* nulled
 	*/
-	setCountry(aCountry: Country): void {
-		this.country = aCountry;
+	set country(aCountry: Country) {
+		this._country = aCountry;
 
 		if (aCountry instanceof CountryImpl)
 		{
 			this.countryText = null;
 		}
 
-		if (this.city instanceof CityImpl && this.city.getCountry().toString() != aCountry.toString())
+		if (this.city instanceof CityImpl && this.city.country.toString() != aCountry.toString())
 		{
 			this.city = null;
 			this.stateProvince = null;
 		}
 	}
 
-	getCityAsstring(): string {
-		return this.cityText;
-	}
-	
-	getCountryAsstring(): string {
-		return this.countryText;
-	}
-	
-	getStateProvinceAsstring(): string {
-		return this.stateText;
-	}
-	
-	setCityAsstring(cityText: string): void {
-		this.cityText = cityText;
-	}
-	
-	setCountryAsstring(countryText: string): void {
-		this.countryText = countryText;
-	}
-	
-	setStateProvinceAsstring(stateName: string): void {
-		this.stateText = stateName;
-	}
-	
-	getCityName(): string {
-		if (this.getCity() != null){
-			return this.getCity().name;
+	get cityName(): string {
+		if (this.city != null){
+			return this.city.name;
 		}
 		else {
 			return this.cityText;
 		}
 	}
-	
-	getCountryName(): string {
-		if (this.getCountry() != null) {
-			return this.getCountry().getName();
-		}
-		else {
-			return this.countryText;
-		}
-	}
 
-	getCountryCode(): string {
-		if (this.getCountry() != null) {
-			return this.getCountry().getCode();
-		}
-		else {
-			return this.countryText;
-		}
-	}
-
-	getStateProvinceName(): string {
-		if (this.getStateProvince() != null) {
-			return this.getStateProvince().getName();
-		}
-		else {
-			return this.stateText;
-		}
-	}
-
-	 getStateProvinceCode(): string {
-		if (this.getStateProvince() != null) {
-			return this.getStateProvince().getCode();
-		}
-		else {
-			return this.stateText;
-		}
-	}
-
-	setCityName(cityText: string): void {
+	set cityName(cityText: string) {
 		this.cityText = cityText;
 	}
 	
-	setCountryName(countryText: string): void {
+	get countryName(): string {
+		if (this.country != null) {
+			return this.country.name;
+		}
+		else {
+			return this.countryText;
+		}
+	}
+	
+	set countryName(countryText: string) {
 		this.countryText = countryText;
 	}
 
-	setStateName(stateText: string): void {
+	get countryCode(): string {
+		if (this.country != null) {
+			return this.country.code;
+		}
+		else {
+			return this.countryText;
+		}
+	}
+
+	get stateProvinceName(): string {
+		if (this.stateProvince != null) {
+			return this.stateProvince.name;
+		}
+		else {
+			return this.stateText;
+		}
+	}
+
+	get stateProvinceCode(): string {
+		if (this.stateProvince != null) {
+			return this.stateProvince.code;
+		}
+		else {
+			return this.stateText;
+		}
+	}
+	
+	set stateName(stateText: string) {
 		this.stateText = stateText;
 	}
 	
@@ -212,35 +188,4 @@ export class PostalAddressImpl implements PostalAddress
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}
-
-	//@SuppressWarnings("unchecked")
-	//Object clone()
-	//{
-	//	try
-	//	{
-	//		PostalAddressImpl result = (PostalAddressImpl) super.clone();
-	//	
-	//		result.setId(-1);
-	//	
-	//		result.line1         = this.line1;
-	//		result.line2         = this.line2;
-	//		result.line3         = this.line3;
-	//		result.postalCode    = this.postalCode;
-	//	
-	//		result.country       = this.country;
-	//		result.stateProvince = this.stateProvince;
-	//		result.city          = this.city;
-	//	
-	//		result.countryText   = this.countryText;
-	//		result.stateText     = this.stateText;
-	//		result.cityText      = this.cityText;
-	//	
-	//		return result;
-	//	}
-	//	catch (CloneNotSupportedException e)
-	//	{
-	//		return null;
-	//	}
-	//}
-	
 } // end class PostalAddressImpl

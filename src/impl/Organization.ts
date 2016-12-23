@@ -11,7 +11,6 @@ import {PartyAbstract} from "./Party";
  * Represents an Organization
  *
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
- * @version $Revision: 1.8 $ - $Date: 2007-05-01 23:20:58 $
  ***************************************************************************************************
  */
 export class OrganizationImpl extends PartyAbstract implements Organization
