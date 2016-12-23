@@ -65,7 +65,7 @@ export abstract class PartyAbstract implements Party
 			}
 
 			this.contactMethods[contactMethod.field].push(contactMethod);
-			console.log("added contact method in field '" + contactMethod.field + "' with type "+contactMethod.type);
+			// console.log("added contact method in field '" + contactMethod.field + "' with type "+contactMethod.type);
 		}
 	}
 
