@@ -1,8 +1,6 @@
-/// <reference path="../../typings/tsd.d.ts" />
-/// <reference path="../collections.ts" />
-
-import {ContactMethod} from "../api/ContactMethod";
 'use strict';
+
+/// <reference path="../collections.ts" />
 
 var tools = require('../tools');
 
@@ -14,8 +12,6 @@ import {PersonName} from "../api/PersonName";
 
 import {PartyAbstract} from "./Party";
 import {PersonNameImpl} from "./PersonName";
-import {PartyName} from "../api/PartyName";
-import {PhoneNumberImpl} from "./PhoneNumber";
 
 /**
  ***************************************************************************************************

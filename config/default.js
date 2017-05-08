@@ -34,7 +34,6 @@ cfg.jshint = {
 };
 
 cfg.tsConfig = {
-	sortOutput: true,
 	module: "commonjs",
 	removeComments: true,
 	target:'ES5'

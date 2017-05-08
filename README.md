@@ -4,11 +4,8 @@ The `janux-people` package represents `Persons` and `Organizations` using the ke
 
 * Install by running:
 
-	$ npm install && tsd install
+	$ npm install
 
-	Note: if you don't have TypeScript Definition manager (TSD), please install by running:
-		
-		$ npm install tsd -g
 
 * Compile typescript project:
 
