@@ -18,11 +18,10 @@ import {StateProvinceImpl} from "./StateProvince";
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
  ***************************************************************************************************
  */
-export class CityImpl implements City
-{
+export class CityImpl implements City {
 	/** An optional business code by which an industry may identify a City */
-	public code: string;
-	public name: string;
+	public code:string;
+	public name:string;
 
 	/**
 	 * A City belongs to a Country implicitly by way of a StateProvince; nevertheless,
@@ -35,16 +34,16 @@ export class CityImpl implements City
 	 */
 	public state:StateProvince = new StateProvinceImpl();
 
-	constructor(state: StateProvince, name: string) {
+	constructor(state:StateProvince, name:string) {
 		this.state = state;
 		this.name = name;
 	}
 
-	get province(): StateProvince {
+	get province():StateProvince {
 		return this.state;
 	}
 
-	set province(o: StateProvince) {
+	set province(o:StateProvince) {
 		this.state = o;
 	}
 
@@ -52,11 +51,11 @@ export class CityImpl implements City
 		return this.state.country;
 	}
 
-	set country(o: Country) {
+	set country(o:Country) {
 		this.state.country = o;
 	}
 
-	public toString(): string {
+	public toString():string {
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}

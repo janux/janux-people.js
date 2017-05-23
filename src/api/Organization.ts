@@ -2,7 +2,6 @@
 
 import {Party} from './Party';
 
-export interface Organization extends Party
-{
-	name: string;
+export interface Organization extends Party {
+	name:string;
 }

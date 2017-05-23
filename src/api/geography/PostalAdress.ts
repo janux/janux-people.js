@@ -38,21 +38,20 @@ import {StateProvince} from './StateProvince';
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
  ***************************************************************************************************
  */
-export interface PostalAddress extends ContactMethod
-{
-	line1: string;
-	line2: string;
-	line3: string;
-	postalCode: string;
+export interface PostalAddress extends ContactMethod {
+	line1:string;
+	line2:string;
+	line3:string;
+	postalCode:string;
 
 	/** @param s a string that can be used to represent a city */
-	cityText: string;
+	cityText:string;
 
 	/** @param s a string that can be used to represent a state or a province */
-	stateText: string;
+	stateText:string;
 
 	/** @param s a string that can be used to represent a country */
-	countryText: string;
+	countryText:string;
 
 	/**
 	 * The City where the PostalAddress is located; may be null if it is not possible to ascertain the
@@ -60,47 +59,47 @@ export interface PostalAddress extends ContactMethod
 	 * string in getCityAsstring.  If the City is not null, the getStateProvince and getCountry fields
 	 * must be the same as the StateProvince/Country of the City.
 	 */
-	city: City;
+	city:City;
 
 	/**
 	 * StateProvince in which this PostalAddress is located; if getCity or getCountry fields ane not
 	 * null, all three of these entities must be congruent.
 	 */
-	stateProvince: StateProvince;
+	stateProvince:StateProvince;
 
 	/**
 	 * Country in which this PostalAddress is located; if getCity or getStateProvince fields are not
 	 * null, this Country must be the same as the one in which the City and StateProvince are located
 	 */
-	country: Country;
+	country:Country;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getCity().getName(); or,
 	 * if getCity() is null, it returns getCityAsstring().
 	 */
-	cityName: string;
+	cityName:string;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getStateProvince().getName(); or,
 	 * if getStateProvince() is null, it returns this.getStateProvinceNameAsstring().
 	 */
-	stateProvinceName: string;
+	stateProvinceName:string;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getStateProvince().getCode(); or,
 	 * if getStateProvince() is null, it returns this.getStateProvinceNameAsstring().
 	 */
-	stateProvinceCode: string;
+	stateProvinceCode:string;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getCountry().getName(); or,
 	 * if getCountry() is null, it returns this.getCountryAsstring().
 	 */
-	countryName: string;
+	countryName:string;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getCountry().getCode(); or,
 	 * if getCountry() is null, it returns this.getCountryAsstring().
 	 */
-	countryCode: string;
+	countryCode:string;
 }

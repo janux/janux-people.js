@@ -1,4 +1,3 @@
-
 var tools = require('../tools');
 
 import {Organization} from "../api/Organization";
@@ -13,28 +12,27 @@ import {PartyAbstract} from "./Party";
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
  ***************************************************************************************************
  */
-export class OrganizationImpl extends PartyAbstract implements Organization
-{
-	get typeName(): string {
+export class OrganizationImpl extends PartyAbstract implements Organization {
+	get typeName():string {
 		return tools.className(this);
 	}
 
-	public name: string;
+	public name:string;
 
-	constructor(name?:string){
+	constructor(name?:string) {
 		super();
 		this.name = name;
 	}
 
-	public toJSON(): any {
-		var out:any = this.contactMethods;
+	public toJSON():any {
+		let out:any = this.contactMethods;
 		out.name = this.name;
 		return out;
 	}
 
 	/** deserializes a Organization from its canonical toJSON representation */
-	static fromJSON(obj: any): Organization {
-		var aOrg =  new OrganizationImpl(obj.name);
+	static fromJSON(obj:any):Organization {
+		let aOrg = new OrganizationImpl(obj.name);
 		aOrg = PartyAbstract.fromJSON(obj, aOrg);
 		return aOrg;
 	}

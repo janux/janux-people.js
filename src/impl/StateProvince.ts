@@ -14,15 +14,14 @@ import {Country} from "../api/geography/Country";
  * Simple bean representing a StateProvince
  ***************************************************************************************************
  */
-export class StateProvinceImpl implements StateProvince
-{
-	public code: string;
-	public name: string;
-	public country: Country;
-	public sortOrder: number;
-	public visible: boolean = true;
+export class StateProvinceImpl implements StateProvince {
+	public code:string;
+	public name:string;
+	public country:Country;
+	public sortOrder:number;
+	public visible:boolean = true;
 
-	public toString(): string {
+	public toString():string {
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}

@@ -14,15 +14,14 @@ import {Country} from "../api/geography/Country";
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
  ***************************************************************************************************
  */
-export class CountryImpl implements Country
-{
-	public code: string;
-	public phoneCode: number;
-	public name: string;
-	public sortOrder: number;
-	public visible: boolean = true;
+export class CountryImpl implements Country {
+	public code:string;
+	public phoneCode:number;
+	public name:string;
+	public sortOrder:number;
+	public visible:boolean = true;
 
-	public toString(): string {
+	public toString():string {
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}

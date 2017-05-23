@@ -25,22 +25,21 @@ import {EmailAddressImpl} from "./EmailAddress";
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
  ***************************************************************************************************
  */
-export abstract class PartyAbstract implements Party
-{
-	public contactMethods: any;
+export abstract class PartyAbstract implements Party {
+	public contactMethods:any;
 
 	constructor() {
 		this.contactMethods = {};
 	}
 
-	getContactMethod(aField: string, aType: string): ContactMethod {
-		var findContact: ContactMethod;
+	getContactMethod(aField:string, aType:string):ContactMethod {
+		var findContact:ContactMethod;
 
 		// Get contact for a specific type Ej: Home
-		if(typeof this.contactMethods[aField] !== 'undefined'){
-			this.contactMethods[aField].forEach(function(contact:ContactMethod){
-				if( (aType !== '' && contact.type === aType) ||
-					(typeof aType === 'undefined' && contact.primary === true)){
+		if (typeof this.contactMethods[aField] !== 'undefined') {
+			this.contactMethods[aField].forEach(function (contact:ContactMethod) {
+				if ((aType !== '' && contact.type === aType) ||
+					(typeof aType === 'undefined' && contact.primary === true)) {
 					findContact = contact;
 				}
 			});
@@ -48,11 +47,11 @@ export abstract class PartyAbstract implements Party
 		return findContact;
 	}
 
-	setContactMethod(type: string, contactMethod: ContactMethod): void {
-		if(typeof type === 'undefined' || type === ''){
+	setContactMethod(type:string, contactMethod:ContactMethod):void {
+		if (typeof type === 'undefined' || type === '') {
 			throw new Error('Can not add a contact without specifying the type');
 		}
-		else{
+		else {
 			// Set type
 			contactMethod.type = type;
 
@@ -60,7 +59,7 @@ export abstract class PartyAbstract implements Party
 			this.contactMethods[contactMethod.field] = this.contactMethods[contactMethod.field] || [];
 
 			// Set this contact method as primary
-			if(this.contactMethods[contactMethod.field].length == 0){
+			if (this.contactMethods[contactMethod.field].length == 0) {
 				contactMethod.primary = true;
 			}
 
@@ -72,15 +71,15 @@ export abstract class PartyAbstract implements Party
 	/*
 	 * Postal mailing addresses
 	 */
-	postalAddresses(dictionary?: boolean): any {
-		if(dictionary){
+	postalAddresses(dictionary?:boolean):any {
+		if (dictionary) {
 			/*
 			 * Postal mailing addresses keyed by a string code representing a
 			 * user-defined type of ContactMethod kind, such as PHYSICAL_ADDRESS,
 			 * CHECK-IN_ADDRESS, MAILING_ADDRESS, BILLING_ADDRESS, etc...
 			 */
 			return this.createContactMethodDictionary('addresses');
-		}else{
+		} else {
 			/*
 			 * Return Array of postal addresses
 			 */
@@ -91,21 +90,21 @@ export abstract class PartyAbstract implements Party
 	/*
 	 * Return specific postal address according type
 	 */
-	postalAddress(type: string): PostalAddress {
+	postalAddress(type:string):PostalAddress {
 		return <PostalAddress>this.getContactMethod('addresses', type);
 	}
 
 	/*
 	 * Telephone numbers 
 	 */
-	phoneNumbers(dictionary?: boolean): any {
-		if(dictionary){
+	phoneNumbers(dictionary?:boolean):any {
+		if (dictionary) {
 			/*
 			 * Telephone numbers keyed by a string code representing a user-defined type of
 			 * Phone Number, such as PHYSICAL_PHONE, BILLING_PHONE, etc...
 			 */
 			return this.createContactMethodDictionary('phones');
-		}else{
+		} else {
 			/*
 			 * Return Array of phone numbers
 			 */
@@ -116,21 +115,21 @@ export abstract class PartyAbstract implements Party
 	/*
 	 * Return specific phone number according type
 	 */
-	phoneNumber(type: string): PhoneNumber {
+	phoneNumber(type:string):PhoneNumber {
 		return <PhoneNumber>this.getContactMethod('phones', type);
 	}
 
 	/*
 	 * Email addresses
 	 */
-	emailAddresses(dictionary?: boolean): any {
-		if(dictionary){
+	emailAddresses(dictionary?:boolean):any {
+		if (dictionary) {
 			/*
 			 * Email addresses keyed by a string code representing a user-defined kind of
 			 * Email, such as EMAIL1, INFO_EMAIL etc...
 			 */
 			return this.createContactMethodDictionary('emails');
-		}else{
+		} else {
 			/*
 			 * Return Array of phones numbers
 			 */
@@ -141,35 +140,35 @@ export abstract class PartyAbstract implements Party
 	/*
 	 * Return specific email according type
 	 */
-	emailAddress(type: string): EmailAddress {
+	emailAddress(type:string):EmailAddress {
 		return <EmailAddress>this.getContactMethod('emails', type);
 	}
 
 	/** creates a Dictionary for each subclass of ContactMethod found in the main ContactMethod Dictionary */
-	protected createContactMethodDictionary(aField: string): Dictionary<string, ContactMethod> {
-		var contacts: Dictionary<string, ContactMethod> = new Dictionary<string, ContactMethod>();
+	protected createContactMethodDictionary(aField:string):Dictionary<string, ContactMethod> {
+		var contacts:Dictionary<string, ContactMethod> = new Dictionary<string, ContactMethod>();
 
 		var csArray = this.contactMethods[aField];
-		if(csArray.length > 0){
-			csArray.forEach(function(contact: ContactMethod){
+		if (csArray.length > 0) {
+			csArray.forEach(function (contact:ContactMethod) {
 				contacts.setValue(contact.type, contact);
 			});
-		}else {
-			throw new Error('Error while creating contacts dictionary for field '+aField);
+		} else {
+			throw new Error('Error while creating contacts dictionary for field ' + aField);
 		}
 		return contacts;
 	}
 
-	toString(): string {
+	toString():string {
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}
 
-	static fromJSON(obj:any, party: any): any{
+	static fromJSON(obj:any, party:any):any {
 		// Contacts
-		['addresses','phones','emails'].forEach(function(elem){
+		['addresses', 'phones', 'emails'].forEach(function (elem) {
 			var cType = obj[elem];
-			if(typeof obj[elem] !== 'undefined') {
+			if (typeof obj[elem] !== 'undefined') {
 				if (cType.length > 0) {
 					cType.forEach(function (contact:ContactMethod) {
 						party.setContactMethod(contact.type, PartyAbstract.hydrateContactMethod(elem, contact));
@@ -180,16 +179,22 @@ export abstract class PartyAbstract implements Party
 		return party;
 	}
 
-	static hydrateContactMethod(field: string, obj: any): ContactMethod {
-		var out: ContactMethod;
+	static hydrateContactMethod(field:string, obj:any):ContactMethod {
+		var out:ContactMethod;
 
 		switch (field) {
-			case 'phones': out = new PhoneNumberImpl(); break;
-			case 'emails': out = new EmailAddressImpl(); break;
-			case 'addresses': out = new PostalAddressImpl(); break;
+			case 'phones':
+				out = new PhoneNumberImpl();
+				break;
+			case 'emails':
+				out = new EmailAddressImpl();
+				break;
+			case 'addresses':
+				out = new PostalAddressImpl();
+				break;
 		}
 
-		for (var prop in obj) {
+		for (let prop in obj) {
 			if (Object.prototype.hasOwnProperty.call(obj, prop)) {
 				out[prop] = obj[prop];
 			}

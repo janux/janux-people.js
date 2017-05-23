@@ -24,50 +24,47 @@ import {StateProvinceImpl} from "./StateProvince";
  * @since $Revision: 1.23 $ - $Date: 2008-03-27 00:51:37 $
  ***************************************************************************************************
  */
-export class PostalAddressImpl implements PostalAddress
-{
-	get field(): string {
-		return  'addresses'; // tools.className(this);
+export class PostalAddressImpl implements PostalAddress {
+	get field():string {
+		return 'addresses'; // tools.className(this);
 	}
 
-	public line1: string;
-	public line2: string;
-	public line3: string;
-	public postalCode: string;
-	public cityText: string;
-	public stateText: string;
-	public countryText: string;
-	public _city: City;
-	public _stateProvince: StateProvince;
-	public _country: Country;
-	public type: string;
-	public primary: boolean;
+	public line1:string;
+	public line2:string;
+	public line3:string;
+	public postalCode:string;
+	public cityText:string;
+	public stateText:string;
+	public countryText:string;
+	public _city:City;
+	public _stateProvince:StateProvince;
+	public _country:Country;
+	public type:string;
+	public primary:boolean;
 
-	get city(): City {
+	get city():City {
 		return this._city;
 	}
-	
+
 	/**
-	* Assigning a City to this PostalAdress causes the cityAsstring to be
-	* nulled, and the StateProvince and Country fields of this Address to be set
-	* to, respectively, city.getState() and city.getCountry()
-	*/
-	set city(city: City) {
+	 * Assigning a City to this PostalAdress causes the cityAsstring to be
+	 * nulled, and the StateProvince and Country fields of this Address to be set
+	 * to, respectively, city.getState() and city.getCountry()
+	 */
+	set city(city:City) {
 		this._city = city;
-		if (city instanceof CityImpl)
-		{
-			this.cityText    = null;
+		if (city instanceof CityImpl) {
+			this.cityText = null;
 			this.stateProvince = city.state;
 			this.country = city.country;
 		}
 	}
 
 	/**
-	* returns getCity().getState() if a City is assigned to this
-	* PostalAddress, or else the StateProvince field
-	*/
-	get stateProvince(): StateProvince
-	{
+	 * returns getCity().getState() if a City is assigned to this
+	 * PostalAddress, or else the StateProvince field
+	 */
+	get stateProvince():StateProvince {
 		if (this.city instanceof CityImpl) {
 			return this.city.state;
 		}
@@ -77,25 +74,23 @@ export class PostalAddressImpl implements PostalAddress
 	}
 
 	/**
-	* Assigning a StateProvince to this PostalAdress causes the
-	* stateProvinceAsstring field to be nulled, and the Country fields of this
-	* Address to be set to stateProvince.getCountry()
-	*/
-	set stateProvince(aStateProvince: StateProvince) {
+	 * Assigning a StateProvince to this PostalAdress causes the
+	 * stateProvinceAsstring field to be nulled, and the Country fields of this
+	 * Address to be set to stateProvince.getCountry()
+	 */
+	set stateProvince(aStateProvince:StateProvince) {
 		this._stateProvince = aStateProvince;
-		if (aStateProvince instanceof StateProvinceImpl)
-		{
+		if (aStateProvince instanceof StateProvinceImpl) {
 			this.stateText = null;
 			this.country = aStateProvince.country;
 		}
 	}
-	
+
 	/**
-	* returns getCity().getCountry() if a City is assigned to this
-	* PostalAddress, or else the Country field
-	*/
-	get country()
-	{
+	 * returns getCity().getCountry() if a City is assigned to this
+	 * PostalAddress, or else the Country field
+	 */
+	get country() {
 		if (this.city instanceof CityImpl) {
 			return this.city.country;
 		}
@@ -103,31 +98,29 @@ export class PostalAddressImpl implements PostalAddress
 			return this._country;
 		}
 	}
-	
+
 	/**
-	* Assigning a Country to this address will null the countryAsstring field;
-	* also, if a City is associated to this PostalAddress, and the Country
-	* assigned herewith is different from City.getCountry(), we understand that
-	* to mean that the existing City will be changed, and thus the City filed is
-	* nulled
-	*/
-	set country(aCountry: Country) {
+	 * Assigning a Country to this address will null the countryAsstring field;
+	 * also, if a City is associated to this PostalAddress, and the Country
+	 * assigned herewith is different from City.getCountry(), we understand that
+	 * to mean that the existing City will be changed, and thus the City filed is
+	 * nulled
+	 */
+	set country(aCountry:Country) {
 		this._country = aCountry;
 
-		if (aCountry instanceof CountryImpl)
-		{
+		if (aCountry instanceof CountryImpl) {
 			this.countryText = null;
 		}
 
-		if (this.city instanceof CityImpl && this.city.country.toString() != aCountry.toString())
-		{
+		if (this.city instanceof CityImpl && this.city.country.toString() != aCountry.toString()) {
 			this.city = null;
 			this.stateProvince = null;
 		}
 	}
 
-	get cityName(): string {
-		if (this.city != null){
+	get cityName():string {
+		if (this.city != null) {
 			return this.city.name;
 		}
 		else {
@@ -135,11 +128,11 @@ export class PostalAddressImpl implements PostalAddress
 		}
 	}
 
-	set cityName(cityText: string) {
+	set cityName(cityText:string) {
 		this.cityText = cityText;
 	}
-	
-	get countryName(): string {
+
+	get countryName():string {
 		if (this.country != null) {
 			return this.country.name;
 		}
@@ -147,12 +140,12 @@ export class PostalAddressImpl implements PostalAddress
 			return this.countryText;
 		}
 	}
-	
-	set countryName(countryText: string) {
+
+	set countryName(countryText:string) {
 		this.countryText = countryText;
 	}
 
-	get countryCode(): string {
+	get countryCode():string {
 		if (this.country != null) {
 			return this.country.code;
 		}
@@ -161,7 +154,7 @@ export class PostalAddressImpl implements PostalAddress
 		}
 	}
 
-	get stateProvinceName(): string {
+	get stateProvinceName():string {
 		if (this.stateProvince != null) {
 			return this.stateProvince.name;
 		}
@@ -170,7 +163,7 @@ export class PostalAddressImpl implements PostalAddress
 		}
 	}
 
-	get stateProvinceCode(): string {
+	get stateProvinceCode():string {
 		if (this.stateProvince != null) {
 			return this.stateProvince.code;
 		}
@@ -178,12 +171,12 @@ export class PostalAddressImpl implements PostalAddress
 			return this.stateText;
 		}
 	}
-	
-	set stateName(stateText: string) {
+
+	set stateName(stateText:string) {
 		this.stateText = stateText;
 	}
-	
-	toString(): string {
+
+	toString():string {
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}

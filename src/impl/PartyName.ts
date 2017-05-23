@@ -13,21 +13,19 @@ import {PartyName} from "../api/PartyName";
  * @author  <a href="mailto:philippe.paravicini@janux.org">Philippe Paravicini</a>
  ***************************************************************************************************
  */
-export class PartyNameImpl implements PartyName
-{
-	public _shortName: string;
-	public _longName: string;
+export class PartyNameImpl implements PartyName {
+	public _shortName:string;
+	public _longName:string;
 
-	get shortName(): string {
+	get shortName():string {
 		return this._shortName;
 	}
 
-	get longName(): string {
+	get longName():string {
 		return this._longName;
 	}
-	
-	public toString(): string
-	{
+
+	public toString():string {
 		// Short hand. Adds each own property
 		return collections.makeString(this);
 	}

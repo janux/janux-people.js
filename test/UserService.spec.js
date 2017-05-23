@@ -30,28 +30,28 @@ describe('UserService', function () {
 	//
 	// });
 
-	it('should be able to get a user by id from service', function(done){
-	
+	it('should be able to get a user by id from service', function (done) {
+
 		// Get user from service
 		userService.findById(aUser.userId).then(function (user) {
-	
+
 			// The user obtained from the service must have at least the specified fields
 			expect(user).to.have.any.keys(
 				'userId', 'username', 'password', 'roles', 'contact', 'cdate', 'mdate'
 			);
-	
+
 			// User data obtained from the service must match the data used to create it
 			expect(user.userId).to.equal(aUser.userId);
 			expect(user.username).to.equal(aUser.username);
 			expect(user.password).to.equal(aUser.password);
-	
+
 			// Contact data obtained from the service must match the data used to create it
 			expect(user.contact.name.honorificPrefix).to.equal(aUser.contact.name.honorificPrefix);
 			expect(user.contact.name.first).to.equal(aUser.contact.name.first);
 			expect(user.contact.name.middle).to.equal(aUser.contact.name.middle);
 			expect(user.contact.name.last).to.equal(aUser.contact.name.last);
 			expect(user.contact.name.honorificSuffix).to.equal(aUser.contact.name.honorificSuffix);
-	
+
 			// Person vs Person2 Phone Number
 			expect(user.contact.phoneNumber('work').number).to.equal(aUser.contact.phoneNumber('work').number);
 			expect(user.contact.phoneNumber('work').type).to.equal(aUser.contact.phoneNumber('work').type);
@@ -72,7 +72,7 @@ describe('UserService', function () {
 		});
 	});
 
-	it('should be able to get a user by username from service', function(done){
+	it('should be able to get a user by username from service', function (done) {
 
 		// Get user by username from services
 		userService.findByUsername(aUser.username).then(function (user) {
@@ -110,10 +110,10 @@ describe('UserService', function () {
 		});
 	});
 
-	it('should find one or more users from a partial string', function(done){
+	it('should find one or more users from a partial string', function (done) {
 
 		// Get user by partial name from service
-		var partialName = aUser.contact.name.first.substr(0,5);
+		var partialName = aUser.contact.name.first.substr(0, 5);
 
 		userService.findByName(partialName).then(function (users) {
 
@@ -132,7 +132,7 @@ describe('UserService', function () {
 		});
 	});
 
-	it('should not get a user from service', function(done) {
+	it('should not get a user from service', function (done) {
 
 		userService.findByName('000000').then(function (users) {
 
@@ -142,7 +142,7 @@ describe('UserService', function () {
 		});
 	});
 
-	it('should get all users from service', function(done) {
+	it('should get all users from service', function (done) {
 
 		userService.findByName('').then(function (users) {
 
@@ -156,7 +156,7 @@ describe('UserService', function () {
 		});
 	});
 
-	it('should find one user by email address', function(done){
+	it('should find one user by email address', function (done) {
 
 		// log.info('email to search', aUser.contact.emailAddress('work').address);
 
@@ -172,7 +172,7 @@ describe('UserService', function () {
 		});
 	});
 
-	it('should find users by phone number', function(done){
+	it('should find users by phone number', function (done) {
 
 		userService.findByPhone(aUser.contact.phoneNumber('work').number).then(function (users) {
 
@@ -189,7 +189,7 @@ describe('UserService', function () {
 		});
 	});
 
-	it('should be able to update a user', function(done){
+	it('should be able to update a user', function (done) {
 
 		// Modify user record
 		userService.findByUsername(aUser.username).then(function (user) {
@@ -209,7 +209,7 @@ describe('UserService', function () {
 
 	});
 
-	it('should be able to delete a user by id', function(done) {
+	it('should be able to delete a user by id', function (done) {
 
 		userService.findByUsername(aUser.username).then(function (user) {
 			userService.deleteUser(user);

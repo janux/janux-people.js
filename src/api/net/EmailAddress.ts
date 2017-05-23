@@ -9,8 +9,7 @@ import {ContactMethod} from '../ContactMethod';
  ***************************************************************************************************
  */
 
-export interface EmailAddress extends ContactMethod
-{
+export interface EmailAddress extends ContactMethod {
 	/** the string representation of this Email Address */
-	address: string;
+	address:string;
 }

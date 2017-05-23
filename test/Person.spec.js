@@ -39,7 +39,7 @@ describe('Person', function () {
 		expect(person.typeName).to.equal(TYPE_NAME);
 	});
 
-	it('should be able to add/retrieve basic data of a person', function(){
+	it('should be able to add/retrieve basic data of a person', function () {
 		expect(_.isObject(person)).to.equal(true);
 
 		expect(person.name.honorificPrefix).to.equal('Mr');
@@ -51,7 +51,7 @@ describe('Person', function () {
 		expect(person.name.longName).to.equal('Mr Jonh Peter Sanders');
 	});
 
-	it('should be able to add/retrieve the phone number of a person', function(){
+	it('should be able to add/retrieve the phone number of a person', function () {
 		// Phone Number
 		var aPhone = new PhoneNumber('5555060593');
 		person.setContactMethod('work', aPhone);
@@ -61,7 +61,7 @@ describe('Person', function () {
 		expect(phone.number).to.equal('5555060593');
 	});
 
-	it('should be able to retrieve the phone numbers of a person as Array or Dictionary', function() {
+	it('should be able to retrieve the phone numbers of a person as Array or Dictionary', function () {
 		// Phone Number
 		var aPhone = new PhoneNumber('5555060593');
 		person.setContactMethod('work', aPhone);
@@ -79,7 +79,7 @@ describe('Person', function () {
 		expect(phoneNumbers.getValue('work').number).to.equal('5555060593');
 	});
 
-	it('should be able to retrieve the primary phone number of a person', function() {
+	it('should be able to retrieve the primary phone number of a person', function () {
 
 		person.setContactMethod('work', new PhoneNumber('5555060593'));
 		person.setContactMethod('home', new PhoneNumber('1209191723'));
@@ -90,7 +90,7 @@ describe('Person', function () {
 
 	});
 
-	it('should be able to add/retrieve the postal address of a person', function(){
+	it('should be able to add/retrieve the postal address of a person', function () {
 		// Postal Address
 		var aPostalAddr = new PostalAddress();
 		aPostalAddr.line1 = '1415 L Street';

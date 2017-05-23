@@ -39,13 +39,13 @@ describe('Organization', function () {
 		expect(org.typeName).to.equal(TYPE_NAME);
 	});
 
-	it('should be able to add/retrieve basic data of a organization', function(){
+	it('should be able to add/retrieve basic data of a organization', function () {
 		expect(_.isObject(org)).to.equal(true);
 
 		expect(org.name).to.equal('Coca-Cola');
 	});
 
-	it('should be able to add/retrieve the phone number of a organization', function(){
+	it('should be able to add/retrieve the phone number of a organization', function () {
 		// Phone Number
 		var aPhone = new PhoneNumber('689655555');
 		org.setContactMethod('work', aPhone);
@@ -53,7 +53,7 @@ describe('Organization', function () {
 		expect(org.phoneNumber('work').number).to.equal('689655555');
 	});
 
-	it('should be able to add/retrieve the postal address of a organization', function(){
+	it('should be able to add/retrieve the postal address of a organization', function () {
 		// Postal Address
 		var aPostalAddr = new PostalAddress();
 		aPostalAddr.line1 = '1415 L Street';
