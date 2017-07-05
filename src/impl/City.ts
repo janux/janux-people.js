@@ -5,7 +5,6 @@
 // collections
 import basarat = require('../collections');
 import collections = basarat.collections;
-
 import {City} from "../api/geography/City";
 import {Country} from "../api/geography/Country";
 import {StateProvince} from "../api/geography/StateProvince";

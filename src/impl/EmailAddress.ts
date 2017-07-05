@@ -1,7 +1,5 @@
 'use strict';
 
-var tools = require('../tools');
-
 import {EmailAddress} from "../api/net/EmailAddress";
 /**
  ***************************************************************************************************
@@ -13,7 +11,7 @@ import {EmailAddress} from "../api/net/EmailAddress";
  */
 export class EmailAddressImpl implements EmailAddress {
 	get field():string {
-		return 'emails'; // tools.className(this);
+		return 'emails';
 	}
 
 	public address:string;

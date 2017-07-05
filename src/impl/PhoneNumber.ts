@@ -2,11 +2,8 @@
 
 'use strict';
 
-var tools = require('../tools');
-
 import basarat = require('../collections');
 import collections = basarat.collections;
-
 import {PhoneNumber} from "../api/PhoneNumber";
 
 /**

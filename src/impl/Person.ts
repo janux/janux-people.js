@@ -2,7 +2,7 @@
 
 /// <reference path="../collections.ts" />
 
-var tools = require('../tools');
+import * as tools from '../tools';
 
 import basarat = require('../collections');
 import collections = basarat.collections;

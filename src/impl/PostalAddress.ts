@@ -1,13 +1,10 @@
 /// <reference path="../collections.ts" />
 
-import {CityImpl} from "./City";
 'use strict';
 
-var tools = require('../tools');
-
+import {CityImpl} from "./City";
 import basarat = require('../collections');
 import collections = basarat.collections;
-
 import {PostalAddress} from '../api/geography/PostalAdress';
 import {City} from "../api/geography/City";
 import {StateProvince} from "../api/geography/StateProvince";
@@ -26,7 +23,7 @@ import {StateProvinceImpl} from "./StateProvince";
  */
 export class PostalAddressImpl implements PostalAddress {
 	get field():string {
-		return 'addresses'; // tools.className(this);
+		return 'addresses';
 	}
 
 	public line1:string;

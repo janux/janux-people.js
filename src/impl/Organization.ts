@@ -1,4 +1,5 @@
-var tools = require('../tools');
+
+import * as tools from '../tools';
 
 import {Organization} from "../api/Organization";
 import {PartyName} from "../api/PartyName";
