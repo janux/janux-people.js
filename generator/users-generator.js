@@ -1,7 +1,7 @@
 "use strict";
 
 var faker = require('faker'),
-	md5 = require('MD5');
+	md5 = require('md5');
 
 var Person = require('../index').Person;
 var PhoneNumber = require('../index').PhoneNumber;

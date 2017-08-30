@@ -1,6 +1,6 @@
 'use strict';
 
-var UsersGenerator = require('../index').UsersGenerator;
+var UsersGenerator = require('../generator/index').UsersGenerator;
 
 var chai = require('chai');
 var expect = chai.expect;

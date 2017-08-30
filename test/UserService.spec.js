@@ -1,8 +1,8 @@
 'use strict';
 
-var userDAO = require('../index').UserDAO.object(); // createInstance();
-var userService = require('../index').UserService.singleton(userDAO);
-var UsersGenerator = require('../index').UsersGenerator;
+var userDAO = require('../generator/index').UserDAO.object(); // createInstance();
+var userService = require('../generator/index').UserService.singleton(userDAO);
+var UsersGenerator = require('../generator/index').UsersGenerator;
 
 var chai = require('chai');
 var expect = chai.expect;

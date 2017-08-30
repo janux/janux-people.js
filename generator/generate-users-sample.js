@@ -3,7 +3,7 @@
 var userDAO = require('../index').UserDAO.object(); // createInstance();
 var userService = require('../index').UserService.singleton(userDAO);
 var UsersGenerator = require('../index').UsersGenerator;
-var md5 = require('MD5');
+var md5 = require('md5');
 
 var usersGen = new UsersGenerator();
 
