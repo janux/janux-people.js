@@ -20,3 +20,6 @@ The `janux-people` package represents `Persons` and `Organizations` using the ke
 * Compile and run tests (also compiles the project files in their own directories)
 
     $ gulp test
+    
+    
+    
