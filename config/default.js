@@ -36,7 +36,8 @@ cfg.jshint = {
 cfg.tsConfig = {
 	module: "commonjs",
 	removeComments: true,
-	target:'ES5'
+	target:'ES5',
+	declaration:true
 };
 
 module.exports = cfg;
