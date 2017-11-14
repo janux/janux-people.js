@@ -3,13 +3,8 @@
 /// <reference path="../collections.ts" />
 
 import * as tools from '../tools';
-
-import basarat = require('../collections');
-import collections = basarat.collections;
-
 import {Person} from '../api/Person';
 import {PersonName} from "../api/PersonName";
-
 import {PartyAbstract} from "./Party";
 import {PersonNameImpl} from "./PersonName";
 

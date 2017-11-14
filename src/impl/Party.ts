@@ -32,6 +32,8 @@ export abstract class PartyAbstract implements Party {
 		this.contactMethods = {};
 	}
 
+    abstract get typeName():string;
+
 	getContactMethod(aField:string, aType:string):ContactMethod {
 		var findContact:ContactMethod;
 
@@ -95,7 +97,7 @@ export abstract class PartyAbstract implements Party {
 	}
 
 	/*
-	 * Telephone numbers 
+	 * Telephone numbers
 	 */
 	phoneNumbers(dictionary?:boolean):any {
 		if (dictionary) {
@@ -178,6 +180,8 @@ export abstract class PartyAbstract implements Party {
 		});
 		return party;
 	}
+
+	public abstract toJSON():any;
 
 	static hydrateContactMethod(field:string, obj:any):ContactMethod {
 		var out:ContactMethod;

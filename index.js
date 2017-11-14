@@ -1,10 +1,16 @@
-'use strict';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var Person_1 = require("./dist/impl/Person");
+exports.Person = Person_1.PersonImpl;
+var Organization_1 = require("./dist/impl/Organization");
+exports.Organization = Organization_1.OrganizationImpl;
+var PhoneNumber_1 = require("./dist/impl/PhoneNumber");
+exports.PhoneNumber = PhoneNumber_1.PhoneNumberImpl;
+var PostalAddress_1 = require("./dist/impl/PostalAddress");
+exports.PostalAddress = PostalAddress_1.PostalAddressImpl;
+var EmailAddress_1 = require("./dist/impl/EmailAddress");
+exports.EmailAddress = EmailAddress_1.EmailAddressImpl;
+var Party_1 = require("./dist/impl/Party");
+exports.PartyAbstract = Party_1.PartyAbstract;
 
-// exposing modules
-exports.Person    		    = require('./dist/impl/Person').PersonImpl;
-exports.Organization 	    = require('./dist/impl/Organization').OrganizationImpl;
-exports.PhoneNumber 	    = require('./dist/impl/PhoneNumber').PhoneNumberImpl;
-exports.PostalAddress 	    = require('./dist/impl/PostalAddress').PostalAddressImpl;
-exports.EmailAddress 	    = require('./dist/impl/EmailAddress').EmailAddressImpl;
-exports.PartyPartyAbstract  = require('./dist/impl/Party').PartyAbstract;
-exports.Party               = require('./dist/api/Party').Party;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImluZGV4LnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7O0FBSUEsd0NBQW1EO0FBQTNDLDBCQUFBLFVBQVUsQ0FBVTtBQUM1QixvREFBcUU7QUFBN0Qsc0NBQUEsZ0JBQWdCLENBQWdCO0FBQ3hDLGtEQUFrRTtBQUExRCxvQ0FBQSxlQUFlLENBQWU7QUFDdEMsc0RBQXdFO0FBQWhFLHdDQUFBLGlCQUFpQixDQUFpQjtBQUMxQyxvREFBcUU7QUFBN0Qsc0NBQUEsZ0JBQWdCLENBQWdCO0FBQ3hDLHNDQUEyQztBQUFuQyxnQ0FBQSxhQUFhLENBQUEiLCJmaWxlIjoiaW5kZXguanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKipcbiAqIFByb2plY3QgamFudXgtcGVvcGxlLmpzXG4gKiBDcmVhdGVkIGJ5IGVybmVzdG8gb24gMTEvMTMvMTcuXG4gKi9cbmV4cG9ydCB7UGVyc29uSW1wbCBhcyBQZXJzb259IGZyb20gXCIuL2ltcGwvUGVyc29uXCI7XG5leHBvcnQge09yZ2FuaXphdGlvbkltcGwgYXMgT3JnYW5pemF0aW9ufSBmcm9tIFwiLi9pbXBsL09yZ2FuaXphdGlvblwiO1xuZXhwb3J0IHtQaG9uZU51bWJlckltcGwgYXMgUGhvbmVOdW1iZXJ9IGZyb20gXCIuL2ltcGwvUGhvbmVOdW1iZXJcIjtcbmV4cG9ydCB7UG9zdGFsQWRkcmVzc0ltcGwgYXMgUG9zdGFsQWRkcmVzc30gZnJvbSBcIi4vaW1wbC9Qb3N0YWxBZGRyZXNzXCI7XG5leHBvcnQge0VtYWlsQWRkcmVzc0ltcGwgYXMgRW1haWxBZGRyZXNzfSBmcm9tIFwiLi9pbXBsL0VtYWlsQWRkcmVzc1wiO1xuZXhwb3J0IHtQYXJ0eUFic3RyYWN0fSBmcm9tIFwiLi9pbXBsL1BhcnR5XCI7XG5leHBvcnQge1BhcnR5fSBmcm9tIFwiLi9hcGkvUGFydHlcIjtcbiJdLCJzb3VyY2VSb290IjoiL3NvdXJjZS8ifQ==

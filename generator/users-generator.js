@@ -35,20 +35,20 @@ var UsersGenerator = (function () {
 	// Generate a single user
 	UsersGenerator.prototype.generateUser = function (userObj) {
 		var aDate = faker.date.past();
-		
+
 		var randUsr = {
 			username: faker.internet.userName(),
 			password: md5(faker.internet.password()),
 			roles: ['DESIGNER']
 		};
-		
+
 		var userObj = (typeof userObj !== 'undefined')? userObj : randUsr;
-		
+
 		userObj.userId =  faker.random.uuid();
 		userObj.contact = this.generateContact();
 		userObj.mdate = aDate;
 		userObj.cdate = aDate;
-		
+
 		return userObj;
 	};
 
@@ -66,7 +66,7 @@ var UsersGenerator = (function () {
 			faker.name.lastName(gender),
 			faker.name.suffix(gender)
 		);
-		
+
 		// Create a new fake phone for this person
 		var aPhone = new PhoneNumber( faker.phone.phoneNumber() );
 		person.setContactMethod('work', aPhone);
