@@ -1,4 +1,4 @@
-import {Country} from './Country';
+import {Country} from '../country/Country';
 
 export interface StateProvince // extends Serializable, Persistent
 {

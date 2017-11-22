@@ -1,15 +1,15 @@
-/// <reference path="../collections.ts" />
+/// <reference path="../../../collections.ts" />
 
 'use strict';
 
 // collections
-import basarat = require('../collections');
+import basarat = require('../../../collections');
 import collections = basarat.collections;
-import {City} from "../api/geography/City";
-import {Country} from "../api/geography/Country";
-import {StateProvince} from "../api/geography/StateProvince";
+import {City} from "../../../api/geography/city/City";
+import {Country} from "../../../api/geography/country/Country";
+import {StateProvince} from "../../../api/geography/state/StateProvince";
 
-import {StateProvinceImpl} from "./StateProvince";
+import {StateProvinceImpl} from "../state/StateProvince";
 /**
  ***************************************************************************************************
  * Simple bean representing a City

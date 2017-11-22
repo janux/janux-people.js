@@ -1,12 +1,12 @@
-/// <reference path="../collections.ts" />
+/// <reference path="../../../collections.ts" />
 
 'use strict';
 
 // collections
-import basarat = require('../collections');
+import basarat = require('../../../collections');
 import collections = basarat.collections;
 
-import {Country} from "../api/geography/Country";
+import {Country} from "../../../api/geography/country/Country";
 /**
  ***************************************************************************************************
  * Simple bean representing a Country

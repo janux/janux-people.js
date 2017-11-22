@@ -1,13 +1,13 @@
-/// <reference path="../collections.ts" />
+/// <reference path="../../../collections.ts" />
 
 'use strict';
 
 // collections
-import basarat = require('../collections');
+import basarat = require('../../../collections');
 import collections = basarat.collections;
 
-import {StateProvince} from "../api/geography/StateProvince";
-import {Country} from "../api/geography/Country";
+import {StateProvince} from "../../../api/geography/state/StateProvince";
+import {Country} from "../../../api/geography/country/Country";
 
 /**
  ***************************************************************************************************

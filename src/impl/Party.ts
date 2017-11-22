@@ -12,11 +12,11 @@ import {Party} from '../api/Party';
 import {PartyName} from '../api/PartyName';
 import {ContactMethod} from '../api/ContactMethod';
 import {PhoneNumber} from '../api/PhoneNumber';
-import {PostalAddress} from '../api/geography/PostalAdress';
+import {PostalAddress} from '../api/geography/postal-address/PostalAdress';
 import {EmailAddress} from '../api/net/EmailAddress';
 
 import {PhoneNumberImpl} from "./PhoneNumber";
-import {PostalAddressImpl} from "./PostalAddress";
+import {PostalAddressImpl} from "./geography/postal-address/PostalAddress";
 import {EmailAddressImpl} from "./EmailAddress";
 /**
  ***************************************************************************************************
@@ -95,7 +95,7 @@ export abstract class PartyAbstract implements Party {
 	}
 
 	/*
-	 * Telephone numbers 
+	 * Telephone numbers
 	 */
 	phoneNumbers(dictionary?:boolean):any {
 		if (dictionary) {
