@@ -90,6 +90,22 @@ describe('Person', function () {
 
 	});
 
+	it('should be able to update a contact method by type', function () {
+
+		person.setContactMethod('work', new PhoneNumber('5555060593'));
+
+		// Primary Phone Number
+		expect(person.phoneNumber().type).to.equal('work');
+		expect(person.phoneNumber().number).to.equal('5555060593');
+
+		person.setContactMethod('work', new PhoneNumber('88888888888'));
+
+		// Primary Phone Number
+		expect(person.phoneNumber('work').type).to.equal('work');
+		expect(person.phoneNumber('work').number).to.equal('88888888888');
+
+	});
+
 	it('should be able to add/retrieve the postal address of a person', function () {
 		// Postal Address
 		var aPostalAddr = new PostalAddress();

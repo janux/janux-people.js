@@ -9,6 +9,7 @@ import Dictionary = collections.Dictionary;
 
 // interfaces
 import {Party} from '../api/Party';
+import * as _ from "lodash";
 import {PartyName} from '../api/PartyName';
 import {ContactMethod} from '../api/ContactMethod';
 import {PhoneNumber} from '../api/PhoneNumber';
@@ -34,6 +35,9 @@ export abstract class PartyAbstract implements Party {
 
     abstract get typeName():string;
 
+	/*
+	* Get a contact method by field and type
+	*/
 	getContactMethod(aField:string, aType:string):ContactMethod {
 		var findContact:ContactMethod;
 
@@ -49,6 +53,9 @@ export abstract class PartyAbstract implements Party {
 		return findContact;
 	}
 
+	/*
+	* Insert or update a contact method
+	*/
 	setContactMethod(type:string, contactMethod:ContactMethod):void {
 		if (typeof type === 'undefined' || type === '') {
 			throw new Error('Can not add a contact without specifying the type');
@@ -65,7 +72,18 @@ export abstract class PartyAbstract implements Party {
 				contactMethod.primary = true;
 			}
 
-			this.contactMethods[contactMethod.field].push(contactMethod);
+			// Check if contact with specified type already exists
+			const contactIndex = _.findIndex(this.contactMethods[contactMethod.field],{type:type});
+
+			if(contactIndex !== -1)
+			{
+				// Just update
+				this.contactMethods[contactMethod.field][contactIndex] = contactMethod;
+			} else {
+				// Insert a new one
+				this.contactMethods[contactMethod.field].push(contactMethod);
+			}
+
 			// console.log("added contact method in field '" + contactMethod.field + "' with type "+contactMethod.type);
 		}
 	}
