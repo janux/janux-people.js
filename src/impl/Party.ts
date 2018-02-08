@@ -73,16 +73,17 @@ export abstract class PartyAbstract implements Party {
 			}
 
 			// Check if contact with specified type already exists
-			const contactIndex = _.findIndex(this.contactMethods[contactMethod.field],{type:type});
-
-			if(contactIndex !== -1)
-			{
-				// Just update
-				this.contactMethods[contactMethod.field][contactIndex] = contactMethod;
-			} else {
-				// Insert a new one
-				this.contactMethods[contactMethod.field].push(contactMethod);
-			}
+			// const contactIndex = _.findIndex(this.contactMethods[contactMethod.field],{type:type});
+			//
+			// if(contactIndex !== -1)
+			// {
+			// 	// Just update
+			// 	this.contactMethods[contactMethod.field][contactIndex] = contactMethod;
+			// } else {
+			// 	// Insert a new one
+			// 	this.contactMethods[contactMethod.field].push(contactMethod);
+			// }
+			this.contactMethods[contactMethod.field].push(contactMethod);
 
 			// console.log("added contact method in field '" + contactMethod.field + "' with type "+contactMethod.type);
 		}
