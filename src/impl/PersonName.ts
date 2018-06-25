@@ -18,63 +18,69 @@ import {PartyNameImpl} from "./PartyName";
  ***************************************************************************************************
  */
 export class PersonNameImpl extends PartyNameImpl implements PersonName {
-	public honorificPrefix:string;
-	public first:string;
-	public middle:string;
-	public last:string;
-	public honorificSuffix:string;
+    public honorificPrefix: string;
+    public first: string;
+    public middle: string;
+    public last: string;
+    public maternal: string;
 
-	constructor(hP?:string, first?:string, middle?:string, last?:string, hS?:string) {
-		super();
+    public honorificSuffix: string;
 
-		this.honorificPrefix = hP;
-		this.first = first;
-		this.middle = middle;
-		this.last = last;
-		this.honorificSuffix = hS;
-	}
+    constructor(hP?: string, first?: string, middle?: string, last?: string, hS?: string, maternal?: string) {
+        super();
 
-	/** contatenates and returns the first and last names */
-	get shortName():string {
-		return this.first + " " + this.last;
-	}
+        this.honorificPrefix = hP;
+        this.first = first;
+        this.middle = middle;
+        this.last = last;
+        this.honorificSuffix = hS;
+        this.maternal = maternal;
+    }
 
-	/** contatenates and returns the honorific Prefix, first, middle and last names, and the honorificSuffix */
-	get longName():string {
-		var out:string = "";
+    /** contatenates and returns the first and last names */
+    get shortName(): string {
+        return this.first + " " + this.last;
+    }
 
-		if (this.honorificPrefix != null && this.honorificPrefix != '') {
-			out += this.honorificPrefix + ' ';
-		}
-		if (this.first != null && this.first != '') {
-			out += this.first + ' ';
-		}
-		if (this.middle != null && this.middle != '') {
-			out += this.middle + ' ';
-		}
-		if (this.last != null && this.last != '') {
-			out += this.last + ' ';
-		}
-		if (this.honorificSuffix != null && this.honorificSuffix != '') {
-			out += ', ' + this.honorificSuffix;
-		}
-		return _.trim(out);
-	}
+    /** contatenates and returns the honorific Prefix, first, middle and last names, and the honorificSuffix */
+    get longName(): string {
+        var out: string = "";
 
-	public toString():string {
-		// Short hand. Adds each own property
-		return collections.makeString(this);
-	}
+        if (this.honorificPrefix != null && this.honorificPrefix != '') {
+            out += this.honorificPrefix + ' ';
+        }
+        if (this.first != null && this.first != '') {
+            out += this.first + ' ';
+        }
+        if (this.middle != null && this.middle != '') {
+            out += this.middle + ' ';
+        }
+        if (this.maternal != null && this.maternal != '') {
+            out += this.maternal + ' ';
+        }
+        if (this.last != null && this.last != '') {
+            out += this.last + ' ';
+        }
+        if (this.honorificSuffix != null && this.honorificSuffix != '') {
+            out += ', ' + this.honorificSuffix;
+        }
+        return _.trim(out);
+    }
 
-	public toJSON():any {
-		var out:any = {};
-		var _hasOwnProperty = Object.prototype.hasOwnProperty;
+    public toString(): string {
+        // Short hand. Adds each own property
+        return collections.makeString(this);
+    }
 
-		for (var prop in this) {
-			if (_hasOwnProperty.call(this, prop)) {
-				out[prop] = (<any>this)[prop];
-			}
-		}
-		return out;
-	}
+    public toJSON(): any {
+        var out: any = {};
+        var _hasOwnProperty = Object.prototype.hasOwnProperty;
+
+        for (var prop in this) {
+            if (_hasOwnProperty.call(this, prop)) {
+                out[prop] = (<any>this)[prop];
+            }
+        }
+        return out;
+    }
 } // end class PersonNameImpl
