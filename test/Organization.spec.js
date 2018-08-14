@@ -20,6 +20,7 @@ describe('Organization', function () {
 	// run before every test in the suite
 	beforeEach(function () {
 		org = new Organization('Coca-Cola');
+		org.code = 'COCA';
 	});
 
 	it('should instantiate with basic fields', function () {
@@ -42,7 +43,10 @@ describe('Organization', function () {
 	it('should be able to add/retrieve basic data of a organization', function () {
 		expect(_.isObject(org)).to.equal(true);
 
+		// Org name
 		expect(org.name).to.equal('Coca-Cola');
+		// Org code
+		expect(org.code).to.equal('COCA');
 	});
 
 	it('should be able to add/retrieve the phone number of a organization', function () {
@@ -90,6 +94,9 @@ describe('Organization', function () {
 
 		// org vs org2 Name
 		expect(org.name).to.equal(org2.name);
+
+		// org vs org2 code
+		expect(org.code).to.equal(org2.code);
 
 		// org vs org2 Phone Number
 		expect(org.phoneNumber('headquarters').number).to.equal(org2.phoneNumber('headquarters').number);

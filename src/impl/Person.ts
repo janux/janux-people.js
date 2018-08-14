@@ -31,6 +31,7 @@ export class PersonImpl extends PartyAbstract implements Person {
         var out: any = this.contactMethods;
         out.displayName = this.name.shortName;
         out.name = this.name.toJSON();
+		out.code = this.code;
         return out;
     }
 

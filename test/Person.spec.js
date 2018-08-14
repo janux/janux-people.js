@@ -20,6 +20,7 @@ describe('Person', function () {
 	// run before every test in the suite
 	beforeEach(function () {
 		person = new Person('Mr', 'Jonh', 'Peter', 'Sanders', null, "Smith");
+		person.code = 'JANUXPERSON';
 	});
 
 	it('should instantiate with basic fields', function () {
@@ -50,6 +51,9 @@ describe('Person', function () {
 
 		// The honorific Prefix, first, middle and last names
 		expect(person.name.longName).to.equal('Mr Jonh Peter Smith Sanders');
+
+		// Person code
+		expect(person.code).to.equal('JANUXPERSON');
 	});
 
 	it('should be able to add/retrieve the phone number of a person', function () {
@@ -159,6 +163,9 @@ describe('Person', function () {
 		expect(person.name.last).to.equal(person2.name.last);
 		expect(person.name.maternal).to.equal(person2.name.maternal);
 		expect(person.name.honorificSuffix).to.equal(person2.name.honorificSuffix);
+
+		// Person Code
+		expect(person.code).to.equal(person2.code);
 
 		// Person vs Person2 Phone Number
 		expect(person.phoneNumber('work').number).to.equal(person2.phoneNumber('work').number);

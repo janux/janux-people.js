@@ -28,6 +28,7 @@ import {EmailAddressImpl} from "./EmailAddress";
  */
 export abstract class PartyAbstract implements Party {
 	public contactMethods:any;
+	public code: string;
 
 	constructor() {
 		this.contactMethods = {};
@@ -197,6 +198,9 @@ export abstract class PartyAbstract implements Party {
 				}
 			}
 		});
+		// Code
+		party.code = obj.code;
+
 		return party;
 	}
 

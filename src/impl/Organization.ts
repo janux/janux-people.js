@@ -28,6 +28,7 @@ export class OrganizationImpl extends PartyAbstract implements Organization {
 	public toJSON():any {
 		let out:any = this.contactMethods;
 		out.name = this.name;
+		out.code = this.code;
 		return out;
 	}
 
