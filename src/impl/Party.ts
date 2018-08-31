@@ -191,6 +191,7 @@ export abstract class PartyAbstract implements Party {
 		['addresses', 'phones', 'emails'].forEach(function (elem) {
 			var cType = obj[elem];
 			if (typeof obj[elem] !== 'undefined') {
+				party.contactMethods[elem] = [];
 				if (cType.length > 0) {
 					cType.forEach(function (contact:ContactMethod) {
 						party.setContactMethod(contact.type, PartyAbstract.hydrateContactMethod(elem, contact));
