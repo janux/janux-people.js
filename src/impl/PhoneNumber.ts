@@ -44,6 +44,7 @@ export class PhoneNumberImpl implements PhoneNumber {
 			this._countryCode = Number(countryCode);
 			if (isNaN(this._countryCode)) {
 				var msg:string = "The Country Code of a phone number should be a numeric value:";
+				this._countryCode = -1;
 				console.error(msg);
 				throw new Error(msg);
 			}
@@ -64,6 +65,7 @@ export class PhoneNumberImpl implements PhoneNumber {
 			}
 			catch (e) {
 				var msg:string = "The Area Code of a phone number should be a numeric value";
+				this._areaCode = -1;
 				console.error(msg, e);
 				throw new Error(msg);
 			}
