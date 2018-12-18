@@ -43,7 +43,7 @@ export class PhoneNumberImpl implements PhoneNumber {
 		else {
 			this._countryCode = Number(countryCode);
 			if (isNaN(this._countryCode)) {
-				var msg:string = "The Country Code of a phone number should be a numeric value:";
+				const msg: string = "The Country Code of a phone number should be a numeric value:";
 				this._countryCode = -1;
 				console.error(msg);
 				throw new Error(msg);
@@ -60,13 +60,11 @@ export class PhoneNumberImpl implements PhoneNumber {
 			this._areaCode = -1;
 		}
 		else {
-			try {
-				this._areaCode = Number(areaCode);
-			}
-			catch (e) {
-				var msg:string = "The Area Code of a phone number should be a numeric value";
+			this._areaCode = Number(areaCode);
+			if (isNaN(this._areaCode)) {
+				const msg: string = "The Area Code of a phone number should be a numeric value";
 				this._areaCode = -1;
-				console.error(msg, e);
+				console.error(msg);
 				throw new Error(msg);
 			}
 		}
