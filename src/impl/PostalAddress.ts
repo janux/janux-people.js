@@ -66,7 +66,7 @@ export class PostalAddressImpl implements PostalAddress {
 			return this.city.state;
 		}
 		else {
-			return this.stateProvince;
+			return this._stateProvince;
 		}
 	}
 
