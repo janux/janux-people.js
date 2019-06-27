@@ -24,7 +24,8 @@ export class PersonImpl extends PartyAbstract implements Person {
     }
 
     get typeName(): string {
-        return tools.className(this);
+        return 'PersonImpl';
+        // return tools.className(this);
     }
 
     public toJSON(): any {

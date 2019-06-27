@@ -15,7 +15,8 @@ import {PartyAbstract} from "./Party";
  */
 export class OrganizationImpl extends PartyAbstract implements Organization {
 	get typeName():string {
-		return tools.className(this);
+		return 'OrganizationImpl';
+		// return tools.className(this);
 	}
 
 	public name:string;
