@@ -33,11 +33,11 @@ export class PhoneNumberImpl implements PhoneNumber {
 	}
 
 	get countryCode():string {
-		return (this._countryCode == -1) ? "" : this._countryCode.toString();
+		return (this._countryCode === -1) ? "" : this._countryCode.toString();
 	}
 
 	set countryCode(countryCode:string) {
-		if (countryCode == '') {
+		if (countryCode === '') {
 			this._countryCode = -1;
 		}
 		else {
@@ -52,11 +52,11 @@ export class PhoneNumberImpl implements PhoneNumber {
 	}
 
 	get areaCode():string {
-		return (this._areaCode == -1) ? "" : this._areaCode.toString();
+		return (this._areaCode === -1) ? "" : this._areaCode.toString();
 	}
 
 	set areaCode(areaCode:string) {
-		if (areaCode == '') {
+		if (areaCode === '') {
 			this._areaCode = -1;
 		}
 		else {
