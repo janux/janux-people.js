@@ -7,20 +7,20 @@ var	typedoc = require("gulp-typedoc"),
 	path     = require('path');
 
 module.exports = function(gulp) {
-	
+
 	var cfg = gulp.cfg;
-	
-	gulp.task("typedoc", function() {
+
+	gulp.task("typedoc", () => {
 	    return gulp
 		.src([cfg.fileset.ts])
-		.pipe(typedoc({ 
+		.pipe(typedoc({
 		    // TypeScript options (see typescript docs)
-		    module: "commonjs", 
+		    module: "commonjs",
 		    target: "es5",
 		    includeDeclarations: true,
 
 		    // Output options (see typedoc docs)
-		    out: cfg.dir.doc, 
+		    out: cfg.dir.doc,
 		    json: path.join(cfg.dir.doc, cfg.pkg.name + '.json'),
 
 		    // TypeDoc options (see typedoc docs)

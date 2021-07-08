@@ -2,7 +2,12 @@
 	"name": "janux-people",
 	"version": "1.0.1-rc",
 	"main": "index.js",
-    "typings": "index.d.ts",
+	"typings": "index.d.ts",
+	"engines": {
+		"node": "~12.x",
+		"npm": "~6.x",
+		"pnpm": "~6.x"
+	},
 	"keywords": [
 		"util",
 		"functional",
@@ -19,36 +24,33 @@
 	},
 	"author": "janux",
 	"contributors": [],
-	"dependencies": {
-		"lodash": "3.10.1"
-	},
 	"devDependencies": {
+		"@types/express": "4.17.0",
+		"@types/node": "10.3.6",
+		"amdefine": "1.0.0",
+		"bluebird": "3.5.0",
 		"browserify": "12.0.1",
 		"chai": "3.4.1",
 		"config": "1.16.0",
-		"mocha": "2.3.4",
-		"vinyl-source-stream": "1.1.0",
-		"@types/express": "4.0.35",
-		"@types/lodash": "4.14.64",
-		"@types/node": "4.0.29",
-		"amdefine": "1.0.0",
 		"del": "2.1.0",
 		"express": "4.13.3",
-		"gulp": "3.9.0",
+		"faker": "3.1.0",
+		"gulp": "4.0.0",
 		"gulp-concat": "2.6.0",
+		"gulp-load-plugins": "2.0.7",
+		"gulp-load-subtasks": "1.2.2",
 		"gulp-mocha": "2.2.0",
 		"gulp-sourcemaps": "1.6.0",
 		"gulp-tslint": "3.6.0",
 		"gulp-typedoc": "2.0.2",
 		"gulp-typescript": "3.1.6",
-		"typedoc": "0.8.0",
 		"log4js": "0.6.29",
-		"q": "1.4.1",
-		"require-dir": "0.3.0",
-		"typescript": "2.3.3",
 		"lokijs": "1.4.1",
-		"faker": "3.1.0",
 		"md5": "2.2.1",
-		"bluebird": "3.5.0"
+		"mocha": "2.3.4",
+		"q": "1.4.1",
+		"typedoc": "0.8.0",
+		"typescript": "3.1.8",
+		"vinyl-source-stream": "1.1.0"
 	}
 }

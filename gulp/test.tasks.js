@@ -29,8 +29,8 @@ module.exports = function(gulp) {
 			//}));
     });
 
-	gulp.task('run-tests', ['ts-plus-test'], function() {
+	gulp.task('run-tests', gulp.series('ts-plus-test', () => {
 		return gulp.src(gulp.cfg.dir.test+'/*.spec.js', {read: false})
 			.pipe(mocha({reporter: 'nyan'}));
-	});
+	}));
 };
