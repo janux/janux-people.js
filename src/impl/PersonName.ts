@@ -1,7 +1,6 @@
 /// <reference path="../collections.ts" />
 
 'use strict';
-import * as _ from "lodash";
 import basarat = require('../collections');
 import collections = basarat.collections;
 
@@ -64,7 +63,7 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName {
         if (this.honorificSuffix != null && this.honorificSuffix != '') {
             out += ', ' + this.honorificSuffix;
         }
-        return _.trim(out);
+        return out.trim();
     }
 
     public toString(): string {

@@ -9,7 +9,6 @@ import Dictionary = collections.Dictionary;
 
 // interfaces
 import {Party} from '../api/Party';
-import * as _ from "lodash";
 import {PartyName} from '../api/PartyName';
 import {ContactMethod} from '../api/ContactMethod';
 import {PhoneNumber} from '../api/PhoneNumber';
