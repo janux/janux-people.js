@@ -1,6 +1,6 @@
 {
 	"name": "janux-people",
-	"version": "1.0.1-rc",
+	"version": "1.0.1",
 	"main": "index.js",
 	"typings": "index.d.ts",
 	"engines": {
