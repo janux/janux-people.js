@@ -37,7 +37,8 @@ cfg.tsConfig = {
 	module: "commonjs",
 	removeComments: true,
 	target:'ES5',
-	declaration:true
+	declaration:true,
+	types: ["node"]
 };
 
 module.exports = cfg;
