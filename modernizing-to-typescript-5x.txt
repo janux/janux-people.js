@@ -1,0 +1,181 @@
+Modernizing janux-people.js Build Process
+Date: 2026-03-19
+Updated: 2026-03-29
+
+Overview
+--------
+Replace the Node 12 + Gulp 4 build pipeline with a modern Node 20 + npm scripts
+setup using the TypeScript compiler directly. The goal is to eliminate unnecessary
+build tool abstraction for a library that only needs to transpile TypeScript to
+CommonJS with declaration files.
+
+Current Stack
+-------------
+- Node 12
+- TypeScript 3.1.8
+- Gulp 4 (orchestration)
+- gulp-typescript (TS compilation)
+- gulp-tslint + TSLint (linting) [NOTE: TSLint is abandoned]
+- del (directory cleaning)
+- gulp-mocha + Mocha 2.x (testing)
+- gulp-typedoc + TypeDoc 0.8.0 (documentation)
+
+Target Stack
+------------
+- Node 20
+- TypeScript 5.x
+- npm scripts (orchestration) — replaces Gulp entirely
+- tsc directly (compilation) — replaces gulp-typescript
+- ESLint + @typescript-eslint (linting) — replaces abandoned TSLint
+- rimraf (directory cleaning) — replaces del/clean tasks
+- Mocha + Chai (current) — replaces gulp-mocha
+- TypeDoc (current) — replaces gulp-typedoc
+
+Why Drop Gulp?
+--------------
+The current Gulp tasks are minimal: clean, lint, compile, test, watch, and docs.
+None of these require a streaming build system. The TypeScript compiler handles
+compilation and watch mode natively, and npm scripts can orchestrate the remaining
+steps. Removing Gulp eliminates a layer of abstraction and several dependencies
+(gulp, gulp-load-plugins, gulp-load-subtasks, gulp-typescript, gulp-tslint,
+gulp-sourcemaps, gulp-concat, gulp-mocha, gulp-typedoc).
+
+Why Not tsup / esbuild / Rollup / Vite?
+----------------------------------------
+Those tools are valuable for bundling (tree-shaking, ESM/CJS dual output, asset
+handling). This project only transpiles TypeScript to CommonJS with declaration
+files — tsc does this natively with zero overhead or configuration complexity.
+
+Changes Required
+----------------
+
+1. package.json
+   - Update engines: node to "~20.x", npm to "~10.x"
+   - Move "main" to "dist/index.js" and "typings" to "dist/index.d.ts"
+     (see item 6 below for index.ts relocation)
+   - Move lodash from devDependencies to dependencies (it is used in source)
+   - Replace all Gulp-related devDependencies with:
+       typescript: 5.x
+       @typescript-eslint/eslint-plugin: latest
+       @typescript-eslint/parser: latest
+       eslint: latest
+       rimraf: latest
+       mocha: latest
+       chai: latest
+       @types/mocha: latest
+       @types/chai: latest
+       @types/node: 20.x
+       ts-node: latest (for running TS tests directly)
+   - Remove Gulp ecosystem:
+       gulp, gulp-*, tslint, del, gulp-load-plugins, gulp-load-subtasks
+   - Remove unused/obsolete dependencies:
+       browserify, vinyl-source-stream, express, amdefine, config
+   - Remove legacy promise libraries (refactor generator/ to native Promises):
+       q, bluebird
+   - Add npm scripts:
+       "clean":   "rimraf dist"
+       "build":   "npm run clean && tsc"
+       "lint":    "eslint src/**/*.ts"
+       "test":    "npm run build && mocha"
+       "watch":   "tsc --watch"
+       "doc":     "typedoc --out doc src"
+       "prebuild" (optional): "npm run lint"
+   - Add "files" field to control published contents:
+       ["dist/", "README.md", "LICENSE"]
+     This excludes src/, test/, generator/, gulp/, config/ from the published
+     package while keeping them in the repo.
+
+2. tsconfig.json (new file, replaces cfg.tsConfig in config/default.js)
+   {
+     "compilerOptions": {
+       "module": "commonjs",
+       "target": "ES2020",       // upgrade from ES5 (Node 20 supports ES2020+)
+       "outDir": "dist",
+       "rootDir": "src",
+       "declaration": true,
+       "sourceMap": true,
+       "removeComments": true,
+       "strict": false,          // see Follow-Up Actions below
+       "types": ["node"]
+     },
+     "include": ["src/**/*.ts"],
+     "exclude": ["node_modules", "dist"]
+   }
+
+3. .eslintrc.json (new file, replaces tslint.json)
+   Configure @typescript-eslint with recommended rules to approximate
+   the existing TSLint rule set.
+
+4. Convert tests from JavaScript to TypeScript
+   - Rename test/*.spec.js to test/*.spec.ts
+   - Replace require() calls with ES module imports
+   - Add type annotations where appropriate
+   - Configure a separate tsconfig.test.json (extending tsconfig.json) with:
+       "include": ["src/**/*.ts", "test/**/*.ts"]
+       "compilerOptions": { "types": ["node", "mocha", "chai"] }
+   - Update mocha config to use ts-node for direct TS test execution
+
+5. Note on ES target
+   The current target is ES5 for broad compatibility. With Node 20 as the
+   runtime target, ES2020 is appropriate and enables async/await, optional
+   chaining, nullish coalescing, and other modern syntax natively.
+   Adjust if consumers of this library require ES5.
+
+6. Relocate index.ts into src/
+   The current root index.js and index.d.ts are hand-maintained compiled
+   artifacts that re-export from ./dist/impl/*. Instead:
+   - Move the source index.ts into src/index.ts
+   - Update its imports to use relative paths (e.g., ./impl/Person instead
+     of ./dist/impl/Person)
+   - Set package.json "main" to "dist/index.js" and "typings" to
+     "dist/index.d.ts" so tsc generates both automatically
+   - Delete the hand-maintained root index.js and index.d.ts
+
+7. Refactor generator/ to use native Promises
+   - Replace q and bluebird usage with native async/await or Promise
+   - Remove q and bluebird from devDependencies
+   - generator/ is excluded from the published package for now (see item 1,
+     "files" field) but remains in the repo for future publication as a
+     separate utility package
+
+8. Files/directories to remove
+   - gulpfile.js
+   - gulp/ (directory with all task files)
+   - config/ (directory — only used for Gulp configuration)
+   - tslint.json (replaced by ESLint)
+   - index.js (replaced by tsc output from src/index.ts)
+   - index.d.ts (replaced by tsc output from src/index.ts)
+
+Implementation Steps
+--------------------
+1.  Relocate index.ts into src/ and update its imports
+2.  Update package.json (engines, main, typings, files, dependencies,
+    devDependencies, scripts)
+3.  Create tsconfig.json
+4.  Create tsconfig.test.json
+5.  Create .eslintrc.json
+6.  Run: npm install
+7.  Run: npm run build — verify clean compilation
+8.  Convert tests from JS to TS
+9.  Run: npm test — verify tests pass
+10. Run: npm run lint — address any ESLint issues
+11. Refactor generator/ to use native Promises (remove q, bluebird)
+12. Remove: gulpfile.js, gulp/, config/, tslint.json, root index.js,
+    root index.d.ts
+13. Verify: npm pack --dry-run — confirm only dist/, README.md, LICENSE
+    are included in the published package
+
+Follow-Up Actions
+-----------------
+- Enable "strict": true incrementally in tsconfig.json. Start by enabling
+  individual flags one at a time (noImplicitAny, strictNullChecks,
+  strictFunctionTypes, etc.), fixing errors at each step, until full
+  strict mode is achieved.
+
+- Evaluate whether to eliminate the lodash dependency from source code.
+  Lodash is currently a runtime dependency; many of its utilities can be
+  replaced with native JS equivalents (Array.find, Object.assign,
+  spread syntax, etc.) on Node 20.
+
+- Publish generator/ as a separate utility package (e.g.,
+  janux-people-testdata) for generating test data during development.
