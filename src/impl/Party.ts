@@ -1,11 +1,4 @@
-/// <reference path="../collections.ts" />
-
 'use strict';
-
-// collections
-import basarat = require('../collections');
-import collections = basarat.collections;
-import Dictionary = collections.Dictionary;
 
 // interfaces
 import {Party} from '../api/Party';
@@ -165,14 +158,14 @@ export abstract class PartyAbstract implements Party {
 		return <EmailAddress>this.getContactMethod('emails', type);
 	}
 
-	/** creates a Dictionary for each subclass of ContactMethod found in the main ContactMethod Dictionary */
-	protected createContactMethodDictionary(aField:string):Dictionary<string, ContactMethod> {
-		var contacts:Dictionary<string, ContactMethod> = new Dictionary<string, ContactMethod>();
+	/** creates a Record for each subclass of ContactMethod found in the main contactMethods object */
+	protected createContactMethodDictionary(aField:string):Record<string, ContactMethod> {
+		const contacts:Record<string, ContactMethod> = {};
 
-		var csArray = this.contactMethods[aField];
+		const csArray = this.contactMethods[aField];
 		if (csArray.length > 0) {
 			csArray.forEach(function (contact:ContactMethod) {
-				contacts.setValue(contact.type, contact);
+				contacts[contact.type] = contact;
 			});
 		} else {
 			throw new Error('Error while creating contacts dictionary for field ' + aField);
@@ -181,8 +174,7 @@ export abstract class PartyAbstract implements Party {
 	}
 
 	toString():string {
-		// Short hand. Adds each own property
-		return collections.makeString(this);
+		return JSON.stringify(this);
 	}
 
 	static fromJSON(obj:any, party:any):any {

@@ -1,9 +1,3 @@
-/// <reference path="../collections.ts" />
-
-import basarat = require('../collections');
-import collections = basarat.collections;
-import List = collections.LinkedList;
-import Dictionary = collections.Dictionary;
 import {PartyName} from './PartyName';
 import {ContactMethod} from './ContactMethod';
 

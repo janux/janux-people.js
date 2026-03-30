@@ -1,9 +1,5 @@
-/// <reference path="../collections.ts" />
-
 'use strict';
 
-import basarat = require('../collections');
-import collections = basarat.collections;
 import {PhoneNumber} from "../api/PhoneNumber";
 
 /**
@@ -71,7 +67,6 @@ export class PhoneNumberImpl implements PhoneNumber {
 	}
 
 	toString():string {
-		// Short hand. Adds each own property
-		return collections.makeString(this);
+		return JSON.stringify(this);
 	}
 } // end class PhoneNumberImpl

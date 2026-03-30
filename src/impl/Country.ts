@@ -1,10 +1,4 @@
-/// <reference path="../collections.ts" />
-
 'use strict';
-
-// collections
-import basarat = require('../collections');
-import collections = basarat.collections;
 
 import {Country} from "../api/geography/Country";
 /**
@@ -22,7 +16,6 @@ export class CountryImpl implements Country {
 	public visible:boolean = true;
 
 	public toString():string {
-		// Short hand. Adds each own property
-		return collections.makeString(this);
+		return JSON.stringify(this);
 	}
 } // end class CountryImpl

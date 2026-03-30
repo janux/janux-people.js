@@ -1,10 +1,8 @@
 'use strict';
 
 // Return class name of target
-export function className(target) {
-	var funcNameRegex = /function (.{1,})\(/;
-	var results = (funcNameRegex).exec(target["constructor"].toString());
-	return (results && results.length > 1) ? results[1] : "";
+export function className(target): string {
+	return target?.constructor?.name ?? '';
 }
 
 // Create mixin

@@ -74,8 +74,8 @@ describe('Person', function () {
 		// Phone numbers dictionary
 		phoneNumbers = person.phoneNumbers(true);
 
-		expect(phoneNumbers.getValue('work').type).to.equal('work');
-		expect(phoneNumbers.getValue('work').number).to.equal('5555060593');
+		expect(phoneNumbers['work'].type).to.equal('work');
+		expect(phoneNumbers['work'].number).to.equal('5555060593');
 	});
 
 	it('should be able to retrieve the primary phone number of a person', function () {

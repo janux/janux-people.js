@@ -1,9 +1,4 @@
-/// <reference path="../collections.ts" />
-
 'use strict';
-
-import basarat = require('../collections');
-import collections = basarat.collections;
 
 import {PartyName} from "../api/PartyName";
 /**
@@ -26,7 +21,6 @@ export class PartyNameImpl implements PartyName {
 	}
 
 	public toString():string {
-		// Short hand. Adds each own property
-		return collections.makeString(this);
+		return JSON.stringify(this);
 	}
 } // end class PartyNameImpl

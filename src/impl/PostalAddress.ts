@@ -1,10 +1,6 @@
-/// <reference path="../collections.ts" />
-
 'use strict';
 
 import {CityImpl} from "./City";
-import basarat = require('../collections');
-import collections = basarat.collections;
 import {PostalAddress} from '../api/geography/PostalAdress';
 import {City} from "../api/geography/City";
 import {StateProvince} from "../api/geography/StateProvince";
@@ -174,7 +170,6 @@ export class PostalAddressImpl implements PostalAddress {
 	}
 
 	toString():string {
-		// Short hand. Adds each own property
-		return collections.makeString(this);
+		return JSON.stringify(this);
 	}
 } // end class PostalAddressImpl

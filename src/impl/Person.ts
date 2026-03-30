@@ -1,7 +1,5 @@
 'use strict';
 
-/// <reference path="../collections.ts" />
-
 import * as tools from '../tools';
 import {Person} from '../api/Person';
 import {PersonName} from "../api/PersonName";
