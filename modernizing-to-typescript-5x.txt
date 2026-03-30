@@ -345,6 +345,63 @@ Verification:
       src/, test/, generator/, gulp/, config/,
       gulpfile.js, index.js, index.d.ts
 
+------------------------------------------------------------------------------
+Phase 6 — Eliminate lodash dependency
+------------------------------------------------------------------------------
+Goal: remove lodash from dependencies (and devDependencies) entirely.
+
+Background:
+  lodash is currently declared as a runtime dependency in package.json, which
+  means it is shipped to every consumer of this library. However, a search of
+  the entire src/ tree reveals zero lodash calls — it is not imported anywhere
+  in the library source. The only usages in this repo are:
+
+    test/Person.spec.ts         _.isObject(person)         — one call
+    test/Organization.spec.ts   _.isObject(org)            — one call
+    test/UserService.spec.js    require('lodash')          — imported, never called
+    generator/user-dao.js       _.cloneDeep(userObj)       — one call
+    generator/user-service.js   _.isObject(instance)       — one call
+
+  The test/ usages are trivially replaced with native equivalents.
+  The generator/ usages are deferred to the Generator Refactoring project
+  (see DEFERRED section), but because generator/ is excluded from the
+  published package they do not block removal of lodash from dependencies.
+
+Files to update:
+  test/Person.spec.ts
+    - Remove: import _ from 'lodash';
+    - Change: expect(_.isObject(person)).to.equal(true)
+           →  expect(person instanceof Object).to.equal(true)
+
+  test/Organization.spec.ts
+    - Remove: import _ from 'lodash';
+    - Change: expect(_.isObject(org)).to.equal(true)
+           →  expect(org instanceof Object).to.equal(true)
+
+  package.json
+    - Remove from dependencies:    "lodash": "^4.17.21"
+    - Remove from devDependencies: "@types/lodash": "^4.17.0"
+
+Note on test/UserService.spec.js:
+  This file requires lodash but never calls any lodash method. The dead
+  require() line will be removed as part of the Generator Refactoring project
+  (see DEFERRED section) rather than here, to keep all generator-related
+  changes together.
+
+Note on generator/:
+  _.cloneDeep(userObj) in user-dao.js → structuredClone(userObj) (Node 17+)
+  _.isObject(instance) in user-service.js → typeof instance === 'object'
+    && instance !== null
+  Both are deferred to the Generator Refactoring project.
+
+Verification:
+  npm install
+  npm run build   — compiles cleanly; no lodash references in src/
+  npm test        — all 14 tests still pass
+  npm pack --dry-run
+    Confirm lodash no longer appears in the dependency tree of the
+    published package.
+
 ==============================================================================
 DEFERRED: Generator Refactoring
 ==============================================================================
@@ -383,10 +440,7 @@ FOLLOW-UP ACTIONS (post-migration, separate tickets)
    each step: noImplicitAny → strictNullChecks → strictFunctionTypes →
    strictPropertyInitialization → ... → "strict": true.
 
-2. Evaluate eliminating lodash from src/
-   Lodash is a runtime dependency. Many utilities have native equivalents in
-   ES2020+ (Array.find, Object.assign, optional chaining, etc.). Removing it
-   reduces the published package's dependency footprint.
+2. Eliminate lodash — addressed in Phase 6.
 
 3. Publish generator/ as a separate package
    Publish as e.g. janux-people-testdata. Will require its own package.json,

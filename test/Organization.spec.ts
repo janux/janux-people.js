@@ -1,7 +1,6 @@
 import { describe, it, beforeEach } from 'vitest';
 import { expect } from 'chai';
 import log4js from 'log4js';
-import _ from 'lodash';
 import { OrganizationImpl as Organization, PhoneNumberImpl as PhoneNumber, PostalAddressImpl as PostalAddress } from '../src';
 
 const log = log4js.getLogger('Organization_test');
@@ -35,7 +34,7 @@ describe('Organization', function () {
 	});
 
 	it('should be able to add/retrieve basic data of a organization', function () {
-		expect(_.isObject(org)).to.equal(true);
+		expect(org instanceof Object).to.equal(true);
 
 		// Org name
 		expect(org.name).to.equal('Coca-Cola');

@@ -1,7 +1,6 @@
 import { describe, it, beforeEach } from 'vitest';
 import { expect } from 'chai';
 import log4js from 'log4js';
-import _ from 'lodash';
 import { PersonImpl as Person, PhoneNumberImpl as PhoneNumber, PostalAddressImpl as PostalAddress } from '../src';
 
 const log = log4js.getLogger('Person_test');
@@ -35,7 +34,7 @@ describe('Person', function () {
 	});
 
 	it('should be able to add/retrieve basic data of a person', function () {
-		expect(_.isObject(person)).to.equal(true);
+		expect(person instanceof Object).to.equal(true);
 
 		expect(person.name.honorificPrefix).to.equal('Mr');
 		expect(person.name.first).to.equal('Jonh');
