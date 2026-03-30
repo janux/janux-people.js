@@ -1,6 +1,6 @@
 Modernizing janux-people.js Build Process
 Date: 2026-03-19
-Updated: 2026-03-29
+Updated: 2026-03-30
 
 Overview
 --------
@@ -22,14 +22,14 @@ Current Stack
 
 Target Stack
 ------------
-- Node 20
+- Node 20 (runtime is Node 22; engines field set to >=20)
 - TypeScript 5.x
-- npm scripts (orchestration) — replaces Gulp entirely
-- tsc directly (compilation) — replaces gulp-typescript
+- npm scripts (orchestration)       — replaces Gulp entirely
+- tsc directly (compilation)        — replaces gulp-typescript
 - ESLint + @typescript-eslint (linting) — replaces abandoned TSLint
-- rimraf (directory cleaning) — replaces del/clean tasks
-- Mocha + Chai (current) — replaces gulp-mocha
-- TypeDoc (current) — replaces gulp-typedoc
+- rimraf (directory cleaning)       — replaces del/clean tasks
+- Vitest + Chai (testing)           — replaces gulp-mocha + Mocha 2.x
+- TypeDoc (documentation)           — replaces gulp-typedoc
 
 Why Drop Gulp?
 --------------
@@ -46,136 +46,283 @@ Those tools are valuable for bundling (tree-shaking, ESM/CJS dual output, asset
 handling). This project only transpiles TypeScript to CommonJS with declaration
 files — tsc does this natively with zero overhead or configuration complexity.
 
-Changes Required
-----------------
+Why Vitest Instead of Mocha + ts-node?
+---------------------------------------
+Node 22 ships with built-in TypeScript type-stripping. When Mocha loads a .ts
+test file via import(), Node 22 intercepts the call, strips the types, and treats
+the file as an ES module — bypassing ts-node and tsx entirely. Any test file that
+contains a require() call then fails at runtime because require is not defined in
+ES module scope. This is a fundamental incompatibility between Mocha's module-
+loading strategy and Node 22's native TypeScript support.
 
-1. package.json
-   - Update engines: node to "~20.x", npm to "~10.x"
-   - Move "main" to "dist/index.js" and "typings" to "dist/index.d.ts"
-     (see item 6 below for index.ts relocation)
-   - Move lodash from devDependencies to dependencies (it is used in source)
-   - Replace all Gulp-related devDependencies with:
-       typescript: 5.x
-       @typescript-eslint/eslint-plugin: latest
-       @typescript-eslint/parser: latest
-       eslint: latest
-       rimraf: latest
-       mocha: latest
-       chai: latest
-       @types/mocha: latest
-       @types/chai: latest
-       @types/node: 20.x
-       ts-node: latest (for running TS tests directly)
-   - Remove Gulp ecosystem:
-       gulp, gulp-*, tslint, del, gulp-load-plugins, gulp-load-subtasks
-   - Remove unused/obsolete dependencies:
-       browserify, vinyl-source-stream, express, amdefine, config
-   - Remove legacy promise libraries (refactor generator/ to native Promises):
-       q, bluebird
-   - Add npm scripts:
-       "clean":   "rimraf dist"
-       "build":   "npm run clean && tsc"
-       "lint":    "eslint src/**/*.ts"
-       "test":    "npm run build && mocha"
-       "watch":   "tsc --watch"
-       "doc":     "typedoc --out doc src"
-       "prebuild" (optional): "npm run lint"
-   - Add "files" field to control published contents:
-       ["dist/", "README.md", "LICENSE"]
-     This excludes src/, test/, generator/, gulp/, config/ from the published
-     package while keeping them in the repo.
+Vitest avoids this entirely. It has native TypeScript support via its own transform
+pipeline and does not depend on ts-node, tsx, or Node's module hook chain. Test
+files are transformed transparently before execution, with no ESM/CJS conflicts.
 
-2. tsconfig.json (new file, replaces cfg.tsConfig in config/default.js)
-   {
-     "compilerOptions": {
-       "module": "commonjs",
-       "target": "ES2020",       // upgrade from ES5 (Node 20 supports ES2020+)
-       "outDir": "dist",
-       "rootDir": "src",
-       "declaration": true,
-       "sourceMap": true,
-       "removeComments": true,
-       "strict": false,          // see Follow-Up Actions below
-       "types": ["node"]
-     },
-     "include": ["src/**/*.ts"],
-     "exclude": ["node_modules", "dist"]
-   }
+Vitest is also Jest API-compatible, so test files require only minimal changes:
+swap require() for import, update import paths, and add three vitest imports
+(describe, it, beforeEach). All Chai assertion chains (expect(x).to.equal(y)
+etc.) remain unchanged because Chai is retained as the assertion library.
 
-3. .eslintrc.json (new file, replaces tslint.json)
-   Configure @typescript-eslint with recommended rules to approximate
-   the existing TSLint rule set.
+Why Keep Chai?
+--------------
+The existing test assertions are written in Chai's BDD style (.to.equal, .to.be
+.instanceof, etc.). Rewriting them to Vitest's native expect (toBe, toEqual, etc.)
+would be mechanical churn with no benefit. Chai works fine alongside Vitest:
+Vitest provides the test lifecycle; Chai provides the assertions.
 
-4. Convert tests from JavaScript to TypeScript
-   - Rename test/*.spec.js to test/*.spec.ts
-   - Replace require() calls with ES module imports
-   - Add type annotations where appropriate
-   - Configure a separate tsconfig.test.json (extending tsconfig.json) with:
-       "include": ["src/**/*.ts", "test/**/*.ts"]
-       "compilerOptions": { "types": ["node", "mocha", "chai"] }
-   - Update mocha config to use ts-node for direct TS test execution
+Summary of Key Decisions
+-------------------------
+- lodash moved to dependencies (used in src/); follow-up: evaluate eliminating it
+- generator/ excluded from published package; kept in repo for future publication
+  as a separate utility package (e.g. janux-people-testdata)
+- strict: false in tsconfig.json; follow-up: enable incrementally
+- Removed obsolete deps: browserify, vinyl-source-stream, express, amdefine
+- q and bluebird removed; generator/ refactored to use native Promises
+- src/index.ts replaces hand-maintained root index.js and index.d.ts
 
-5. Note on ES target
-   The current target is ES5 for broad compatibility. With Node 20 as the
-   runtime target, ES2020 is appropriate and enables async/await, optional
-   chaining, nullish coalescing, and other modern syntax natively.
-   Adjust if consumers of this library require ES5.
+==============================================================================
+IMPLEMENTATION PHASES
+==============================================================================
 
-6. Relocate index.ts into src/
-   The current root index.js and index.d.ts are hand-maintained compiled
-   artifacts that re-export from ./dist/impl/*. Instead:
-   - Move the source index.ts into src/index.ts
-   - Update its imports to use relative paths (e.g., ./impl/Person instead
-     of ./dist/impl/Person)
-   - Set package.json "main" to "dist/index.js" and "typings" to
-     "dist/index.d.ts" so tsc generates both automatically
-   - Delete the hand-maintained root index.js and index.d.ts
+Each phase ends with a specific verification command. Do not proceed to the
+next phase until verification passes.
 
-7. Refactor generator/ to use native Promises
-   - Replace q and bluebird usage with native async/await or Promise
-   - Remove q and bluebird from devDependencies
-   - generator/ is excluded from the published package for now (see item 1,
-     "files" field) but remains in the repo for future publication as a
-     separate utility package
+------------------------------------------------------------------------------
+Phase 1 — Build Pipeline
+------------------------------------------------------------------------------
+Goal: tsc compiles the library cleanly via npm scripts. No test runner yet.
 
-8. Files/directories to remove
-   - gulpfile.js
-   - gulp/ (directory with all task files)
-   - config/ (directory — only used for Gulp configuration)
-   - tslint.json (replaced by ESLint)
-   - index.js (replaced by tsc output from src/index.ts)
-   - index.d.ts (replaced by tsc output from src/index.ts)
+Files to create:
+  src/index.ts
+    - Replaces hand-maintained root index.js and index.d.ts
+    - Content: re-exports PersonImpl, OrganizationImpl, PhoneNumberImpl,
+      PostalAddressImpl, EmailAddressImpl, PartyAbstract, Party from src/
 
-Implementation Steps
---------------------
-1.  Relocate index.ts into src/ and update its imports
-2.  Update package.json (engines, main, typings, files, dependencies,
-    devDependencies, scripts)
-3.  Create tsconfig.json
-4.  Create tsconfig.test.json
-5.  Create .eslintrc.json
-6.  Run: npm install
-7.  Run: npm run build — verify clean compilation
-8.  Convert tests from JS to TS
-9.  Run: npm test — verify tests pass
-10. Run: npm run lint — address any ESLint issues
-11. Refactor generator/ to use native Promises (remove q, bluebird)
-12. Remove: gulpfile.js, gulp/, config/, tslint.json, root index.js,
-    root index.d.ts
-13. Verify: npm pack --dry-run — confirm only dist/, README.md, LICENSE
-    are included in the published package
+  tsconfig.json
+    {
+      "compilerOptions": {
+        "module": "commonjs",
+        "target": "ES2020",
+        "outDir": "dist",
+        "rootDir": "src",
+        "declaration": true,
+        "sourceMap": true,
+        "removeComments": true,
+        "strict": false,
+        "esModuleInterop": true,
+        "types": ["node"]
+      },
+      "include": ["src/**/*.ts"],
+      "exclude": ["node_modules", "dist"]
+    }
 
-Follow-Up Actions
------------------
-- Enable "strict": true incrementally in tsconfig.json. Start by enabling
-  individual flags one at a time (noImplicitAny, strictNullChecks,
-  strictFunctionTypes, etc.), fixing errors at each step, until full
-  strict mode is achieved.
+Files to update:
+  package.json
+    engines:  { "node": ">=20.x", "npm": ">=10.x" }
+    main:     "dist/index.js"
+    typings:  "dist/index.d.ts"
+    files:    ["dist/", "README.md", "LICENSE"]
+    dependencies:
+      lodash: "^4.17.21"   (moved from devDependencies)
+    devDependencies — replace entire block with:
+      "@types/node":    "^20.0.0"
+      "rimraf":         "^5.0.0"
+      "typescript":     "~5.4.0"
+    scripts:
+      "clean":  "rimraf dist"
+      "build":  "npm run clean && tsc"
+      "watch":  "tsc --watch"
 
-- Evaluate whether to eliminate the lodash dependency from source code.
-  Lodash is currently a runtime dependency; many of its utilities can be
-  replaced with native JS equivalents (Array.find, Object.assign,
-  spread syntax, etc.) on Node 20.
+Verification:
+  npm install
+  npm run build
+  Expected: dist/ is created with .js, .d.ts, and .map files for every
+  source file in src/. No TypeScript errors.
 
-- Publish generator/ as a separate utility package (e.g.,
-  janux-people-testdata) for generating test data during development.
+------------------------------------------------------------------------------
+Phase 2 — Testing
+------------------------------------------------------------------------------
+Goal: npm test passes all existing tests, written in TypeScript.
+
+Why tests import from src/ not dist/
+  Vitest transforms TypeScript source on the fly. Tests import directly from
+  src/ so that no build step is required before running tests. The build step
+  (tsc) remains the source of truth for the published dist/ artefact.
+
+Files to create:
+  vitest.config.ts
+    import { defineConfig } from 'vitest/config';
+    export default defineConfig({
+      test: { environment: 'node' }
+    });
+
+  test/Person.spec.ts         (converted from test/Person.spec.js)
+  test/Organization.spec.ts   (converted from test/Organization.spec.js)
+  test/UsersGenerator.spec.ts (converted from test/UsersGenerator.spec.js)
+  test/UserService.spec.ts    (converted from test/UserService.spec.js)
+
+  Conversion rules for each spec file:
+    a. Replace var/require block at the top with ES imports:
+         import { describe, it, beforeEach } from 'vitest';
+         import { expect } from 'chai';
+         import log4js from 'log4js';
+         import { Person, PhoneNumber, PostalAddress } from '../src';
+         (adjust named imports per file)
+    b. For generator imports (UsersGenerator, UserService specs):
+         import generatorIndex from '../generator/index.js';
+         const { UsersGenerator } = generatorIndex;  (adjust per file)
+    c. Remove 'use strict' directive (not needed in TypeScript modules)
+    d. Remove unused 'util' import
+    e. Change var → const/let
+    f. All Chai assertion chains remain UNCHANGED
+
+Files to update:
+  package.json — add to devDependencies:
+    "chai":            "^4.3.0"
+    "@types/chai":     "^4.3.0"
+    "@types/lodash":   "^4.17.0"
+    "faker":           "3.1.0"      (used by generator)
+    "log4js":          "^6.9.0"
+    "lokijs":          "^1.5.12"    (used by generator)
+    "md5":             "^2.3.0"     (used by generator)
+    "vitest":          "^3.0.0"
+
+  package.json — add to scripts:
+    "test":       "vitest run"
+    "test:watch": "vitest"
+
+Files to delete:
+  test/Person.spec.js
+  test/Organization.spec.js
+  test/UsersGenerator.spec.js
+  test/UserService.spec.js
+
+Verification:
+  npm test
+  Expected: all test suites pass, no TypeScript errors reported by Vitest.
+
+------------------------------------------------------------------------------
+Phase 3 — Linting
+------------------------------------------------------------------------------
+Goal: npm run lint runs cleanly against src/.
+
+Files to create:
+  .eslintrc.json
+    {
+      "root": true,
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": { "project": "./tsconfig.json" },
+      "plugins": ["@typescript-eslint"],
+      "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/no-unused-vars": "warn"
+      }
+    }
+
+Files to update:
+  package.json — add to devDependencies:
+    "@typescript-eslint/eslint-plugin": "^7.0.0"
+    "@typescript-eslint/parser":        "^7.0.0"
+    "eslint":                           "^8.57.0"
+
+  package.json — add to scripts:
+    "lint": "eslint 'src/**/*.ts'"
+
+Verification:
+  npm install
+  npm run lint
+  Expected: lint runs without configuration errors. Address any warnings
+  or errors found in src/ before proceeding.
+
+------------------------------------------------------------------------------
+Phase 4 — Generator Refactoring
+------------------------------------------------------------------------------
+Goal: generator/ uses native Promises only; npm test still passes.
+
+Background:
+  generator/ is excluded from the published package but kept in the repo for
+  future publication as a separate utility package. It currently depends on
+  bluebird (Promise library) and lodash. This phase removes those dependencies
+  and replaces them with native Node 20+ equivalents.
+
+Files to update:
+  generator/user-dao.js
+    - Remove: var Promise = require('bluebird')
+    - Remove: var _ = require('lodash'), var faker = require('faker')
+      (faker was only used for faker.random.uuid(); replace with
+       const { randomUUID } = require('crypto'))
+    - Replace _.cloneDeep(obj) with structuredClone(obj)  (Node 17+)
+    - Replace _.isObject(x) singleton guards with: if (!userDAOInstance)
+    - Replace all .asCallback(callback) calls: remove callback parameter
+      and return native Promise directly (all callers use .then() already)
+    - Replace new Promise(resolve => resolve(x)).asCallback(cb)
+      with: return Promise.resolve(x)
+
+  generator/user-service.js
+    - Remove: var _ = require('lodash')
+    - Replace _.isObject(userServiceInstance) with: if (!userServiceInstance)
+    - Remove .asCallback(callback) calls on DAO method returns
+    - Remove callback parameters from findBy()
+
+  generator/users-generator.js
+    - Remove: var faker.random.uuid() usage
+    - Add: const { randomUUID } = require('crypto')
+    - Replace faker.random.uuid() with randomUUID()
+
+  package.json — no new deps; confirm these are NOT present:
+    bluebird, q (should already be absent after Phase 1 cleanup)
+
+Verification:
+  npm test
+  Expected: all test suites still pass, including UserService and
+  UsersGenerator suites which exercise generator/.
+
+------------------------------------------------------------------------------
+Phase 5 — Cleanup
+------------------------------------------------------------------------------
+Goal: remove all Gulp-era artefacts; confirm published package is clean.
+
+Files to delete:
+  gulpfile.js
+  gulp/               (entire directory)
+  config/             (entire directory)
+  index.js            (root — replaced by dist/index.js from tsc)
+  index.d.ts          (root — replaced by dist/index.d.ts from tsc)
+
+Note: tslint.json does not exist in this repo (never committed), so no
+action needed there.
+
+Verification:
+  npm run build     — still compiles cleanly
+  npm test          — all tests still pass
+  npm pack --dry-run
+    Expected output includes ONLY:
+      dist/...
+      README.md
+      LICENSE
+    Expected output does NOT include:
+      src/, test/, generator/, gulp/, config/,
+      gulpfile.js, index.js, index.d.ts
+
+==============================================================================
+FOLLOW-UP ACTIONS (post-migration, separate tickets)
+==============================================================================
+
+1. Enable strict TypeScript incrementally
+   Enable individual flags one at a time in tsconfig.json, fixing errors at
+   each step: noImplicitAny → strictNullChecks → strictFunctionTypes →
+   strictPropertyInitialization → ... → "strict": true.
+
+2. Evaluate eliminating lodash from src/
+   Lodash is a runtime dependency. Many utilities have native equivalents in
+   ES2020+ (Array.find, Object.assign, optional chaining, etc.). Removing it
+   reduces the published package's dependency footprint.
+
+3. Publish generator/ as a separate package
+   Publish as e.g. janux-people-testdata. Will require its own package.json,
+   tsconfig, README, and conversion from plain JS to TypeScript.
