@@ -76,10 +76,13 @@ Summary of Key Decisions
 - lodash moved to dependencies (used in src/); follow-up: evaluate eliminating it
 - generator/ excluded from published package; kept in repo for future publication
   as a separate utility package (e.g. janux-people-testdata)
+- generator/ and its test files are OUT OF SCOPE for this migration; see the
+  DEFERRED section below
 - strict: false in tsconfig.json; follow-up: enable incrementally
 - Removed obsolete deps: browserify, vinyl-source-stream, express, amdefine
-- q and bluebird removed; generator/ refactored to use native Promises
+- q and bluebird removed; generator/ refactoring deferred to a future project
 - src/index.ts replaces hand-maintained root index.js and index.d.ts
+- src/collections.ts (vendored basarat/typescript-collections) removed; see Phase 3
 
 ==============================================================================
 IMPLEMENTATION PHASES
@@ -143,7 +146,9 @@ Verification:
 ------------------------------------------------------------------------------
 Phase 2 — Testing
 ------------------------------------------------------------------------------
-Goal: npm test passes all existing tests, written in TypeScript.
+Goal: npm test passes all existing tests for the core library (src/), written
+in TypeScript. Generator tests (UsersGenerator, UserService) are OUT OF SCOPE;
+see the DEFERRED section.
 
 Why tests import from src/ not dist/
   Vitest transforms TypeScript source on the fly. Tests import directly from
@@ -159,8 +164,6 @@ Files to create:
 
   test/Person.spec.ts         (converted from test/Person.spec.js)
   test/Organization.spec.ts   (converted from test/Organization.spec.js)
-  test/UsersGenerator.spec.ts (converted from test/UsersGenerator.spec.js)
-  test/UserService.spec.ts    (converted from test/UserService.spec.js)
 
   Conversion rules for each spec file:
     a. Replace var/require block at the top with ES imports:
@@ -169,23 +172,17 @@ Files to create:
          import log4js from 'log4js';
          import { Person, PhoneNumber, PostalAddress } from '../src';
          (adjust named imports per file)
-    b. For generator imports (UsersGenerator, UserService specs):
-         import generatorIndex from '../generator/index.js';
-         const { UsersGenerator } = generatorIndex;  (adjust per file)
-    c. Remove 'use strict' directive (not needed in TypeScript modules)
-    d. Remove unused 'util' import
-    e. Change var → const/let
-    f. All Chai assertion chains remain UNCHANGED
+    b. Remove 'use strict' directive (not needed in TypeScript modules)
+    c. Remove unused 'util' import
+    d. Change var → const/let
+    e. All Chai assertion chains remain UNCHANGED
 
 Files to update:
   package.json — add to devDependencies:
     "chai":            "^4.3.0"
     "@types/chai":     "^4.3.0"
     "@types/lodash":   "^4.17.0"
-    "faker":           "3.1.0"      (used by generator)
     "log4js":          "^6.9.0"
-    "lokijs":          "^1.5.12"    (used by generator)
-    "md5":             "^2.3.0"     (used by generator)
     "vitest":          "^3.0.0"
 
   package.json — add to scripts:
@@ -195,15 +192,97 @@ Files to update:
 Files to delete:
   test/Person.spec.js
   test/Organization.spec.js
-  test/UsersGenerator.spec.js
-  test/UserService.spec.js
+
+NOTE: test/UsersGenerator.spec.js and test/UserService.spec.js are left as-is
+for now (plain JS, not converted). They will be addressed when generator/ is
+tackled as a separate future project.
 
 Verification:
-  npm test
-  Expected: all test suites pass, no TypeScript errors reported by Vitest.
+  Deferred — do not run npm test yet. The src/impl/ files still import
+  src/collections.ts via `import basarat = require('../collections')`, which
+  Vitest cannot resolve in its transform pipeline. Phase 3 removes that
+  dependency entirely. Run npm test only after Phase 3 is complete.
 
 ------------------------------------------------------------------------------
-Phase 3 — Linting
+Phase 3 — Remove basarat/collections
+------------------------------------------------------------------------------
+Goal: eliminate src/collections.ts (a vendored copy of basarat/typescript-
+collections) and all references to it across src/. No public API changes.
+
+Background:
+  src/collections.ts is a 2700-line vendored copy of the basarat/typescript-
+  collections library included directly in the repo rather than as an npm
+  package. It is used in two ways across src/impl/:
+    1. collections.makeString(this) — called in toString() on every impl class;
+       produces a "{prop:val,...}" string from own properties.
+    2. Dictionary<string, ContactMethod> — used as the return type and internal
+       implementation of the protected createContactMethodDictionary() method
+       in PartyAbstract. The public methods that call it (postalAddresses(),
+       phoneNumbers(), emailAddresses()) already return `any`.
+  The api/ interfaces do not expose either type; the changes are entirely
+  internal to impl/.
+
+Files to update:
+  src/api/Party.ts
+    - Remove the three dead import lines:
+        /// <reference path="../collections.ts" />
+        import basarat = require('../collections');
+        import collections = basarat.collections;
+      (None of the types from collections are used in this file.)
+
+  src/impl/Party.ts
+    - Remove:
+        /// <reference path="../collections.ts" />
+        import basarat = require('../collections');
+        import collections = basarat.collections;
+        import Dictionary = collections.Dictionary;
+    - In createContactMethodDictionary():
+        Change return type:  Dictionary<string, ContactMethod>
+                         →   Record<string, ContactMethod>
+        Change constructor:  new Dictionary<string, ContactMethod>()
+                         →   {} as Record<string, ContactMethod>
+        Change setter:       contacts.setValue(contact.type, contact)
+                         →   contacts[contact.type] = contact
+    - In toString():
+        Change: return collections.makeString(this);
+             →  return JSON.stringify(this);
+
+  src/impl/PhoneNumber.ts
+  src/impl/PartyName.ts
+  src/impl/StateProvince.ts
+  src/impl/PostalAddress.ts
+  src/impl/Country.ts
+  src/impl/PersonName.ts
+  src/impl/City.ts
+    For each of the above:
+    - Remove:
+        /// <reference path="../collections.ts" />
+        import basarat = require('../collections');
+        import collections = basarat.collections;
+    - In toString():
+        Change: return collections.makeString(this);
+             →  return JSON.stringify(this);
+
+Files to delete:
+  src/collections.ts
+
+Files to update:
+  test/Person.spec.ts
+    - The test 'should be able to retrieve the phone numbers of a person as
+      Array or Dictionary' calls phoneNumbers.getValue('work') on the result
+      of person.phoneNumbers(true). getValue() is a Dictionary method; once
+      createContactMethodDictionary() returns a plain Record, it no longer
+      exists. Change:
+        phoneNumbers.getValue('work').type   →  phoneNumbers['work'].type
+        phoneNumbers.getValue('work').number →  phoneNumbers['work'].number
+
+Verification:
+  npm run build   — tsc compiles cleanly; no references to collections remain
+  npm test        — all test suites pass (this is also the deferred
+                    verification for Phase 2)
+
+------------------------------------------------------------------------------
+Phase 4 — Linting
 ------------------------------------------------------------------------------
 Goal: npm run lint runs cleanly against src/.
 
@@ -240,49 +319,6 @@ Verification:
   or errors found in src/ before proceeding.
 
 ------------------------------------------------------------------------------
-Phase 4 — Generator Refactoring
-------------------------------------------------------------------------------
-Goal: generator/ uses native Promises only; npm test still passes.
-
-Background:
-  generator/ is excluded from the published package but kept in the repo for
-  future publication as a separate utility package. It currently depends on
-  bluebird (Promise library) and lodash. This phase removes those dependencies
-  and replaces them with native Node 20+ equivalents.
-
-Files to update:
-  generator/user-dao.js
-    - Remove: var Promise = require('bluebird')
-    - Remove: var _ = require('lodash'), var faker = require('faker')
-      (faker was only used for faker.random.uuid(); replace with
-       const { randomUUID } = require('crypto'))
-    - Replace _.cloneDeep(obj) with structuredClone(obj)  (Node 17+)
-    - Replace _.isObject(x) singleton guards with: if (!userDAOInstance)
-    - Replace all .asCallback(callback) calls: remove callback parameter
-      and return native Promise directly (all callers use .then() already)
-    - Replace new Promise(resolve => resolve(x)).asCallback(cb)
-      with: return Promise.resolve(x)
-
-  generator/user-service.js
-    - Remove: var _ = require('lodash')
-    - Replace _.isObject(userServiceInstance) with: if (!userServiceInstance)
-    - Remove .asCallback(callback) calls on DAO method returns
-    - Remove callback parameters from findBy()
-
-  generator/users-generator.js
-    - Remove: var faker.random.uuid() usage
-    - Add: const { randomUUID } = require('crypto')
-    - Replace faker.random.uuid() with randomUUID()
-
-  package.json — no new deps; confirm these are NOT present:
-    bluebird, q (should already be absent after Phase 1 cleanup)
-
-Verification:
-  npm test
-  Expected: all test suites still pass, including UserService and
-  UsersGenerator suites which exercise generator/.
-
-------------------------------------------------------------------------------
 Phase 5 — Cleanup
 ------------------------------------------------------------------------------
 Goal: remove all Gulp-era artefacts; confirm published package is clean.
@@ -310,6 +346,35 @@ Verification:
       gulpfile.js, index.js, index.d.ts
 
 ==============================================================================
+DEFERRED: Generator Refactoring
+==============================================================================
+
+The generator/ directory and its associated test files (test/UsersGenerator.spec.js,
+test/UserService.spec.js) are OUT OF SCOPE for this migration. They are left
+as-is (plain JavaScript) and will be addressed in a future project, most likely
+when generator/ is published as a separate package (e.g. janux-people-testdata)
+with its own package.json, tsconfig, and README.
+
+Reasons for deferral:
+  - generator/ uses bluebird (Promise library), lokijs, faker, and md5, all of
+    which need careful handling during a TypeScript conversion
+  - The generator code and tests were sufficiently complex that they bogged down
+    Phase 2; isolating them avoids blocking the core library migration
+  - generator/ is already excluded from the published package (not in files[])
+    so deferring it has no impact on consumers
+
+When the time comes, the generator refactoring work will include:
+  - Convert generator/ from plain JS to TypeScript
+  - Replace bluebird with native Promises (Promise.resolve, async/await)
+  - Replace faker.random.uuid() with crypto.randomUUID() (Node 14.17+)
+  - Replace lodash _.cloneDeep with structuredClone() (Node 17+)
+  - Replace lodash _.isObject singleton guards with simple if (!instance) checks
+  - Remove .asCallback() calls (bluebird-specific)
+  - Convert test/UsersGenerator.spec.js and test/UserService.spec.js to
+    TypeScript using the same Vitest + Chai pattern as the core test files
+  - Add faker, lokijs, md5 back to devDependencies if still needed
+
+==============================================================================
 FOLLOW-UP ACTIONS (post-migration, separate tickets)
 ==============================================================================
 
@@ -325,4 +390,5 @@ FOLLOW-UP ACTIONS (post-migration, separate tickets)
 
 3. Publish generator/ as a separate package
    Publish as e.g. janux-people-testdata. Will require its own package.json,
-   tsconfig, README, and conversion from plain JS to TypeScript.
+   tsconfig, README, and conversion from plain JS to TypeScript (see DEFERRED
+   section above).
