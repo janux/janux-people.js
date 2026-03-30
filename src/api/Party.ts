@@ -1,3 +1,8 @@
+import {ContactMethod} from './ContactMethod';
+import {PhoneNumber} from './PhoneNumber';
+import {PostalAddress} from './geography/PostalAdress';
+import {EmailAddress} from './net/EmailAddress';
+
 /**
  *************************************************************************************************
  * Organization and people have common characteristics that describe them, such as addresses, phone
@@ -12,10 +17,42 @@ export interface Party {
 	/** optional string identifier for this Party */
 	code: string;
 
+	/** contact methods (addresses, phones, emails) keyed by field name */
+	contactMethods: any;
+
+	/** Discriminator string identifying the concrete type of this Party (e.g. 'Person', 'Organization') */
+	readonly typeName: string;
+
+	/** Get a contact method by field name and usage type */
+	getContactMethod(aField: string, aType: string): ContactMethod;
+
+	/** Insert or update a contact method under the given usage type */
+	setContactMethod(type: string, contactMethod: ContactMethod): void;
+
 	/**
-	 * The name(s) by which this Party is known; sub-classes may implement this in different ways; for
-	 * Persons, for example, it may the concatenation of the first and last name, while for an
-	 * Organization it may be a short name or legal name
+	 * Returns postal addresses; when {@code dictionary} is true returns a Record keyed by
+	 * contact-method type, otherwise returns a PostalAddress array
 	 */
-	// getPartyName(): PartyName;
+	postalAddresses(dictionary?: boolean): any;
+
+	/** Return the postal address matching the given usage type */
+	postalAddress(type: string): PostalAddress;
+
+	/**
+	 * Returns phone numbers; when {@code dictionary} is true returns a Record keyed by
+	 * contact-method type, otherwise returns a PhoneNumber array
+	 */
+	phoneNumbers(dictionary?: boolean): any;
+
+	/** Return the phone number matching the given usage type */
+	phoneNumber(type: string): PhoneNumber;
+
+	/**
+	 * Returns email addresses; when {@code dictionary} is true returns a Record keyed by
+	 * contact-method type, otherwise returns an EmailAddress array
+	 */
+	emailAddresses(dictionary?: boolean): any;
+
+	/** Return the email address matching the given usage type */
+	emailAddress(type: string): EmailAddress;
 }
