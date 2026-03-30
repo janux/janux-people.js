@@ -13,5 +13,6 @@ export interface PersonName extends PartyName {
     /** titles that are used after a name such as Jr., Sr., M.D., C.P.A., etc... */
     honorificSuffix: string;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     toJSON(): any;
 }

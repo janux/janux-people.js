@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {PersonName} from "../api/PersonName";
 
@@ -39,7 +40,7 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName {
 
     /** contatenates and returns the honorific Prefix, first, middle and last names, and the honorificSuffix */
     get longName(): string {
-        var out: string = "";
+        let out: string = "";
 
         if (this.honorificPrefix != null && this.honorificPrefix != '') {
             out += this.honorificPrefix + ' ';
@@ -67,10 +68,10 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName {
     }
 
     public toJSON(): any {
-        var out: any = {};
-        var _hasOwnProperty = Object.prototype.hasOwnProperty;
+        const out: any = {};
+        const _hasOwnProperty = Object.prototype.hasOwnProperty;
 
-        for (var prop in this) {
+        for (const prop in this) {
             if (_hasOwnProperty.call(this, prop)) {
                 out[prop] = (<any>this)[prop];
             }

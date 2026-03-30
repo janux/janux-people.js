@@ -1,6 +1,3 @@
-import {PartyName} from './PartyName';
-import {ContactMethod} from './ContactMethod';
-
 /**
  *************************************************************************************************
  * Organization and people have common characteristics that describe them, such as addresses, phone

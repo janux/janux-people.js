@@ -1,8 +1,7 @@
-
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as tools from '../tools';
 
 import {Organization} from "../api/Organization";
-import {PartyName} from "../api/PartyName";
 
 import {PartyAbstract} from "./Party";
 
@@ -26,7 +25,7 @@ export class OrganizationImpl extends PartyAbstract implements Organization {
 	}
 
 	public toJSON():any {
-		let out:any = this.contactMethods;
+		const out:any = this.contactMethods;
 		out.name = this.name;
 		out.typeName = this.typeName;
 		out.code = this.code;

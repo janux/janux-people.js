@@ -7,8 +7,8 @@ export function className(target): string {
 
 // Create mixin
 export function extend(destination, source) {
-	for (var k in source) {
-		if (source.hasOwnProperty(k)) {
+	for (const k in source) {
+		if (Object.prototype.hasOwnProperty.call(source, k)) {
 			destination[k] = source[k];
 		}
 	}

@@ -1,8 +1,8 @@
 'use strict';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 // interfaces
 import {Party} from '../api/Party';
-import {PartyName} from '../api/PartyName';
 import {ContactMethod} from '../api/ContactMethod';
 import {PhoneNumber} from '../api/PhoneNumber';
 import {PostalAddress} from '../api/geography/PostalAdress';
@@ -32,7 +32,7 @@ export abstract class PartyAbstract implements Party {
 	* Get a contact method by field and type
 	*/
 	getContactMethod(aField:string, aType:string):ContactMethod {
-		var findContact:ContactMethod;
+		let findContact: ContactMethod;
 
 		// Get contact for a specific type Ej: Home
 		if (typeof this.contactMethods[aField] !== 'undefined') {
@@ -180,7 +180,7 @@ export abstract class PartyAbstract implements Party {
 	static fromJSON(obj:any, party:any):any {
 		// Contacts
 		['addresses', 'phones', 'emails'].forEach(function (elem) {
-			var cType = obj[elem];
+			const cType = obj[elem];
 			if (typeof obj[elem] !== 'undefined') {
 				party.contactMethods[elem] = [];
 				if (cType.length > 0) {
@@ -199,7 +199,7 @@ export abstract class PartyAbstract implements Party {
 	public abstract toJSON():any;
 
 	static hydrateContactMethod(field:string, obj:any):ContactMethod {
-		var out:ContactMethod;
+		let out: ContactMethod;
 
 		switch (field) {
 			case 'phones':
@@ -213,7 +213,7 @@ export abstract class PartyAbstract implements Party {
 				break;
 		}
 
-		for (let prop in obj) {
+		for (const prop in obj) {
 			if (Object.prototype.hasOwnProperty.call(obj, prop)) {
 				out[prop] = obj[prop];
 			}
