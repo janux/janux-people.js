@@ -1,25 +1,19 @@
-'use strict';
+import { describe, it, beforeEach } from 'vitest';
+import { expect } from 'chai';
+import log4js from 'log4js';
+import _ from 'lodash';
+import { PersonImpl as Person, PhoneNumberImpl as PhoneNumber, PostalAddressImpl as PostalAddress } from '../src';
 
-var Person = require('../index').Person;
-var PhoneNumber = require('../index').PhoneNumber;
-var PostalAddress = require('../index').PostalAddress;
-
-var _ = require('lodash');
-var chai = require('chai');
-var expect = chai.expect;
-
-/* global describe, it, beforeEach, fail */
-var log4js = require('log4js'), util = require('util');
-var log = log4js.getLogger('Person_test');
+const log = log4js.getLogger('Person_test');
 
 describe('Person', function () {
 
-	var TYPE_NAME = 'PersonImpl';
-	var person;
+	const TYPE_NAME = 'PersonImpl';
+	let person: any;
 
 	// run before every test in the suite
 	beforeEach(function () {
-		person = new Person('Mr', 'Jonh', 'Peter', 'Sanders', null, "Smith");
+		person = new Person('Mr', 'Jonh', 'Peter', 'Sanders', null, 'Smith');
 		person.code = 'JANUXPERSON';
 	});
 
@@ -58,27 +52,27 @@ describe('Person', function () {
 
 	it('should be able to add/retrieve the phone number of a person', function () {
 		// Phone Number
-		var aPhone = new PhoneNumber('5555060593');
+		const aPhone = new PhoneNumber('5555060593');
 		person.setContactMethod('work', aPhone);
 
-		var phone = person.phoneNumber('work');
+		const phone = person.phoneNumber('work');
 
 		expect(phone.number).to.equal('5555060593');
 	});
 
 	it('should be able to retrieve the phone numbers of a person as Array or Dictionary', function () {
 		// Phone Number
-		var aPhone = new PhoneNumber('5555060593');
+		const aPhone = new PhoneNumber('5555060593');
 		person.setContactMethod('work', aPhone);
 
 		// Phone numbers array
-		var phoneNumbers = person.phoneNumbers();
+		let phoneNumbers = person.phoneNumbers();
 
 		expect(phoneNumbers[0].type).to.equal('work');
 		expect(phoneNumbers[0].number).to.equal('5555060593');
 
 		// Phone numbers dictionary
-		var phoneNumbers = person.phoneNumbers(true);
+		phoneNumbers = person.phoneNumbers(true);
 
 		expect(phoneNumbers.getValue('work').type).to.equal('work');
 		expect(phoneNumbers.getValue('work').number).to.equal('5555060593');
@@ -95,25 +89,9 @@ describe('Person', function () {
 
 	});
 
-	// it('should be able to update a contact method by type', function () {
-	//
-	// 	person.setContactMethod('work', new PhoneNumber('5555060593'));
-	//
-	// 	// Primary Phone Number
-	// 	expect(person.phoneNumber().type).to.equal('work');
-	// 	expect(person.phoneNumber().number).to.equal('5555060593');
-	//
-	// 	person.setContactMethod('work', new PhoneNumber('88888888888'));
-	//
-	// 	// Primary Phone Number
-	// 	expect(person.phoneNumber('work').type).to.equal('work');
-	// 	expect(person.phoneNumber('work').number).to.equal('88888888888');
-	//
-	// });
-
 	it('should be able to add/retrieve the postal address of a person', function () {
 		// Postal Address
-		var aPostalAddr = new PostalAddress();
+		const aPostalAddr = new PostalAddress();
 		aPostalAddr.line1 = '1415 L Street';
 		aPostalAddr.line2 = 'Suite 200';
 		aPostalAddr.cityText = 'Sacramento';
@@ -121,7 +99,7 @@ describe('Person', function () {
 		aPostalAddr.postalCode = '95814';
 		person.setContactMethod('Home', aPostalAddr);
 
-		var postalAddr = person.postalAddress('Home');
+		const postalAddr = person.postalAddress('Home');
 
 		expect(postalAddr.line1).to.equal('1415 L Street');
 		expect(postalAddr.line2).to.equal('Suite 200');
@@ -130,7 +108,7 @@ describe('Person', function () {
 		expect(postalAddr.postalCode).to.equal('95814');
 
 		// Postal addresses array
-		var postalAddresses = person.postalAddresses();
+		const postalAddresses = person.postalAddresses();
 
 		expect(postalAddresses[0].type).to.equal('Home');
 		expect(postalAddresses[0].line1).to.equal('1415 L Street');
@@ -142,11 +120,11 @@ describe('Person', function () {
 
 	it('should be deserialized via fromJSON', function () {
 
-		var aPhone = new PhoneNumber('5555060593');
+		const aPhone = new PhoneNumber('5555060593');
 		person.setContactMethod('work', aPhone);
 
 		// Postal Address
-		var aPostalAddr = new PostalAddress();
+		const aPostalAddr = new PostalAddress();
 		aPostalAddr.line1 = '1415 L Street';
 		aPostalAddr.line2 = 'Suite 200';
 		aPostalAddr.cityText = 'Sacramento';
@@ -154,7 +132,7 @@ describe('Person', function () {
 		aPostalAddr.postalCode = '95814';
 		person.setContactMethod('Home', aPostalAddr);
 
-		var person2 = Person.fromJSON(person.toJSON());
+		const person2 = Person.fromJSON(person.toJSON());
 
 		// Person vs Person2 Name
 		expect(person.name.honorificPrefix).to.equal(person2.name.honorificPrefix);

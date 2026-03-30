@@ -1,21 +1,15 @@
-'use strict';
+import { describe, it, beforeEach } from 'vitest';
+import { expect } from 'chai';
+import log4js from 'log4js';
+import _ from 'lodash';
+import { OrganizationImpl as Organization, PhoneNumberImpl as PhoneNumber, PostalAddressImpl as PostalAddress } from '../src';
 
-var Organization = require('../index').Organization;
-var PhoneNumber = require('../index').PhoneNumber;
-var PostalAddress = require('../index').PostalAddress;
-
-var _ = require('lodash');
-var chai = require('chai');
-var expect = chai.expect;
-
-/* global describe, it, beforeEach, fail */
-var log4js = require('log4js'), util = require('util');
-var log = log4js.getLogger('Organization_test');
+const log = log4js.getLogger('Organization_test');
 
 describe('Organization', function () {
 
-	var TYPE_NAME = 'OrganizationImpl';
-	var org;
+	const TYPE_NAME = 'OrganizationImpl';
+	let org: any;
 
 	// run before every test in the suite
 	beforeEach(function () {
@@ -51,7 +45,7 @@ describe('Organization', function () {
 
 	it('should be able to add/retrieve the phone number of a organization', function () {
 		// Phone Number
-		var aPhone = new PhoneNumber('689655555');
+		const aPhone = new PhoneNumber('689655555');
 		org.setContactMethod('work', aPhone);
 
 		expect(org.phoneNumber('work').number).to.equal('689655555');
@@ -59,7 +53,7 @@ describe('Organization', function () {
 
 	it('should be able to add/retrieve the postal address of a organization', function () {
 		// Postal Address
-		var aPostalAddr = new PostalAddress();
+		const aPostalAddr = new PostalAddress();
 		aPostalAddr.line1 = '1415 L Street';
 		aPostalAddr.line2 = 'Suite 200';
 		aPostalAddr.cityText = 'Sacramento';
@@ -67,7 +61,7 @@ describe('Organization', function () {
 		aPostalAddr.postalCode = '95814';
 		org.setContactMethod('Home', aPostalAddr);
 
-		var postalAddr = org.postalAddress('Home');
+		const postalAddr = org.postalAddress('Home');
 
 		expect(postalAddr.line1).to.equal('1415 L Street');
 		expect(postalAddr.line2).to.equal('Suite 200');
@@ -78,11 +72,11 @@ describe('Organization', function () {
 
 	it('should be deserialized via fromJSON', function () {
 
-		var aPhone = new PhoneNumber('5555060593');
+		const aPhone = new PhoneNumber('5555060593');
 		org.setContactMethod('headquarters', aPhone);
 
 		// Postal Address
-		var aPostalAddr = new PostalAddress();
+		const aPostalAddr = new PostalAddress();
 		aPostalAddr.line1 = '1415 L Street';
 		aPostalAddr.line2 = 'Suite 200';
 		aPostalAddr.cityText = 'Sacramento';
@@ -90,7 +84,7 @@ describe('Organization', function () {
 		aPostalAddr.postalCode = '95814';
 		org.setContactMethod('headquarters', aPostalAddr);
 
-		var org2 = Organization.fromJSON(org.toJSON());
+		const org2 = Organization.fromJSON(org.toJSON());
 
 		// org vs org2 Name
 		expect(org.name).to.equal(org2.name);
