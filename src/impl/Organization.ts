@@ -3,7 +3,7 @@ import * as tools from '../tools';
 
 import {Organization} from "../api/Organization";
 
-import {PartyAbstract} from "./Party";
+import {PartyAbstract} from "./PartyAbstract";
 
 /**
  ***************************************************************************************************

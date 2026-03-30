@@ -4,7 +4,7 @@
 import * as tools from '../tools';
 import {Person} from '../api/Person';
 import {PersonName} from "../api/PersonName";
-import {PartyAbstract} from "./Party";
+import {PartyAbstract} from "./PartyAbstract";
 import {PersonNameImpl} from "./PersonName";
 
 /**

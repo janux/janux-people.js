@@ -3,5 +3,5 @@ export { OrganizationImpl } from './impl/Organization';
 export { PhoneNumberImpl } from './impl/PhoneNumber';
 export { PostalAddressImpl } from './impl/PostalAddress';
 export { EmailAddressImpl } from './impl/EmailAddress';
-export { PartyAbstract } from './impl/Party';
+export { PartyAbstract } from './impl/PartyAbstract';
 export { Party } from './api/Party';
