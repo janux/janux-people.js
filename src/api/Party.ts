@@ -1,4 +1,4 @@
-import {ContactMethod} from './ContactMethod';
+import {ContactMethod, ContactMethodKind} from './ContactMethod';
 import {PhoneNumber} from './PhoneNumber';
 import {PostalAddress} from './geography/PostalAdress';
 import {EmailAddress} from './net/EmailAddress';
@@ -17,14 +17,14 @@ export interface Party {
 	/** optional string identifier for this Party */
 	code: string | undefined;
 
-	/** contact methods (addresses, phones, emails) keyed by field name */
-	contactMethods: Record<string, ContactMethod[]>;
+	/** contact methods keyed by ContactMethodKind */
+	contactMethods: Partial<Record<ContactMethodKind, ContactMethod[]>>;
 
 	/** Discriminator string identifying the concrete type of this Party (e.g. 'Person', 'Organization') */
 	readonly typeName: string;
 
-	/** Get a contact method by field name and usage type; returns undefined if not found */
-	getContactMethod(aField: string, aType: string): ContactMethod | undefined;
+	/** Get a contact method by field and usage type; returns undefined if not found */
+	getContactMethod(aKind: ContactMethodKind, aType: string): ContactMethod | undefined;
 
 	/** Insert or update a contact method under the given usage type */
 	setContactMethod(type: string, contactMethod: ContactMethod): void;

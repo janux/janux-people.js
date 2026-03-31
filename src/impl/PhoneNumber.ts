@@ -1,6 +1,7 @@
 'use strict';
 
 import {PhoneNumber} from "../api/PhoneNumber";
+import {ContactMethodKind} from "../api/ContactMethod";
 
 /**
  ***************************************************************************************************
@@ -24,8 +25,8 @@ export class PhoneNumberImpl implements PhoneNumber {
 		this._countryCode = cC || this._countryCode;
 	}
 
-	get field():string {
-		return 'phones'; // tools.className(this);
+	get kind():ContactMethodKind {
+		return ContactMethodKind.Phones;
 	}
 
 	get countryCode():string {

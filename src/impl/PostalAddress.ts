@@ -7,6 +7,7 @@ import {StateProvince} from "../api/geography/StateProvince";
 import {Country} from "../api/geography/Country";
 import {CountryImpl} from "./Country";
 import {StateProvinceImpl} from "./StateProvince";
+import {ContactMethodKind} from "../api/ContactMethod";
 
 /**
  ***************************************************************************************************
@@ -18,8 +19,8 @@ import {StateProvinceImpl} from "./StateProvince";
  ***************************************************************************************************
  */
 export class PostalAddressImpl implements PostalAddress {
-	get field():string {
-		return 'addresses';
+	get kind():ContactMethodKind {
+		return ContactMethodKind.Addresses;
 	}
 
 	public line1:string = '';

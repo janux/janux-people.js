@@ -5,3 +5,4 @@ export { PostalAddressImpl } from './impl/PostalAddress';
 export { EmailAddressImpl } from './impl/EmailAddress';
 export { PartyAbstract } from './impl/PartyAbstract';
 export { Party } from './api/Party';
+export { ContactMethodKind } from './api/ContactMethod';

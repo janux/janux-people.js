@@ -2,7 +2,7 @@
 
 // interfaces
 import {Party} from '../api/Party';
-import {ContactMethod} from '../api/ContactMethod';
+import {ContactMethod, ContactMethodKind} from '../api/ContactMethod';
 import {PhoneNumber} from '../api/PhoneNumber';
 import {PostalAddress} from '../api/geography/PostalAdress';
 import {EmailAddress} from '../api/net/EmailAddress';
@@ -18,7 +18,7 @@ import {EmailAddressImpl} from "./EmailAddress";
  ***************************************************************************************************
  */
 export abstract class PartyAbstract implements Party {
-	public contactMethods: Record<string, ContactMethod[]>;
+	public contactMethods: Partial<Record<ContactMethodKind, ContactMethod[]>>;
 	public code: string | undefined;
 
 	constructor() {
@@ -30,12 +30,13 @@ export abstract class PartyAbstract implements Party {
 	/*
 	* Get a contact method by field and type
 	*/
-	getContactMethod(aField:string, aType:string):ContactMethod | undefined {
+	getContactMethod(aKind:ContactMethodKind, aType:string):ContactMethod | undefined {
 		let findContact: ContactMethod | undefined;
 
 		// Get contact for a specific type Ej: Home
-		if (typeof this.contactMethods[aField] !== 'undefined') {
-			this.contactMethods[aField].forEach(function (contact:ContactMethod) {
+		const methods = this.contactMethods[aKind];
+		if (methods !== undefined) {
+			methods.forEach(function (contact:ContactMethod) {
 				if ((aType !== '' && contact.type === aType) ||
 					(typeof aType === 'undefined' && contact.primary === true)) {
 					findContact = contact;
@@ -57,27 +58,17 @@ export abstract class PartyAbstract implements Party {
 			contactMethod.type = type;
 
 			// If there are no others define an empty array
-			this.contactMethods[contactMethod.field] = this.contactMethods[contactMethod.field] || [];
+			const existing = this.contactMethods[contactMethod.kind] ?? [];
 
 			// Set this contact method as primary
-			if (this.contactMethods[contactMethod.field].length == 0) {
+			if (existing.length === 0) {
 				contactMethod.primary = true;
 			}
 
-			// Check if contact with specified type already exists
-			// const contactIndex = _.findIndex(this.contactMethods[contactMethod.field],{type:type});
-			//
-			// if(contactIndex !== -1)
-			// {
-			// 	// Just update
-			// 	this.contactMethods[contactMethod.field][contactIndex] = contactMethod;
-			// } else {
-			// 	// Insert a new one
-			// 	this.contactMethods[contactMethod.field].push(contactMethod);
-			// }
-			this.contactMethods[contactMethod.field].push(contactMethod);
+			existing.push(contactMethod);
+			this.contactMethods[contactMethod.kind] = existing;
 
-			// console.log("added contact method in field '" + contactMethod.field + "' with type "+contactMethod.type);
+			// console.log("added contact method of kind '" + contactMethod.kind + "' with type "+contactMethod.type);
 		}
 	}
 
@@ -91,12 +82,12 @@ export abstract class PartyAbstract implements Party {
 			 * user-defined type of ContactMethod kind, such as PHYSICAL_ADDRESS,
 			 * CHECK-IN_ADDRESS, MAILING_ADDRESS, BILLING_ADDRESS, etc...
 			 */
-			return this.createContactMethodDictionary('addresses') as Record<string, PostalAddress>;
+			return this.createContactMethodDictionary(ContactMethodKind.Addresses) as Record<string, PostalAddress>;
 		} else {
 			/*
 			 * Return Array of postal addresses
 			 */
-			return <PostalAddress[]>this.contactMethods['addresses'];
+			return <PostalAddress[]>this.contactMethods[ContactMethodKind.Addresses];
 		}
 	}
 
@@ -104,7 +95,7 @@ export abstract class PartyAbstract implements Party {
 	 * Return specific postal address according type
 	 */
 	postalAddress(type:string):PostalAddress | undefined {
-		return this.getContactMethod('addresses', type) as PostalAddress | undefined;
+		return this.getContactMethod(ContactMethodKind.Addresses, type) as PostalAddress | undefined;
 	}
 
 	/*
@@ -116,12 +107,12 @@ export abstract class PartyAbstract implements Party {
 			 * Telephone numbers keyed by a string code representing a user-defined type of
 			 * Phone Number, such as PHYSICAL_PHONE, BILLING_PHONE, etc...
 			 */
-			return this.createContactMethodDictionary('phones') as Record<string, PhoneNumber>;
+			return this.createContactMethodDictionary(ContactMethodKind.Phones) as Record<string, PhoneNumber>;
 		} else {
 			/*
 			 * Return Array of phone numbers
 			 */
-			return <PhoneNumber[]>this.contactMethods['phones'];
+			return <PhoneNumber[]>this.contactMethods[ContactMethodKind.Phones];
 		}
 	}
 
@@ -129,7 +120,7 @@ export abstract class PartyAbstract implements Party {
 	 * Return specific phone number according type
 	 */
 	phoneNumber(type:string):PhoneNumber | undefined {
-		return this.getContactMethod('phones', type) as PhoneNumber | undefined;
+		return this.getContactMethod(ContactMethodKind.Phones, type) as PhoneNumber | undefined;
 	}
 
 	/*
@@ -141,12 +132,12 @@ export abstract class PartyAbstract implements Party {
 			 * Email addresses keyed by a string code representing a user-defined kind of
 			 * Email, such as EMAIL1, INFO_EMAIL etc...
 			 */
-			return this.createContactMethodDictionary('emails') as Record<string, EmailAddress>;
+			return this.createContactMethodDictionary(ContactMethodKind.Emails) as Record<string, EmailAddress>;
 		} else {
 			/*
 			 * Return Array of phones numbers
 			 */
-			return <EmailAddressImpl[]>this.contactMethods['emails'];
+			return <EmailAddressImpl[]>this.contactMethods[ContactMethodKind.Emails];
 		}
 	}
 
@@ -154,21 +145,20 @@ export abstract class PartyAbstract implements Party {
 	 * Return specific email according type
 	 */
 	emailAddress(type:string):EmailAddress | undefined {
-		return this.getContactMethod('emails', type) as EmailAddress | undefined;
+		return this.getContactMethod(ContactMethodKind.Emails, type) as EmailAddress | undefined;
 	}
 
 	/** creates a Record for each subclass of ContactMethod found in the main contactMethods object */
-	protected createContactMethodDictionary(aField:string):Record<string, ContactMethod> {
+	protected createContactMethodDictionary(aKind:ContactMethodKind):Record<string, ContactMethod> {
 		const contacts:Record<string, ContactMethod> = {};
 
-		const csArray = this.contactMethods[aField];
-		if (csArray.length > 0) {
-			csArray.forEach(function (contact:ContactMethod) {
-				contacts[contact.type] = contact;
-			});
-		} else {
-			throw new Error('Error while creating contacts dictionary for field ' + aField);
+		const csArray = this.contactMethods[aKind];
+		if (!csArray || csArray.length === 0) {
+			throw new Error('Error while creating contacts dictionary for kind ' + aKind);
 		}
+		csArray.forEach(function (contact:ContactMethod) {
+			contacts[contact.type] = contact;
+		});
 		return contacts;
 	}
 
@@ -178,7 +168,7 @@ export abstract class PartyAbstract implements Party {
 
 	static hydrateFromJSON<T extends PartyAbstract>(obj: Record<string, unknown>, party: T): T {
 		// Contacts
-		['addresses', 'phones', 'emails'].forEach(function (elem) {
+		[ContactMethodKind.Addresses, ContactMethodKind.Phones, ContactMethodKind.Emails].forEach(function (elem) {
 			const cType = obj[elem] as ContactMethod[] | undefined;
 			if (typeof cType !== 'undefined') {
 				party.contactMethods[elem] = [];
@@ -197,21 +187,21 @@ export abstract class PartyAbstract implements Party {
 
 	public abstract toJSON(): Record<string, unknown>;
 
-	static hydrateContactMethod(field: string, obj: Record<string, unknown>): ContactMethod {
+	static hydrateContactMethod(kind: ContactMethodKind, obj: Record<string, unknown>): ContactMethod {
 		let out: ContactMethod;
 
-		switch (field) {
-			case 'phones':
+		switch (kind) {
+			case ContactMethodKind.Phones:
 				out = new PhoneNumberImpl();
 				break;
-			case 'emails':
+			case ContactMethodKind.Emails:
 				out = new EmailAddressImpl();
 				break;
-			case 'addresses':
+			case ContactMethodKind.Addresses:
 				out = new PostalAddressImpl();
 				break;
 			default:
-				throw new Error(`Unknown contact method field: ${field}`);
+				throw new Error(`Unknown contact method kind: ${kind}`);
 		}
 
 		for (const prop in obj) {

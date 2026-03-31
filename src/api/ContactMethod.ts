@@ -1,8 +1,14 @@
+export enum ContactMethodKind {
+	Phones    = 'phones',
+	Emails    = 'emails',
+	Addresses = 'addresses',
+}
+
 export interface ContactMethod {
 	/**
-	 * Portable Contacts Plural Fields: phoneNumbers, emails, etc.
+	 * The kind of contact method: phoneNumbers, emails, etc.
 	 **/
-	field:string;
+	kind:ContactMethodKind;
 
 	/**
 	 * The type of field for this instance, usually used to label the preferred

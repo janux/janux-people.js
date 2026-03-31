@@ -1,6 +1,7 @@
 'use strict';
 
 import {EmailAddress} from "../api/net/EmailAddress";
+import {ContactMethodKind} from "../api/ContactMethod";
 /**
  ***************************************************************************************************
  * bean that represents an Email Address Uniform Resource Identifier
@@ -10,8 +11,8 @@ import {EmailAddress} from "../api/net/EmailAddress";
  ***************************************************************************************************
  */
 export class EmailAddressImpl implements EmailAddress {
-	get field():string {
-		return 'emails';
+	get kind():ContactMethodKind {
+		return ContactMethodKind.Emails;
 	}
 
 	public address:string;
