@@ -1,5 +1,4 @@
 'use strict';
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {PersonName} from "../api/PersonName";
 
@@ -67,13 +66,13 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName {
         return JSON.stringify(this);
     }
 
-    public toJSON(): any {
-        const out: any = {};
+    public toJSON(): Record<string, unknown> {
+        const out: Record<string, unknown> = {};
         const _hasOwnProperty = Object.prototype.hasOwnProperty;
 
         for (const prop in this) {
             if (_hasOwnProperty.call(this, prop)) {
-                out[prop] = (<any>this)[prop];
+                out[prop] = (this as Record<string, unknown>)[prop];
             }
         }
         return out;

@@ -1,6 +1,3 @@
-'use strict';
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import * as tools from '../tools';
 import {Person} from '../api/Person';
 import {PersonName} from "../api/PersonName";
@@ -26,8 +23,8 @@ export class PersonImpl extends PartyAbstract implements Person {
         return tools.className(this);
     }
 
-    public toJSON(): any {
-        const out: any = this.contactMethods;
+    public toJSON(): Record<string, unknown> {
+        const out: Record<string, unknown> = { ...this.contactMethods };
         out.displayName = this.name.shortName;
         out.name = this.name.toJSON();
         out.typeName = this.typeName;
@@ -36,16 +33,17 @@ export class PersonImpl extends PartyAbstract implements Person {
     }
 
     /** deserializes a Person from its canonical toJSON representation */
-    static fromJSON(obj: any): Person {
+    static fromJSON(obj: Record<string, unknown>): Person {
+        const nameObj = obj.name as Record<string, string>;
         let aPerson = new PersonImpl(
-            obj.name.honorificPrefix,
-            obj.name.first,
-            obj.name.middle,
-            obj.name.last,
-            obj.name.honorificSuffix,
-            obj.name.maternal);
+            nameObj.honorificPrefix,
+            nameObj.first,
+            nameObj.middle,
+            nameObj.last,
+            nameObj.honorificSuffix,
+            nameObj.maternal);
 
-        aPerson = PartyAbstract.fromJSON(obj, aPerson);
+        aPerson = PartyAbstract.hydrateFromJSON(obj, aPerson);
 
         return aPerson;
     }

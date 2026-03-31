@@ -1,5 +1,4 @@
 'use strict';
-/* eslint-disable @typescript-eslint/no-explicit-any */
 
 // interfaces
 import {Party} from '../api/Party';
@@ -19,7 +18,7 @@ import {EmailAddressImpl} from "./EmailAddress";
  ***************************************************************************************************
  */
 export abstract class PartyAbstract implements Party {
-	public contactMethods:any;
+	public contactMethods: Record<string, ContactMethod[]>;
 	public code: string;
 
 	constructor() {
@@ -85,14 +84,14 @@ export abstract class PartyAbstract implements Party {
 	/*
 	 * Postal mailing addresses
 	 */
-	postalAddresses(dictionary?:boolean):any {
+	postalAddresses(dictionary?:boolean): PostalAddress[] | Record<string, PostalAddress> {
 		if (dictionary) {
 			/*
 			 * Postal mailing addresses keyed by a string code representing a
 			 * user-defined type of ContactMethod kind, such as PHYSICAL_ADDRESS,
 			 * CHECK-IN_ADDRESS, MAILING_ADDRESS, BILLING_ADDRESS, etc...
 			 */
-			return this.createContactMethodDictionary('addresses');
+			return this.createContactMethodDictionary('addresses') as Record<string, PostalAddress>;
 		} else {
 			/*
 			 * Return Array of postal addresses
@@ -111,13 +110,13 @@ export abstract class PartyAbstract implements Party {
 	/*
 	 * Telephone numbers
 	 */
-	phoneNumbers(dictionary?:boolean):any {
+	phoneNumbers(dictionary?:boolean): PhoneNumber[] | Record<string, PhoneNumber> {
 		if (dictionary) {
 			/*
 			 * Telephone numbers keyed by a string code representing a user-defined type of
 			 * Phone Number, such as PHYSICAL_PHONE, BILLING_PHONE, etc...
 			 */
-			return this.createContactMethodDictionary('phones');
+			return this.createContactMethodDictionary('phones') as Record<string, PhoneNumber>;
 		} else {
 			/*
 			 * Return Array of phone numbers
@@ -136,13 +135,13 @@ export abstract class PartyAbstract implements Party {
 	/*
 	 * Email addresses
 	 */
-	emailAddresses(dictionary?:boolean):any {
+	emailAddresses(dictionary?:boolean): EmailAddress[] | Record<string, EmailAddress> {
 		if (dictionary) {
 			/*
 			 * Email addresses keyed by a string code representing a user-defined kind of
 			 * Email, such as EMAIL1, INFO_EMAIL etc...
 			 */
-			return this.createContactMethodDictionary('emails');
+			return this.createContactMethodDictionary('emails') as Record<string, EmailAddress>;
 		} else {
 			/*
 			 * Return Array of phones numbers
@@ -177,28 +176,28 @@ export abstract class PartyAbstract implements Party {
 		return JSON.stringify(this);
 	}
 
-	static fromJSON(obj:any, party:any):any {
+	static hydrateFromJSON<T extends PartyAbstract>(obj: Record<string, unknown>, party: T): T {
 		// Contacts
 		['addresses', 'phones', 'emails'].forEach(function (elem) {
-			const cType = obj[elem];
-			if (typeof obj[elem] !== 'undefined') {
+			const cType = obj[elem] as ContactMethod[] | undefined;
+			if (typeof cType !== 'undefined') {
 				party.contactMethods[elem] = [];
 				if (cType.length > 0) {
 					cType.forEach(function (contact:ContactMethod) {
-						party.setContactMethod(contact.type, PartyAbstract.hydrateContactMethod(elem, contact));
+						party.setContactMethod(contact.type, PartyAbstract.hydrateContactMethod(elem, contact as unknown as Record<string, unknown>));
 					});
 				}
 			}
 		});
 		// Code
-		party.code = obj.code;
+		party.code = obj.code as string;
 
 		return party;
 	}
 
-	public abstract toJSON():any;
+	public abstract toJSON(): Record<string, unknown>;
 
-	static hydrateContactMethod(field:string, obj:any):ContactMethod {
+	static hydrateContactMethod(field: string, obj: Record<string, unknown>): ContactMethod {
 		let out: ContactMethod;
 
 		switch (field) {
@@ -215,7 +214,7 @@ export abstract class PartyAbstract implements Party {
 
 		for (const prop in obj) {
 			if (Object.prototype.hasOwnProperty.call(obj, prop)) {
-				out[prop] = obj[prop];
+				(out as unknown as Record<string, unknown>)[prop] = obj[prop];
 			}
 		}
 		return out;

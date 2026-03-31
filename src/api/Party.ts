@@ -18,7 +18,7 @@ export interface Party {
 	code: string;
 
 	/** contact methods (addresses, phones, emails) keyed by field name */
-	contactMethods: any;
+	contactMethods: Record<string, ContactMethod[]>;
 
 	/** Discriminator string identifying the concrete type of this Party (e.g. 'Person', 'Organization') */
 	readonly typeName: string;
@@ -33,7 +33,7 @@ export interface Party {
 	 * Returns postal addresses; when {@code dictionary} is true returns a Record keyed by
 	 * contact-method type, otherwise returns a PostalAddress array
 	 */
-	postalAddresses(dictionary?: boolean): any;
+	postalAddresses(dictionary?: boolean): PostalAddress[] | Record<string, PostalAddress>;
 
 	/** Return the postal address matching the given usage type */
 	postalAddress(type: string): PostalAddress;
@@ -42,7 +42,7 @@ export interface Party {
 	 * Returns phone numbers; when {@code dictionary} is true returns a Record keyed by
 	 * contact-method type, otherwise returns a PhoneNumber array
 	 */
-	phoneNumbers(dictionary?: boolean): any;
+	phoneNumbers(dictionary?: boolean): PhoneNumber[] | Record<string, PhoneNumber>;
 
 	/** Return the phone number matching the given usage type */
 	phoneNumber(type: string): PhoneNumber;
@@ -51,7 +51,7 @@ export interface Party {
 	 * Returns email addresses; when {@code dictionary} is true returns a Record keyed by
 	 * contact-method type, otherwise returns an EmailAddress array
 	 */
-	emailAddresses(dictionary?: boolean): any;
+	emailAddresses(dictionary?: boolean): EmailAddress[] | Record<string, EmailAddress>;
 
 	/** Return the email address matching the given usage type */
 	emailAddress(type: string): EmailAddress;

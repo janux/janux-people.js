@@ -1,6 +1,6 @@
 Modernizing janux-people.js Build Process
 Date: 2026-03-19
-Updated: 2026-03-30
+Updated: 2026-03-31
 
 Overview
 --------
@@ -402,6 +402,113 @@ Verification:
     Confirm lodash no longer appears in the dependency tree of the
     published package.
 
+------------------------------------------------------------------------------
+Phase 7 — Remove ESLint Disable Statements
+------------------------------------------------------------------------------
+Goal: remove all eslint-disable comments in src/ file by file, fixing the
+underlying issues so the code complies cleanly with ESLint. This phase
+prepares src/ for incremental TypeScript strict mode enablement (Phase 8).
+
+Background:
+  Phase 4 introduced ESLint with @typescript-eslint rules. The initial
+  linting pass revealed issues that were suppressed with eslint-disable
+  comments rather than fixed. Removing these comments forces us to address
+  the underlying code issues, resulting in cleaner, more maintainable code
+  and catching potential bugs early.
+
+Audit results (grep -r "eslint-disable" src/):
+  src/impl/PartyAbstract.ts       /* eslint-disable @typescript-eslint/no-explicit-any */
+  src/impl/PersonName.ts          /* eslint-disable @typescript-eslint/no-explicit-any */
+  src/impl/Organization.ts        /* eslint-disable @typescript-eslint/no-explicit-any */
+  src/impl/Person.ts              /* eslint-disable @typescript-eslint/no-explicit-any */
+  src/api/PersonName.ts           // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+  Total files: 5 (4 impl/, 1 api/)
+  Suppressed rule: @typescript-eslint/no-explicit-any
+  Comment style: block-level (/* */) in impl/, line-level (//) in api/
+
+Process (file by file):
+  1. Start with the file that has the fewest suppressions.
+  2. For each suppression:
+     a. Understand why the linter flagged the code (e.g., no-explicit-any,
+        unused-vars, etc.)
+     b. Fix the code to comply with the rule (e.g., add explicit type
+        annotations, remove unused imports)
+     c. Verify that npm run lint no longer complains about that line
+     d. Remove the eslint-disable comment
+  3. After all suppressions are removed from the file:
+     a. Run npm run lint to confirm the file is clean
+     b. Run npm run build to ensure compilation still works
+     c. Run npm test to ensure tests still pass
+     d. STOP and request review of your changes before committing
+  4. Once changes are reviewed and committed, move to the next file.
+
+Expected outcomes per file:
+  - All eslint-disable / @ts-expect-error / @ts-ignore comments removed
+  - Code is more explicit (types added, unused code removed)
+  - npm run lint, npm run build, and npm test all pass
+
+Verification (after all files are clean):
+  npm run lint     — no warnings or errors; no suppression comments remain
+  npm run build    — compiles cleanly
+  npm test         — all tests pass
+
+  .eslintrc.json update (final step):
+    Promote "@typescript-eslint/no-explicit-any" from "warn" to "error"
+    to lock in the improvement and prevent future regressions.
+    Confirm npm run lint still passes after the rule change.
+
+------------------------------------------------------------------------------
+Phase 8 — Enable TypeScript Strict Flags
+------------------------------------------------------------------------------
+Goal: incrementally enable TypeScript's strict mode flags in tsconfig.json,
+fixing all errors at each step, until "strict": true can be set cleanly.
+This is the capstone of the modernization effort.
+
+Background:
+  Phase 1 set "strict": false deliberately to unblock compilation. Phase 7
+  cleaned up all no-explicit-any suppressions. With those out of the way,
+  the codebase is ready for strict mode to be layered in one flag at a time.
+
+  TypeScript's "strict": true is shorthand for enabling all of the following
+  individual flags simultaneously. Enabling them one at a time keeps each
+  batch of errors small and reviewable:
+
+    noImplicitAny              — ban implicit any; require explicit types
+    strictNullChecks           — null and undefined are not assignable to
+                                 other types unless explicitly declared
+    strictFunctionTypes        — stricter checking of function parameter types
+    strictBindCallApply        — type-safe .bind(), .call(), and .apply()
+    strictPropertyInitialization — class properties must be initialised in
+                                 the constructor (requires strictNullChecks)
+    noImplicitThis             — error on 'this' with an implicit 'any' type
+    alwaysStrict               — emit 'use strict' in output files
+
+Process (flag by flag):
+  For each flag in the order listed above:
+  1. Add the flag (set to true) in tsconfig.json compilerOptions.
+  2. Run npm run build.
+  3. Fix all TypeScript errors introduced by the flag.
+  4. Run npm test to confirm no regressions.
+  5. STOP and request review of your changes before committing.
+  6. Once changes are reviewed and committed, move to the next flag.
+
+  Final step:
+    Replace all individual strict flags in tsconfig.json with the single
+    "strict": true setting, confirm npm run build and npm test still pass,
+    and update the Summary of Key Decisions to reflect that strict mode
+    is now fully enabled.
+
+Verification (after each flag):
+  npm run build    — no TypeScript errors
+  npm test         — all tests pass
+
+Verification (final):
+  tsconfig.json contains "strict": true and no individual strict flags
+  npm run build    — compiles cleanly
+  npm run lint     — no warnings or errors
+  npm test         — all tests pass
+
 ==============================================================================
 DEFERRED: Generator Refactoring
 ==============================================================================
@@ -435,14 +542,7 @@ When the time comes, the generator refactoring work will include:
 FOLLOW-UP ACTIONS (post-migration, separate tickets)
 ==============================================================================
 
-1. Enable strict TypeScript incrementally
-   Enable individual flags one at a time in tsconfig.json, fixing errors at
-   each step: noImplicitAny → strictNullChecks → strictFunctionTypes →
-   strictPropertyInitialization → ... → "strict": true.
-
-2. Eliminate lodash — addressed in Phase 6.
-
-3. Publish generator/ as a separate package
+1. Publish generator/ as a separate package
    Publish as e.g. janux-people-testdata. Will require its own package.json,
    tsconfig, README, and conversion from plain JS to TypeScript (see DEFERRED
    section above).

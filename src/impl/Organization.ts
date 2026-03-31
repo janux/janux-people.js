@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as tools from '../tools';
 
 import {Organization} from "../api/Organization";
@@ -24,8 +23,8 @@ export class OrganizationImpl extends PartyAbstract implements Organization {
 		this.name = name;
 	}
 
-	public toJSON():any {
-		const out:any = this.contactMethods;
+	public toJSON(): Record<string, unknown> {
+		const out: Record<string, unknown> = { ...this.contactMethods };
 		out.name = this.name;
 		out.typeName = this.typeName;
 		out.code = this.code;
@@ -33,9 +32,9 @@ export class OrganizationImpl extends PartyAbstract implements Organization {
 	}
 
 	/** deserializes a Organization from its canonical toJSON representation */
-	static fromJSON(obj:any):Organization {
-		let aOrg = new OrganizationImpl(obj.name);
-		aOrg = PartyAbstract.fromJSON(obj, aOrg);
+	static fromJSON(obj: Record<string, unknown>): Organization {
+		let aOrg = new OrganizationImpl(obj.name as string);
+		aOrg = PartyAbstract.hydrateFromJSON(obj, aOrg);
 		return aOrg;
 	}
 } // end class OrganizationImpl
