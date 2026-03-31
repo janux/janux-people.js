@@ -30,8 +30,8 @@ export abstract class PartyAbstract implements Party {
 	/*
 	* Get a contact method by field and type
 	*/
-	getContactMethod(aField:string, aType:string):ContactMethod {
-		let findContact: ContactMethod;
+	getContactMethod(aField:string, aType:string):ContactMethod | undefined {
+		let findContact: ContactMethod | undefined;
 
 		// Get contact for a specific type Ej: Home
 		if (typeof this.contactMethods[aField] !== 'undefined') {
@@ -103,8 +103,8 @@ export abstract class PartyAbstract implements Party {
 	/*
 	 * Return specific postal address according type
 	 */
-	postalAddress(type:string):PostalAddress {
-		return <PostalAddress>this.getContactMethod('addresses', type);
+	postalAddress(type:string):PostalAddress | undefined {
+		return this.getContactMethod('addresses', type) as PostalAddress | undefined;
 	}
 
 	/*
@@ -128,8 +128,8 @@ export abstract class PartyAbstract implements Party {
 	/*
 	 * Return specific phone number according type
 	 */
-	phoneNumber(type:string):PhoneNumber {
-		return <PhoneNumber>this.getContactMethod('phones', type);
+	phoneNumber(type:string):PhoneNumber | undefined {
+		return this.getContactMethod('phones', type) as PhoneNumber | undefined;
 	}
 
 	/*
@@ -153,8 +153,8 @@ export abstract class PartyAbstract implements Party {
 	/*
 	 * Return specific email according type
 	 */
-	emailAddress(type:string):EmailAddress {
-		return <EmailAddress>this.getContactMethod('emails', type);
+	emailAddress(type:string):EmailAddress | undefined {
+		return this.getContactMethod('emails', type) as EmailAddress | undefined;
 	}
 
 	/** creates a Record for each subclass of ContactMethod found in the main contactMethods object */
@@ -210,6 +210,8 @@ export abstract class PartyAbstract implements Party {
 			case 'addresses':
 				out = new PostalAddressImpl();
 				break;
+			default:
+				throw new Error(`Unknown contact method field: ${field}`);
 		}
 
 		for (const prop in obj) {

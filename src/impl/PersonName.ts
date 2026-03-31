@@ -24,12 +24,12 @@ export class PersonNameImpl extends PartyNameImpl implements PersonName {
     constructor(hP?: string, first?: string, middle?: string, last?: string, hS?: string, maternal?: string) {
         super();
 
-        this.honorificPrefix = hP;
-        this.first = first;
-        this.middle = middle;
-        this.last = last;
-        this.honorificSuffix = hS;
-        this.maternal = maternal;
+        this.honorificPrefix = hP ?? '';
+        this.first = first ?? '';
+        this.middle = middle ?? '';
+        this.last = last ?? '';
+        this.honorificSuffix = hS ?? '';
+        this.maternal = maternal ?? '';
     }
 
     /** contatenates and returns the first and last names */

@@ -19,6 +19,6 @@ export class EmailAddressImpl implements EmailAddress {
 	public primary:boolean;
 
 	constructor(address?:string) {
-		this.address = address;
+		this.address = address ?? '';
 	}
 } // end class EmailAddressImpl

@@ -18,8 +18,8 @@ export class PhoneNumberImpl implements PhoneNumber {
 	public primary:boolean;
 
 	constructor(number?:string, extension?:string, cC?:number, aC?:number) {
-		this.number = number;
-		this.extension = extension;
+		this.number = number ?? '';
+		this.extension = extension ?? '';
 		this._areaCode = aC || this._areaCode;
 		this._countryCode = cC || this._countryCode;
 	}

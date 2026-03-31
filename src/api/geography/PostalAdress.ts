@@ -44,28 +44,28 @@ export interface PostalAddress extends ContactMethod {
 	line3:string;
 	postalCode:string;
 
-	/** @param s a string that can be used to represent a city */
-	cityText:string;
+	/** @param s a string that can be used to represent a city; undefined when a City entity is set */
+	cityText:string | undefined;
 
-	/** @param s a string that can be used to represent a state or a province */
-	stateText:string;
+	/** @param s a string that can be used to represent a state or a province; undefined when a StateProvince entity is set */
+	stateText:string | undefined;
 
-	/** @param s a string that can be used to represent a country */
-	countryText:string;
+	/** @param s a string that can be used to represent a country; undefined when a Country entity is set */
+	countryText:string | undefined;
 
 	/**
-	 * The City where the PostalAddress is located; may be null if it is not possible to ascertain the
-	 * City entity in with this Postal Address is located; in such case, the city may be stored as a
-	 * string in getCityAsstring.  If the City is not null, the getStateProvince and getCountry fields
+	 * The City where the PostalAddress is located; undefined if it is not possible to ascertain the
+	 * City entity for this Postal Address; in such case, the city may be stored as a
+	 * string in cityText.  If defined, the stateProvince and country fields
 	 * must be the same as the StateProvince/Country of the City.
 	 */
-	city:City;
+	city:City | undefined;
 
 	/**
-	 * StateProvince in which this PostalAddress is located; if getCity or getCountry fields ane not
-	 * null, all three of these entities must be congruent.
+	 * StateProvince in which this PostalAddress is located; if city or country fields are
+	 * defined, all three of these entities must be congruent.
 	 */
-	stateProvince:StateProvince;
+	stateProvince:StateProvince | undefined;
 
 	/**
 	 * Country in which this PostalAddress is located; if getCity or getStateProvince fields are not

@@ -20,7 +20,7 @@ export class OrganizationImpl extends PartyAbstract implements Organization {
 
 	constructor(name?:string) {
 		super();
-		this.name = name;
+		this.name = name ?? '';
 	}
 
 	public toJSON(): Record<string, unknown> {

@@ -23,8 +23,8 @@ export interface Party {
 	/** Discriminator string identifying the concrete type of this Party (e.g. 'Person', 'Organization') */
 	readonly typeName: string;
 
-	/** Get a contact method by field name and usage type */
-	getContactMethod(aField: string, aType: string): ContactMethod;
+	/** Get a contact method by field name and usage type; returns undefined if not found */
+	getContactMethod(aField: string, aType: string): ContactMethod | undefined;
 
 	/** Insert or update a contact method under the given usage type */
 	setContactMethod(type: string, contactMethod: ContactMethod): void;
@@ -35,8 +35,8 @@ export interface Party {
 	 */
 	postalAddresses(dictionary?: boolean): PostalAddress[] | Record<string, PostalAddress>;
 
-	/** Return the postal address matching the given usage type */
-	postalAddress(type: string): PostalAddress;
+	/** Return the postal address matching the given usage type, or undefined if not found */
+	postalAddress(type: string): PostalAddress | undefined;
 
 	/**
 	 * Returns phone numbers; when {@code dictionary} is true returns a Record keyed by
@@ -44,8 +44,8 @@ export interface Party {
 	 */
 	phoneNumbers(dictionary?: boolean): PhoneNumber[] | Record<string, PhoneNumber>;
 
-	/** Return the phone number matching the given usage type */
-	phoneNumber(type: string): PhoneNumber;
+	/** Return the phone number matching the given usage type, or undefined if not found */
+	phoneNumber(type: string): PhoneNumber | undefined;
 
 	/**
 	 * Returns email addresses; when {@code dictionary} is true returns a Record keyed by
@@ -53,6 +53,6 @@ export interface Party {
 	 */
 	emailAddresses(dictionary?: boolean): EmailAddress[] | Record<string, EmailAddress>;
 
-	/** Return the email address matching the given usage type */
-	emailAddress(type: string): EmailAddress;
+	/** Return the email address matching the given usage type, or undefined if not found */
+	emailAddress(type: string): EmailAddress | undefined;
 }

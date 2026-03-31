@@ -26,16 +26,16 @@ export class PostalAddressImpl implements PostalAddress {
 	public line2:string;
 	public line3:string;
 	public postalCode:string;
-	public cityText:string;
-	public stateText:string;
-	public countryText:string;
-	public _city:City;
-	public _stateProvince:StateProvince;
+	public cityText:string | undefined;
+	public stateText:string | undefined;
+	public countryText:string | undefined;
+	public _city:City | undefined;
+	public _stateProvince:StateProvince | undefined;
 	public _country:Country;
 	public type:string;
 	public primary:boolean;
 
-	get city():City {
+	get city():City | undefined {
 		return this._city;
 	}
 
@@ -47,7 +47,7 @@ export class PostalAddressImpl implements PostalAddress {
 	set city(city:City) {
 		this._city = city;
 		if (city instanceof CityImpl) {
-			this.cityText = null;
+			this.cityText = undefined;
 			this.stateProvince = city.state;
 			this.country = city.country;
 		}
@@ -57,7 +57,7 @@ export class PostalAddressImpl implements PostalAddress {
 	 * returns getCity().getState() if a City is assigned to this
 	 * PostalAddress, or else the StateProvince field
 	 */
-	get stateProvince():StateProvince {
+	get stateProvince():StateProvince | undefined {
 		if (this.city instanceof CityImpl) {
 			return this.city.state;
 		}
@@ -74,7 +74,7 @@ export class PostalAddressImpl implements PostalAddress {
 	set stateProvince(aStateProvince:StateProvince) {
 		this._stateProvince = aStateProvince;
 		if (aStateProvince instanceof StateProvinceImpl) {
-			this.stateText = null;
+			this.stateText = undefined;
 			this.country = aStateProvince.country;
 		}
 	}
@@ -103,12 +103,12 @@ export class PostalAddressImpl implements PostalAddress {
 		this._country = aCountry;
 
 		if (aCountry instanceof CountryImpl) {
-			this.countryText = null;
+			this.countryText = undefined;
 		}
 
 		if (this.city instanceof CityImpl && this.city.country.toString() != aCountry.toString()) {
-			this.city = null;
-			this.stateProvince = null;
+			this._city = undefined;
+			this._stateProvince = undefined;
 		}
 	}
 
@@ -117,7 +117,7 @@ export class PostalAddressImpl implements PostalAddress {
 			return this.city.name;
 		}
 		else {
-			return this.cityText;
+			return this.cityText ?? '';
 		}
 	}
 
@@ -130,7 +130,7 @@ export class PostalAddressImpl implements PostalAddress {
 			return this.country.name;
 		}
 		else {
-			return this.countryText;
+			return this.countryText ?? '';
 		}
 	}
 
@@ -143,7 +143,7 @@ export class PostalAddressImpl implements PostalAddress {
 			return this.country.code;
 		}
 		else {
-			return this.countryText;
+			return this.countryText ?? '';
 		}
 	}
 
@@ -152,7 +152,7 @@ export class PostalAddressImpl implements PostalAddress {
 			return this.stateProvince.name;
 		}
 		else {
-			return this.stateText;
+			return this.stateText ?? '';
 		}
 	}
 
@@ -161,7 +161,7 @@ export class PostalAddressImpl implements PostalAddress {
 			return this.stateProvince.code;
 		}
 		else {
-			return this.stateText;
+			return this.stateText ?? '';
 		}
 	}
 
