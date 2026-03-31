@@ -7,9 +7,7 @@
     "declaration": true,
     "sourceMap": true,
     "removeComments": true,
-    "strict": false,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
+    "strict": true,
     "esModuleInterop": true,
     "types": ["node"]
   },

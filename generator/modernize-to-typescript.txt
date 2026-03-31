@@ -1,0 +1,35 @@
+Modernizing generator/ to TypeScript
+Date: 2026-03-31
+
+Overview
+--------
+The generator/ directory and its associated test files (test/UsersGenerator.spec.js,
+test/UserService.spec.js) were out of scope for the core library migration
+(see modernizing-to-typescript-5x.txt). They are left as-is (plain JavaScript)
+and will be addressed here, most likely when generator/ is published as a
+separate package (e.g. janux-people-testdata) with its own package.json,
+tsconfig, and README.
+
+Why deferred from the core migration:
+  - generator/ uses bluebird (Promise library), lokijs, faker, and md5, all of
+    which need careful handling during a TypeScript conversion
+  - The generator code and tests were sufficiently complex that they bogged down
+    Phase 2 of the core migration; isolating them avoids blocking that work
+  - generator/ is already excluded from the published package (not in files[])
+    so deferring it has no impact on consumers
+
+==============================================================================
+WORK TO BE DONE
+==============================================================================
+
+  - Convert generator/ from plain JS to TypeScript
+  - Replace bluebird with native Promises (Promise.resolve, async/await)
+  - Replace faker.random.uuid() with crypto.randomUUID() (Node 14.17+)
+  - Replace lodash _.cloneDeep with structuredClone() (Node 17+)
+  - Replace lodash _.isObject singleton guards with simple if (!instance) checks
+  - Remove .asCallback() calls (bluebird-specific)
+  - Remove dead require('lodash') in test/UserService.spec.js
+  - Convert test/UsersGenerator.spec.js and test/UserService.spec.js to
+    TypeScript using the same Vitest + Chai pattern as the core test files
+  - Add faker, lokijs, md5 back to devDependencies if still needed
+  - Add own package.json, tsconfig.json, and README if publishing separately
