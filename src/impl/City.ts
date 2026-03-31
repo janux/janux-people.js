@@ -14,7 +14,7 @@ import {StateProvinceImpl} from "./StateProvince";
  */
 export class CityImpl implements City {
 	/** An optional business code by which an industry may identify a City */
-	public code:string;
+	public code:string | undefined;
 	public name:string;
 
 	/**

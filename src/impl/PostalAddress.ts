@@ -22,18 +22,18 @@ export class PostalAddressImpl implements PostalAddress {
 		return 'addresses';
 	}
 
-	public line1:string;
-	public line2:string;
-	public line3:string;
-	public postalCode:string;
+	public line1:string = '';
+	public line2:string = '';
+	public line3:string = '';
+	public postalCode:string = '';
 	public cityText:string | undefined;
 	public stateText:string | undefined;
 	public countryText:string | undefined;
 	public _city:City | undefined;
 	public _stateProvince:StateProvince | undefined;
-	public _country:Country;
-	public type:string;
-	public primary:boolean;
+	public _country:Country | undefined;
+	public type:string = '';
+	public primary:boolean = false;
 
 	get city():City | undefined {
 		return this._city;
@@ -83,7 +83,7 @@ export class PostalAddressImpl implements PostalAddress {
 	 * returns getCity().getCountry() if a City is assigned to this
 	 * PostalAddress, or else the Country field
 	 */
-	get country() {
+	get country():Country | undefined {
 		if (this.city instanceof CityImpl) {
 			return this.city.country;
 		}

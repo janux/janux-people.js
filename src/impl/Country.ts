@@ -9,10 +9,10 @@ import {Country} from "../api/geography/Country";
  ***************************************************************************************************
  */
 export class CountryImpl implements Country {
-	public code:string;
-	public phoneCode:number;
-	public name:string;
-	public sortOrder:number;
+	public code:string = '';
+	public phoneCode:number = 0;
+	public name:string = '';
+	public sortOrder:number = 0;
 	public visible:boolean = true;
 
 	public toString():string {

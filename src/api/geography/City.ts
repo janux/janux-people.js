@@ -3,7 +3,8 @@ import {StateProvince} from './StateProvince';
 
 export interface City // extends Serializable, Persistent
 {
-	code:string;
+	/** An optional business code by which an industry may identify a City */
+	code:string | undefined;
 	name:string;
 	state:StateProvince;
 

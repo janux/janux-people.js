@@ -19,7 +19,7 @@ import {EmailAddressImpl} from "./EmailAddress";
  */
 export abstract class PartyAbstract implements Party {
 	public contactMethods: Record<string, ContactMethod[]>;
-	public code: string;
+	public code: string | undefined;
 
 	constructor() {
 		this.contactMethods = {};

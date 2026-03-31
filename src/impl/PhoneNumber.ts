@@ -14,8 +14,8 @@ export class PhoneNumberImpl implements PhoneNumber {
 	private _areaCode:number = -1;
 	public number:string;
 	public extension:string;
-	public type:string;
-	public primary:boolean;
+	public type:string = '';
+	public primary:boolean = false;
 
 	constructor(number?:string, extension?:string, cC?:number, aC?:number) {
 		this.number = number ?? '';

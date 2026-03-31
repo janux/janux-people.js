@@ -9,10 +9,10 @@ import {Country} from "../api/geography/Country";
  ***************************************************************************************************
  */
 export class StateProvinceImpl implements StateProvince {
-	public code:string;
-	public name:string;
-	public country:Country;
-	public sortOrder:number;
+	public code:string = '';
+	public name:string = '';
+	public country!:Country;
+	public sortOrder:number = 0;
 	public visible:boolean = true;
 
 	public toString():string {

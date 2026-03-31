@@ -68,10 +68,11 @@ export interface PostalAddress extends ContactMethod {
 	stateProvince:StateProvince | undefined;
 
 	/**
-	 * Country in which this PostalAddress is located; if getCity or getStateProvince fields are not
-	 * null, this Country must be the same as the one in which the City and StateProvince are located
+	 * Country in which this PostalAddress is located; if city or stateProvince fields are defined,
+	 * this Country must be the same as the one in which the City and StateProvince are located.
+	 * Undefined if no country has been assigned yet.
 	 */
-	country:Country;
+	country:Country | undefined;
 
 	/**
 	 * @return Convenience method that returns, if it exists, this.getCity().getName(); or,

@@ -9,8 +9,8 @@ import {PartyName} from "../api/PartyName";
  ***************************************************************************************************
  */
 export class PartyNameImpl implements PartyName {
-	public _shortName:string;
-	public _longName:string;
+	public _shortName:string = '';
+	public _longName:string = '';
 
 	get shortName():string {
 		return this._shortName;

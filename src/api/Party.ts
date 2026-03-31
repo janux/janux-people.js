@@ -15,7 +15,7 @@ import {EmailAddress} from './net/EmailAddress';
 export interface Party {
 
 	/** optional string identifier for this Party */
-	code: string;
+	code: string | undefined;
 
 	/** contact methods (addresses, phones, emails) keyed by field name */
 	contactMethods: Record<string, ContactMethod[]>;
