@@ -44,11 +44,13 @@ npm test         # build, then mocha
 - Has a user/org generator in `generator/` for seeding demo data.
 - Output in `dist/`, type definitions in `index.d.ts`.
 - Git branch: `dev`, remote: github.com/janux/janux-people.js
-- Not yet tagged for a published version (the currently-published `1.0.1-rc2`
-  predates this convention — see `janux/CLAUDE.md`'s Publishing section for
-  the version-collision blocking a republish). Once republished, tag the
-  published commit `vX.Y.Z` — see `janux/CLAUDE.md`, "Tag every published
-  commit".
+- Not yet tagged for a published version. The currently-published
+  `1.0.1-rc2` is itself a live example of the exact mistake `/VERSIONING.md`
+  (workspace root) exists to prevent: an RC published without `--tag rc`
+  ended up as `latest`, so a bare `npm install janux-people` resolves to a
+  prerelease. Fixing this — and any future publish here — should follow
+  that workflow. (See `janux/CLAUDE.md`'s Publishing section for the
+  version-collision currently blocking a plain republish.)
 
 ### Compiler version matters to downstream consumers
 
