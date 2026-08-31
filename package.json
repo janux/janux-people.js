@@ -3,6 +3,16 @@
 	"version": "1.0.1",
 	"main": "index.js",
 	"typings": "index.d.ts",
+	"files": [
+		"dist",
+		"generator",
+		"index.js",
+		"index.d.ts",
+		"LICENSE"
+	],
+	"publishConfig": {
+		"registry": "https://registry.januxmedia.com/"
+	},
 	"engines": {
 		"node": "~12.x",
 		"npm": "~6.x",
