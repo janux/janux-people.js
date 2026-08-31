@@ -44,6 +44,11 @@ npm test         # build, then mocha
 - Has a user/org generator in `generator/` for seeding demo data.
 - Output in `dist/`, type definitions in `index.d.ts`.
 - Git branch: `dev`, remote: github.com/janux/janux-people.js
+- Not yet tagged for a published version (the currently-published `1.0.1-rc2`
+  predates this convention — see `janux/CLAUDE.md`'s Publishing section for
+  the version-collision blocking a republish). Once republished, tag the
+  published commit `vX.Y.Z` — see `janux/CLAUDE.md`, "Tag every published
+  commit".
 
 ### Compiler version matters to downstream consumers
 
