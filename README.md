@@ -7,17 +7,16 @@ The `janux-people` package represents `Persons` and `Organizations` using the ke
 	$ npm install
 
 
-* Compile typescript project:
+* Compile typescript project (output goes to `dist/`):
 
 
-	$ gulp default
+	$ npm run build
 
 
-* Generate documentation in 'doc' directory:
+* Compile and watch for changes:
 
-	$ gulp doc
+	$ npm run watch
 
-* Compile and run tests (also compiles the project files in their own directories)
+* Compile and run tests
 
-    $ gulp test
-    
+    $ npm test

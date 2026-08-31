@@ -20,37 +20,24 @@
 		"url": "git@github.com:janux/janux-people.js.git"
 	},
 	"scripts": {
-		"build": "gulp default"
+		"build": "tsc -p tsconfig.json",
+		"test": "npm run build && mocha 'test/**/*.spec.js' --timeout 10000",
+		"watch": "tsc -p tsconfig.json --watch"
 	},
 	"author": "janux",
 	"contributors": [],
 	"devDependencies": {
 		"@types/node": "10.3.6",
-		"amdefine": "1.0.0",
 		"bluebird": "3.5.0",
-		"browserify": "12.0.1",
 		"chai": "3.4.1",
 		"config": "1.16.0",
-		"del": "2.1.0",
-		"express": "4.13.3",
 		"faker": "3.1.0",
-		"gulp": "4.0.0",
-		"gulp-concat": "2.6.0",
-		"gulp-load-plugins": "2.0.7",
-		"gulp-load-subtasks": "1.2.2",
-		"gulp-mocha": "2.2.0",
-		"gulp-sourcemaps": "1.6.0",
-		"gulp-tslint": "3.6.0",
-		"gulp-typedoc": "2.0.2",
-		"gulp-typescript": "3.1.6",
 		"lodash": "*",
 		"log4js": "0.6.29",
 		"lokijs": "1.4.1",
 		"md5": "2.2.1",
 		"mocha": "2.3.4",
 		"q": "1.4.1",
-		"typedoc": "0.8.0",
-		"typescript": "3.1.8",
-		"vinyl-source-stream": "1.1.0"
+		"typescript": "3.1.8"
 	}
 }
