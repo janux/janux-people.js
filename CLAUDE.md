@@ -11,7 +11,8 @@ between Person and Organization. Provides models for contact information
 - **Language**: TypeScript 3.1.8 → ES5/CommonJS
 - **Build**: `tsc` via npm scripts (Gulp removed)
 - **Test**: Mocha 2.3.4 + Chai 3.4.1
-- **Node**: `~12.x` (engines field)
+- **Node**: `>=10` (engines field; it constrains consumers, and the ES5
+  output runs on Node 10+, so it pins no npm/pnpm version)
 
 ## Exports
 

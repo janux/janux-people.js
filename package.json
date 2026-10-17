@@ -1,6 +1,6 @@
 {
 	"name": "janux-people",
-	"version": "1.0.2-rc1",
+	"version": "1.0.2-rc2",
 	"main": "index.js",
 	"typings": "index.d.ts",
 	"files": [
@@ -14,9 +14,7 @@
 		"registry": "https://registry.januxmedia.com/"
 	},
 	"engines": {
-		"node": "~12.x",
-		"npm": "~6.x",
-		"pnpm": "~6.x"
+		"node": ">=10"
 	},
 	"keywords": [
 		"util",
