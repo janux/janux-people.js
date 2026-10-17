@@ -51,3 +51,6 @@ export class PersonImpl extends PartyAbstract implements Person {
         return aPerson;
     }
 } // end class PersonImpl
+
+// minification-safe name for typeName, see tools.declareTypeName()
+tools.declareTypeName(PersonImpl, 'PersonImpl');

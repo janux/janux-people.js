@@ -16,7 +16,7 @@ between Person and Organization. Provides models for contact information
 ## Exports
 
 `Person`, `Organization`, `PhoneNumber`, `PostalAddress`, `EmailAddress`,
-`PartyAbstract`
+`PartyAbstract`, `declareTypeName`
 
 Note these are **aliases**: the root `index.js` re-exports `PersonImpl` as
 `Person`, `OrganizationImpl` as `Organization`, and so on. Consumers import
@@ -44,13 +44,22 @@ npm test         # build, then mocha
 - Has a user/org generator in `generator/` for seeding demo data.
 - Output in `dist/`, type definitions in `index.d.ts`.
 - Git branch: `dev`, remote: github.com/janux/janux-people.js
-- Not yet tagged for a published version. The currently-published
-  `1.0.1-rc2` is itself a live example of the exact mistake `/VERSIONING.md`
-  (workspace root) exists to prevent: an RC published without `--tag rc`
-  ended up as `latest`, so a bare `npm install janux-people` resolves to a
-  prerelease. Fixing this — and any future publish here — should follow
-  that workflow. (See `janux/CLAUDE.md`'s Publishing section for the
-  version-collision currently blocking a plain republish.)
+- Not yet tagged for a published version. `latest` points at `1.0.1`; the
+  `1.0.1-rc` / `-rc2` builds (published after 1.0.1, and once mis-tagged
+  as `latest`) are being replaced by `1.0.2` via `1.0.2-rc1` (JAM-125).
+  Follow `/VERSIONING.md` (workspace root) for any publish.
+
+### `typeName` must be declared, not derived
+
+`typeName` (and the `typeName` in `toJSON()`) is what consumers use to
+rehydrate a contact as a `Person` or an `Organization`, so it is part of
+the wire format. Deriving it from the constructor's name is not safe:
+minifiers and scope-hoisting bundlers rename constructors. So `PersonImpl`
+and `OrganizationImpl` declare their names with `declareTypeName()`
+(`src/tools.ts`), which `className()` returns ahead of `constructor.name`.
+A subclass that declares nothing reports its own constructor name, which
+is only safe in unminified code: a subclass whose `typeName` matters
+should call `declareTypeName(Sub, 'Sub')` too.
 
 ### Compiler version matters to downstream consumers
 

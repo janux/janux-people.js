@@ -40,3 +40,6 @@ export class OrganizationImpl extends PartyAbstract implements Organization {
 		return aOrg;
 	}
 } // end class OrganizationImpl
+
+// minification-safe name for typeName, see tools.declareTypeName()
+tools.declareTypeName(OrganizationImpl, 'OrganizationImpl');
