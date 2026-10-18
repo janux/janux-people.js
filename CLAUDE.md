@@ -45,10 +45,12 @@ npm test         # build, then mocha
 - Has a user/org generator in `generator/` for seeding demo data.
 - Output in `dist/`, type definitions in `index.d.ts`.
 - Git branch: `dev`, remote: github.com/janux/janux-people.js
-- Not yet tagged for a published version. `latest` points at `1.0.1`; the
-  `1.0.1-rc` / `-rc2` builds (published after 1.0.1, and once mis-tagged
-  as `latest`) are being replaced by `1.0.2` via `1.0.2-rc1` (JAM-125).
-  Follow `/VERSIONING.md` (workspace root) for any publish.
+- Tags: `v1.0.0` on `ac37881` (the registry's recorded `gitHead`),
+  `v1.0.1` on `658ec30`, and `v1.0.2` on `baae7f0`. `v1.0.1` is only the
+  nearest commit: that version was published from an uncommitted working
+  copy, and the original 2021 commit no longer exists (history was rebased
+  in 2022). `latest` is `1.0.2`. Follow `/VERSIONING.md` (workspace root)
+  for any publish.
 
 ### `typeName` must be declared, not derived
 
@@ -85,3 +87,17 @@ the gulp artifacts. It is good work but cannot be adopted as-is:
 
 Both are fixable (target ES2019; re-add the aliases), but that work is
 deferred until the Node 12 baseline is established across all projects.
+The branch is kept as a reference for janux 2.0, whose toolchain work
+redoes it in `janux-mono` rather than importing it (JAM-127).
+
+### Other branches
+
+`origin/dev-07-eo-postal-address` (2017) is kept for reference only: it
+holds country-specific postal-address subclasses (`PostalAddressMX`,
+`PostalAddressBR` over a `BasePostalAddress`), the model for how a consumer
+could subclass to represent a non-US address. It is not meant to be merged.
+
+`develop-wp-uglify` (2019, tip `4fd722a`) was deleted on 2026-10-17. It was
+an early attempt at a minification-safe `typeName` by hardcoding the class
+names, which would make a subclass report its parent's name;
+`declareTypeName()` supersedes it.
